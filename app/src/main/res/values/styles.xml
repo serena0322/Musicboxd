@@ -1,0 +1,10 @@
+<resources>
+    <style name="PopupMenuStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:popupBackground">@drawable/popup_menu_background</item> <!--sfondo menu in nero-->
+    </style>
+
+    <style name="PopupMenuItemText" parent="TextAppearance.AppCompat.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+</resources>

@@ -1,17 +1,20 @@
 package com.example.musicboxd
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : ComponentActivity() {
+
+class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,28 +53,59 @@ class MainActivity : ComponentActivity() {
                     bottomNav.itemIconTintList = homeColor
                     true
                 }
+
                 R.id.nav_search -> {
                     bottomNav.itemIconTintList = searchColor
                     true
                 }
+
                 R.id.nav_add -> {
                     bottomNav.itemIconTintList = addColor
                     true
                 }
+
                 R.id.nav_notifications -> {
                     bottomNav.itemIconTintList = notificationsColor
                     true
                 }
+
                 R.id.nav_profile -> {
                     bottomNav.itemIconTintList = profileColor
                     true
                 }
+
                 else -> false
             }
         }
 
+        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar)) //di default visualizzerà il nome dell’app
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.overflowIcon?.let { drawable ->
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(this, R.color.notify))
+            toolbar.overflowIcon = wrappedDrawable
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                // Azione quando clicchi su "Impostazioni"
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
+
+
 
 
 

@@ -5,27 +5,33 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <TextView
-        android:id="@+id/Title"
-        android:layout_width="183dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="66dp"
-        android:fontFamily="@font/poppinsbold"
-        android:text="Musicboxd"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold" />
 
-    <!-- Bottom Navigation fissa in basso, tutta larghezza -->
-    <FrameLayout
-        android:id="@+id/nav_host_fragment"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation"
-        android:layout_marginBottom="0dp" />
+        android:layout_height="70dp"
+        android:layout_marginTop="50dp"
+        android:background="#00FFFFFF"
+        android:theme="?attr/actionBarTheme"
+        android:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:navigationIcon="?homeAsUpIndicator"
+        app:popupTheme="@style/PopupMenuStyle"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="532dp"
+        android:layout_above="@id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- I tuoi contenuti vanno qui -->
+
+        </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -39,6 +45,17 @@
         app:menu="@menu/bottom_nav_menu" >
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="61dp"
+        android:fontFamily="@font/poppinsbold"
+        android:text="Musicboxd"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
 

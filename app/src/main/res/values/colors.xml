@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="home">#FF00FF</color>          <!-- Colore per Home -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="search">#FF6200EE</color>      <!-- Colore per Search -->
-    <color name="add">#FF3700B3</color>         <!-- Colore per Add -->
+    <color name="search">#c553db</color>        <!-- Colore per Search -->
+    <color name="add">#FFBB86FC</color>         <!-- Colore per Add -->
     <color name="notify">#FF03DAC5</color>      <!-- Colore per Notifications -->
-    <color name="profile">#FF018786</color>     <!-- Colore per Profile -->
+    <color name="profile">#80CBC4</color>       <!-- Colore per Profile -->
+
+    <color name="teal_700">#00796B</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="purple_500">#9C27B0</color>
     <color name="purple_700">#7B1FA2</color>
     <color name="teal_200">#80CBC4</color>
-    <color name="teal_700">#00796B</color>
 
 </resources>
