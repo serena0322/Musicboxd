@@ -31,6 +31,7 @@ class MainActivity : ComponentActivity() {
             )
             textView.paint.shader = shader
             textView.invalidate()
+            //
         }
 
 
