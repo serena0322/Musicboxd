@@ -1,89 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    tools:context=".MainActivity">
 
+    <!-- Host dei Fragment -->
+    <!-- Container che ospita i fragment -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/navigation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="493dp"
-        android:layout_above="@id/bottom_nav"
-        android:layout_below="@+id/tabLayout"
-        android:layout_marginTop="6dp"
-        android:background="@color/scrollView">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- I tuoi contenuti vanno qui -->
-
-        </LinearLayout>
-    </ScrollView>
-
-
+    <!--BottomNav-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
-        app:itemIconTint="@color/iconTint"
-        app:itemIconSize="35dp"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_alignParentBottom="true"
         android:background="@color/gray"
+        app:itemIconTint="@color/iconTint"
+        app:itemIconSize="35dp"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_nav_menu" >
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
-
-    <TextView
-        android:id="@+id/Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="105dp"
-        android:layout_marginTop="47dp"
-        android:fontFamily="@font/poppinsbold"
-        android:text="Musicboxd"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Title"
-        android:layout_marginTop="10dp"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/home"
-        app:tabMode="fixed"
-        app:tabTextAppearance="@style/CustomTabTextAppearance">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Music" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reviews" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lists" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Journal" />
-    </com.google.android.material.tabs.TabLayout>
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
-</RelativeLayout>
-
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>
