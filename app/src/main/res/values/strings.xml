@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Musicboxd</string>
     <string name="settings">Settings</string>
+    <string name="music">Music</string>
+    <string name="letterboxd">Letterboxd</string>
 
 </resources>

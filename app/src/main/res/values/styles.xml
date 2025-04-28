@@ -7,4 +7,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/iconTint</item>
+    </style>
+
+
 </resources>
