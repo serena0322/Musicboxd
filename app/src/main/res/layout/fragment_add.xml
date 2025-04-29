@@ -14,7 +14,7 @@
         android:layout_marginTop="47dp"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/poppinsbold"
-        android:text="Add a Film"
+        android:text="Add a Song"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -30,7 +30,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/search_background"
-        android:queryHint="Name of film"
+        android:queryHint="Name of song"
         app:iconifiedByDefault="false" /> <!-- sfondo trasparente per il campo -->
 
     <ScrollView
