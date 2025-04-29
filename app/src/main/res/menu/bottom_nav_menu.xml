@@ -16,7 +16,7 @@
         android:title="Add" />
 
     <item
-        android:id="@+id/nav_notifications"
+        android:id="@+id/nav_activity"
         android:icon="@drawable/bolt"
         android:title="Notifications" />
 

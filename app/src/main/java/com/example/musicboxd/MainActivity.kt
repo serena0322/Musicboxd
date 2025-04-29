@@ -42,16 +42,19 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.nav_add -> {
                     bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_add_icon)
+                    navController.navigate(R.id.addFragment)
                     true
                 }
 
-                R.id.nav_notifications -> {
-                    bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_notify_icon)
+                R.id.nav_activity -> {
+                    bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_activity_icon)
+                    navController.navigate(R.id.activityFragment)
                     true
                 }
 
                 R.id.nav_profile -> {
                     bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_profile_icon)
+                    navController.navigate(R.id.profileFragment)
                     true
                 }
                 else -> false

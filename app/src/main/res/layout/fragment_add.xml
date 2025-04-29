@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <!--Titolo-->
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="105dp"
+        android:layout_marginTop="47dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/poppinsbold"
+        android:text="Add a Film"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+
+    <!-- Barra di ricerca -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/Title"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/search_background"
+        android:queryHint="Name of film"
+        app:iconifiedByDefault="false" /> <!-- sfondo trasparente per il campo -->
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/searchView"
+        android:background="@color/scrollView"
+        android:paddingBottom="56dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- I tuoi contenuti vanno qui -->
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

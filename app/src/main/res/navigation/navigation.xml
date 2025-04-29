@@ -14,6 +14,15 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_activityFragment"
+            app:destination="@id/activityFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <!-- Fragment Search -->
@@ -23,11 +32,28 @@
         android:label="Search"
         tools:layout="@layout/fragment_search"  />
 
-<!--    &lt;!&ndash; Fragment Profile &ndash;&gt;-->
-<!--    <fragment-->
-<!--        android:id="@+id/profileFragment"-->
-<!--        android:name="com.example.musicboxd.ProfileFragment"-->
-<!--        android:label="Profile"-->
-<!--        tools:layout="@layout/fragment_profile" />-->
+    <!--    Fragment Add-->
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.example.musicboxd.AddFragment"
+        android:label="Add"
+        tools:layout="@layout/fragment_add" >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/activityFragment"
+        android:name="com.example.musicboxd.ActivityFragment"
+        android:label="Activity"
+        tools:layout="@layout/fragment_activity" >
+
+    </fragment>
+
+    <!-- Fragment Profile -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.musicboxd.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>
