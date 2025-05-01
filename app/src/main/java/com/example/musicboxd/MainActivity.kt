@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         // Collega la bottom navigation al NavController
         bottomNav.setupWithNavController(navController)
 
-
         // Setta il ColorStateList prima di selezionare le icone
         bottomNav.setOnItemSelectedListener()
         { item ->

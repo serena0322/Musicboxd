@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.musicboxd.R
 
 class AddFragment: Fragment(){
     @SuppressLint("ServiceCast")
@@ -20,7 +22,7 @@ class AddFragment: Fragment(){
         val view = inflater.inflate(R.layout.fragment_add, container, false)
 
         // Inizializza la SearchView
-        val searchView = view.findViewById<androidx.appcompat.widget.SearchView>(R.id.searchView)
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
 
         // Personalizza il testo di ricerca e l'hint
         searchView.queryHint = "Name of film" // Imposta l'hint
