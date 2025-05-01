@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 
-
 class ActivityFragment: Fragment(){
 
     private lateinit var tabLayout: TabLayout
