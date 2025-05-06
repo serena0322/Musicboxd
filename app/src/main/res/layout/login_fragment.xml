@@ -10,12 +10,13 @@
     android:padding="16dp">
 
     <!-- LinearLayout centrato verticalmente -->
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/bottone_contorno"
         android:text="skip"
         android:textColor="@color/gray"

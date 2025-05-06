@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.musicboxd.R
+import android.widget.Toast
 
 class SearchFragment : Fragment() {
 
@@ -35,7 +36,16 @@ class SearchFragment : Fragment() {
         searchEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // colore del testo digitato
         searchEditText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // colore dell'hint
 
+        view.findViewById<TextView>(R.id.releaseDate).setOnClickListener {
+            Toast.makeText(requireContext(), "Release date clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        view.findViewById<TextView>(R.id.genreCountryLanguage).setOnClickListener {
+            Toast.makeText(requireContext(), "Journal clicked", Toast.LENGTH_SHORT).show()
+        }
+
         // Restituisci la vista
         return view
     }
+
 }

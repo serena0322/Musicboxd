@@ -44,9 +44,62 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- I tuoi contenuti vanno qui -->
+            <TextView
+                android:id="@+id/browseBy"
+                style="@style/ClickableListItem"
+                android:padding="10dp"
+                android:text="Browse by"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/releaseDate"
+                style="@style/ClickableListItem"
+                android:text="Release date" />
+
+            <TextView
+                android:id="@+id/genreCountryLanguage"
+                style="@style/ClickableListItem"
+                android:text="Genre, country or language" />
+
+            <TextView
+                android:id="@+id/service"
+                style="@style/ClickableListItem"
+                android:text="Service" />
+
+            <TextView
+                android:id="@+id/mostPopular"
+                style="@style/ClickableListItem"
+                android:text="Most popular" />
+
+            <TextView
+                android:id="@+id/highestRated"
+                style="@style/ClickableListItem"
+                android:text="Highest rated" />
+
+            <TextView
+                android:id="@+id/mostAnticipated"
+                style="@style/ClickableListItem"
+                android:text="Most anticipated" />
+
+            <TextView
+                android:id="@+id/top250"
+                style="@style/ClickableListItem"
+                android:text="Top 250 narrative features" />
+
+            <TextView
+                android:id="@+id/featuredLists"
+                style="@style/ClickableListItem"
+                android:text="Featured lists" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="16dp"
+                android:background="#333" />
 
         </LinearLayout>
     </ScrollView>

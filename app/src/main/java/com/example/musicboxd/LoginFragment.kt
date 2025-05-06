@@ -1,5 +1,6 @@
 package com.example.musicboxd
 
+import android.content.Intent
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
@@ -28,7 +29,10 @@ class LoginFragment : Fragment(){
 
         val skip = view.findViewById<Button>(R.id.button)
         skip.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.putExtra("destination", "home")
+            startActivity(intent)
+            requireActivity().finish()
         }
 
         return view

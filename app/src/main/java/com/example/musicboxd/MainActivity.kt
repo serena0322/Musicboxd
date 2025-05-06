@@ -16,9 +16,17 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
+        val destination = intent.getStringExtra("destination")
+
         // Trova il NavHostFragment e ottieni il NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
         val navController = navHostFragment.navController
+
+        if (destination == "home") {
+            navController.navigate(R.id.homeFragment)
+        }
+
 
         // Collega la bottom navigation al NavController
         bottomNav.setupWithNavController(navController)
