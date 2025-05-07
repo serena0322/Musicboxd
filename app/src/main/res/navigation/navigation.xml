@@ -30,7 +30,12 @@
         android:id="@+id/searchFragment"
         android:name="com.example.musicboxd.SearchFragment"
         android:label="Search"
-        tools:layout="@layout/fragment_search"  />
+        tools:layout="@layout/fragment_search"  >
+        <action
+            android:id="@+id/action_searchFragment_pop_including_homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <!-- Fragment Add-->
     <fragment
@@ -39,6 +44,10 @@
         android:label="Add"
         tools:layout="@layout/fragment_add" >
 
+        <action
+            android:id="@+id/action_addFragment_pop_including_homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Fragment Activity-->
@@ -48,6 +57,10 @@
         android:label="Activity"
         tools:layout="@layout/fragment_activity" >
 
+        <action
+            android:id="@+id/action_activityFragment_pop_including_homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Fragment Profile -->
@@ -55,7 +68,22 @@
         android:id="@+id/profileFragment"
         android:name="com.example.musicboxd.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_pop_including_homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Fragment Settings -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.musicboxd.SettingsFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_settings" />
 
 
 </navigation>

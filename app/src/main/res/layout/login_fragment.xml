@@ -47,11 +47,11 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_background"
-            android:hint="Email"
+            android:hint="Username or Email"
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:textColor="@color/white"
@@ -59,7 +59,7 @@
             android:layout_marginTop="24dp" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_background"

@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import android.widget.Toast
 
 class SearchFragment : Fragment() {
 
@@ -37,11 +36,10 @@ class SearchFragment : Fragment() {
         searchEditText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // colore dell'hint
 
         view.findViewById<TextView>(R.id.releaseDate).setOnClickListener {
-            Toast.makeText(requireContext(), "Release date clicked", Toast.LENGTH_SHORT).show()
+            //al click
         }
-
         view.findViewById<TextView>(R.id.genreCountryLanguage).setOnClickListener {
-            Toast.makeText(requireContext(), "Journal clicked", Toast.LENGTH_SHORT).show()
+            //al click
         }
 
         // Restituisci la vista

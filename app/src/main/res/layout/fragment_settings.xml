@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <!-- Titolo -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Settings"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <!-- Signed in as -->
+    <TextView
+        android:id="@+id/signedInText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:text="Signed in as"
+        android:visibility="visible"
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="20sp" />
+
+    <!-- Logout -->
+    <TextView
+        android:id="@+id/signOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/signedInText"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Logout"
+        android:clickable="true"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+
+    <!-- ScrollView -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/signOut"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/security"
+                style="@style/ClickableListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Password and authentication" />
+
+            <TextView
+                android:id="@+id/first_name"
+                style="@style/ClickableListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First name" />
+
+            <TextView
+                android:id="@+id/last_name"
+                style="@style/ClickableListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last name" />
+
+            <TextView
+                android:id="@+id/email"
+                style="@style/ClickableListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email address" />
+
+            <TextView
+                android:id="@+id/cancel"
+                style="@style/ClickableListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete account"
+                android:textStyle="bold"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
