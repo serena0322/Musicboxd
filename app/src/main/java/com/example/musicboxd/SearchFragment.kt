@@ -26,7 +26,7 @@ class SearchFragment : Fragment() {
         val searchView = view.findViewById<SearchView>(R.id.searchView)
 
         // Personalizza il testo di ricerca e l'hint
-        searchView.queryHint = "Cerca su Musicboxd..." // Imposta l'hint
+        searchView.queryHint = "Search with Musicboxd..." // Imposta l'hint
 
         // Inizializza EditText interno della SearchView
         val searchEditText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)

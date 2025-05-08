@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@color/black">
 
-    <!--Titolo-->
+    <!-- Titolo -->
     <TextView
         android:id="@+id/Title"
-        android:layout_width="368dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="204dp"
         android:fontFamily="@font/poppinsbold"
         android:text="Sign In"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/edit_text_background"
+        android:fontFamily="sans-serif"
         android:hint="Email"
-        android:padding="12dp"
         android:inputType="textEmailAddress"
+        android:padding="12dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:fontFamily="sans-serif"
-        android:background="@drawable/edit_text_background"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Title" />
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Username"
         android:padding="12dp"
@@ -49,11 +54,15 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif"
-        android:background="@drawable/edit_text_background"/>
+        android:background="@drawable/edit_text_background"
+        app:layout_constraintTop_toBottomOf="@id/email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Password -->
     <EditText
         android:id="@+id/password"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Password"
         android:layout_marginTop="10dp"
@@ -63,14 +72,21 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif"
-        android:background="@drawable/edit_text_background" />
+        android:background="@drawable/edit_text_background"
+        app:layout_constraintTop_toBottomOf="@id/username"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Bottone Sign In -->
     <Button
         android:id="@+id/buttonSignIn"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:layout_marginTop="24dp"
-        android:background="@drawable/button_background" />
+        android:background="@drawable/button_background"
+        app:layout_constraintTop_toBottomOf="@id/password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

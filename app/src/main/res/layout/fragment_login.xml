@@ -8,8 +8,6 @@
     android:gravity="center"
     android:padding="16dp">
 
-    <!-- LinearLayout centrato verticalmente -->
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -88,6 +86,18 @@
             android:textAlignment="center"
             android:gravity="center"
             android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/credentialRecovery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recover your Account"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:clickable="true" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

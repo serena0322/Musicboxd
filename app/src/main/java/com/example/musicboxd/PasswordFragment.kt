@@ -20,7 +20,7 @@ class PasswordFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_password_and_authentication,container,false)
+        val view = inflater.inflate(R.layout.fragment_change_password_,container,false)
         val change = view.findViewById<TextView>(R.id.changePassword)
         val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val savedPassword = sharedPreferences.getString("saved_password", "Guest")

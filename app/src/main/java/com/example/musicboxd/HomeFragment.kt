@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.homeRecyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.musicRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Esempio lista statica
@@ -102,14 +102,13 @@ class HomeFragment : Fragment() {
             MusicItem("Bad Guy", "Billie Eilish"),
             MusicItem("Uptown Funk", "Mark Ronson ft. Bruno Mars"),
         )
-
         val adapter = MusicAdapter(musicList)
         recyclerView.adapter = adapter
 
         return view
-
     }
 
+    //sfumatura titolo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -119,7 +118,8 @@ class HomeFragment : Fragment() {
         // Utilizzo di post() per eseguire codice sulla UI dopo che la vista è pronta
         textView?.post {
             // Misura la larghezza del testo
-            val textWidth = textView.paint.measureText(textView.text.toString())
+//            val textWidth = textView.paint.measureText(textView.text.toString())
+            val textWidth = textView.width.toFloat()
 
             // Colori per la sfumatura
             val startColor = ContextCompat.getColor(requireContext(), R.color.home)
@@ -128,8 +128,8 @@ class HomeFragment : Fragment() {
             // Creazione della sfumatura orizzontale
             val shader = LinearGradient(
                 0f, 0f, textWidth, 0f,  // Sfumatura orizzontale (da sinistra a destra)
-                startColor,
-                endColor,
+                intArrayOf(startColor, endColor),
+                floatArrayOf(0.0f, 0.6f), // Colori distribuiti in modo uniforme da 0% a 100%
                 Shader.TileMode.CLAMP
             )
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,26 +11,30 @@
         android:id="@+id/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="47dp"
         android:fontFamily="@font/poppinsbold"
         android:text="Profile"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- TabLayout -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_below="@id/Title"
         android:layout_marginTop="20dp"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/home"
         app:tabMode="fixed"
-        app:tabTextAppearance="@style/CustomTabTextAppearance">
+        app:tabTextAppearance="@style/CustomTabTextAppearance"
+        app:layout_constraintTop_toBottomOf="@id/Title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -50,18 +55,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Watchlist" />
-
     </com.google.android.material.tabs.TabLayout>
 
     <!-- Contenuto scrollabile -->
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tabLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:paddingBottom="56dp"
-        android:background="@color/scrollView">
+        android:background="@color/scrollView"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,8 +85,10 @@
             <TextView android:id="@+id/likes" style="@style/ClickableListItem" android:text="Likes" />
             <TextView android:id="@+id/tags" style="@style/ClickableListItem" android:text="Tags" />
             <TextView android:id="@+id/network" style="@style/ClickableListItem" android:text="Network" />
-            <TextView android:id="@+id/settings" style="@style/ClickableListItem" android:text="Settings" android:textStyle="bold" android:textColor="@color/white"/>
+            <TextView android:id="@+id/settings" style="@style/ClickableListItem" android:text="Settings" android:textStyle="bold" android:textColor="@color/white" />
 
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

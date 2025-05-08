@@ -32,6 +32,7 @@ class ActivityFragment: Fragment(){
                             ContextCompat.getColor(
                                 requireContext(),
                                 R.color.home
+
                             )
                         )
                     }
