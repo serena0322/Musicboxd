@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 class SettingsFragment: Fragment() {
     @SuppressLint("MissingInflatedId", "SetTextI18n")
@@ -149,6 +150,10 @@ class SettingsFragment: Fragment() {
                     dialog.dismiss()
                 }
                 .show()
+        }
+        val authentication = view.findViewById<TextView>(R.id.security)
+        authentication.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFragment_to_PasswordandAuthentication)
         }
         return view
     }

@@ -9,7 +9,7 @@
             android:id="@+id/loginFragment"
             android:name="com.example.musicboxd.LoginFragment"
             android:label="Login"
-            tools:layout="@layout/login_fragment" >
+            tools:layout="@layout/fragment_login" >
             <action
                 android:id="@+id/action_loginFragment_to_signInFragment"
                 app:destination="@id/signInFragment" />
@@ -19,7 +19,7 @@
         android:id="@+id/signInFragment"
         android:name="com.example.musicboxd.SignInFragment"
         android:label="SignIn"
-        tools:layout="@layout/sign_in_fragment" >
+        tools:layout="@layout/fragment_sign_in" >
         <action
             android:id="@+id/action_signInFragment_to_loginFragment"
             app:destination="@id/loginFragment" />

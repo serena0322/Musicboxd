@@ -78,7 +78,7 @@
             <TextView android:id="@+id/likes" style="@style/ClickableListItem" android:text="Likes" />
             <TextView android:id="@+id/tags" style="@style/ClickableListItem" android:text="Tags" />
             <TextView android:id="@+id/network" style="@style/ClickableListItem" android:text="Network" />
-            <TextView android:id="@+id/settings" style="@style/ClickableListItem" android:text="Settings" />
+            <TextView android:id="@+id/settings" style="@style/ClickableListItem" android:text="Settings" android:textStyle="bold" android:textColor="@color/white"/>
 
         </LinearLayout>
     </ScrollView>
