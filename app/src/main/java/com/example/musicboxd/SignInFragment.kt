@@ -19,7 +19,7 @@ class SignInFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.sign_in_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
 
         val emailEditText =view.findViewById<EditText>(R.id.email)
         val usernameEditText = view.findViewById<EditText>(R.id.username)
