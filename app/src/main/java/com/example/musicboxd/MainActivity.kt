@@ -2,6 +2,10 @@ package com.example.musicboxd
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
+import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -9,8 +13,35 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), Parcelable {
+    @SuppressLint("MissingInflatedId")
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var searchView: SearchView
+
+    constructor(parcel: Parcel) : this() {
+
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<MainActivity> {
+        override fun createFromParcel(parcel: Parcel): MainActivity {
+            return MainActivity(parcel)
+        }
+
+        override fun newArray(size: Int): Array<MainActivity?> {
+            return arrayOfNulls(size)
+        }
+    }
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +106,32 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+        // Trova la RecyclerView e la SearchView nel layout
+        recyclerView = findViewById(R.id.scrollView2)
+        searchView = findViewById(R.id.searchView)
+
+        // Inizialmente nascondi la RecyclerView
+        recyclerView.visibility = View.GONE
+
+        // Aggiungi un listener alla SearchView per rilevare quando l'utente inizia a digitare
+        searchView.setOnQueryTextListener(/* listener = */ object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Gestisci la logica di ricerca quando l'utente invia la query
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Rendi visibile la RecyclerView quando l'utente inizia a digitare
+                if (newText.isNullOrEmpty()) {
+                    recyclerView.visibility = View.GONE  // Nascondi se la query è vuota
+                } else {
+                    recyclerView.visibility = View.VISIBLE  // Mostra se c'è del testo
+                }
+                return true
+            }
+         })
     }
 }
-
 
 
 
