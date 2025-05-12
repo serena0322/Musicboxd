@@ -108,14 +108,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecyclerView"
-        android:layout_marginTop="7dp"
-        android:layout_width="410dp"
-        android:layout_height="1227dp"
+        android:layout_width="396dp"
+        android:layout_height="719dp"
+        android:background="#181B20"
         app:layout_constraintEnd_toEndOf="@+id/scrollView"
         app:layout_constraintStart_toStartOf="@+id/scrollView"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
-        android:background="#181B20"
+        app:layout_constraintTop_toTopOf="@+id/scrollView"
         tools:ignore="UnknownId" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
