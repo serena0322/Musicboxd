@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -63,7 +62,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:paddingBottom="56dp"
+        android:paddingBottom="30dp"
         android:background="@color/scrollView"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,20 +74,74 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="16dp">
+            android:padding="6dp">
 
-            <TextView android:id="@+id/music" style="@style/ClickableListItem" android:text="Music" />
-            <TextView android:id="@+id/diary" style="@style/ClickableListItem" android:text="Diary" />
-            <TextView android:id="@+id/reviews" style="@style/ClickableListItem" android:text="Reviews" />
-            <TextView android:id="@+id/lists" style="@style/ClickableListItem" android:text="Lists" />
-            <TextView android:id="@+id/watchlist" style="@style/ClickableListItem" android:text="Watchlist" />
-            <TextView android:id="@+id/likes" style="@style/ClickableListItem" android:text="Likes" />
-            <TextView android:id="@+id/tags" style="@style/ClickableListItem" android:text="Tags" />
-            <TextView android:id="@+id/network" style="@style/ClickableListItem" android:text="Network" />
-            <TextView android:id="@+id/settings" style="@style/ClickableListItem" android:text="Settings" android:textStyle="bold" android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/music"
+                style="@style/ClickableListItem"
+                android:text="Music" />
+
+            <TextView
+                android:id="@+id/diary"
+                style="@style/ClickableListItem"
+                android:text="Diary" />
+
+
+            <TextView
+                android:id="@+id/reviews"
+                style="@style/ClickableListItem"
+                android:text="Reviews" />
+
+
+            <TextView
+                android:id="@+id/lists"
+                style="@style/ClickableListItem"
+                android:text="Lists" />
+
+            <TextView
+                android:id="@+id/watchlist"
+                style="@style/ClickableListItem"
+                android:text="Watchlist" />
+
+            <TextView
+                android:id="@+id/likes"
+                style="@style/ClickableListItem"
+                android:text="Likes" />
+
+            <TextView
+                android:id="@+id/tags"
+                style="@style/ClickableListItem"
+                android:text="Tags" />
+
+            <TextView
+                android:id="@+id/network"
+                style="@style/ClickableListItem"
+                android:text="Network" />
+
+            <TextView
+                android:id="@+id/settings"
+                style="@style/ClickableListItem"
+                android:text="Settings"
+                android:textStyle="bold"
+                android:textColor="@color/white" />
 
         </LinearLayout>
     </ScrollView>
+
+    <!-- RecyclerView per i contenuti dinamici dei tab -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profileRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="56dp"
+        android:visibility="gone"
+        android:background="@color/scrollView"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

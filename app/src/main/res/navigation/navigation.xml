@@ -76,6 +76,9 @@
             android:id="@+id/action_profileFragment_pop_including_homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_ratedMusic"
+            app:destination="@id/ratedMusic" />
     </fragment>
 
     <!-- Fragment Settings -->
@@ -100,7 +103,13 @@
             app:destination="@id/settingsFragment" />
     </fragment>
 
-    <!-- Fragment change password-->
+    <!-- Fragment ratedMusic-->
+    <fragment
+        android:id="@+id/ratedMusic"
+        android:name="com.example.musicboxd.MusicFragment"
+        android:label="Music"
+        tools:layout="@layout/fragment_rated_music" >
+    </fragment>
 
 
 </navigation>

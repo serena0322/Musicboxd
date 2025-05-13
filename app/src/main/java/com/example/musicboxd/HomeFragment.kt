@@ -14,9 +14,39 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.adapter.MusicAdapter
 import com.google.android.material.tabs.TabLayout
 
+
+
 class HomeFragment : Fragment() {
 
     private lateinit var tabLayout: TabLayout
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MusicAdapter
+
+    // Dati fittizi per ogni tab
+    private val musicList = listOf(
+        MusicItem("Bohemian Rhapsody", "Queen"),
+        MusicItem("Billie Jean", "Michael Jackson"),
+        MusicItem("Imagine", "John Lennon")
+    )
+
+    private val reviewList = listOf(
+        MusicItem("Recensione 1", "Album A"),
+        MusicItem("Recensione 2", "Album B"),
+        MusicItem("Recensione 3", "Album C")
+    )
+
+    private val listList = listOf(
+        MusicItem("Top 10 Rock", "Vari artisti"),
+        MusicItem("Best of 2024", "Vari artisti"),
+        MusicItem("Favorites", "Vari artisti")
+    )
+
+    private val journalList = listOf(
+        MusicItem("Giorno 1", "Ascoltato Album X"),
+        MusicItem("Giorno 2", "Scoperto Artista Y"),
+        MusicItem("Giorno 3", "Playlist Z")
+    )
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,83 +57,47 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         tabLayout = view.findViewById(R.id.tabLayout)
+        recyclerView = view.findViewById(R.id.homeRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Adapter inizializzato con la prima lista (Music)
+        adapter = MusicAdapter(musicList)
+        recyclerView.adapter = adapter
+
+        // Listener dei tab
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> {
-                        // Tab Music cliccato
+                        adapter.updateData(musicList)
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.home
-                            )
+                            ContextCompat.getColor(requireContext(), R.color.home)
                         )
                     }
-
                     1 -> {
-                        // Tab Reviews cliccato
+                        adapter.updateData(reviewList)
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.add
-                            )
+                            ContextCompat.getColor(requireContext(), R.color.add)
                         )
                     }
-
                     2 -> {
-                        // Tab Lists cliccato
+                        adapter.updateData(listList)
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.teal_200
-                            )
+                            ContextCompat.getColor(requireContext(), R.color.teal_200)
                         )
                     }
-
                     3 -> {
-                        // Tab Journal cliccato
+                        adapter.updateData(journalList)
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.profile
-                            )
+                            ContextCompat.getColor(requireContext(), R.color.profile)
                         )
                     }
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-                // Opzionale: azioni quando il tab viene deselezionato
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                // Opzionale: azioni quando il tab viene riselezionato
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-
-        val recyclerView = view.findViewById<RecyclerView>(R.id.musicRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Esempio lista statica
-        val musicList = listOf(
-            MusicItem("Bohemian Rhapsody", "Queen"),
-            MusicItem("Billie Jean", "Michael Jackson"),
-            MusicItem("Imagine", "John Lennon"),
-            MusicItem("Smells Like Teen Spirit", "Nirvana"),
-            MusicItem("Like a Rolling Stone", "Bob Dylan"),
-            MusicItem("Hotel California", "Eagles"),
-            MusicItem("Hey Jude", "The Beatles"),
-            MusicItem("Lose Yourself", "Eminem"),
-            MusicItem("Hallelujah", "Leonard Cohen"),
-            MusicItem("Wonderwall", "Oasis"),
-            MusicItem("Rolling in the Deep", "Adele"),
-            MusicItem("Shape of You", "Ed Sheeran"),
-            MusicItem("Blinding Lights", "The Weeknd"),
-            MusicItem("Bad Guy", "Billie Eilish"),
-            MusicItem("Uptown Funk", "Mark Ronson ft. Bruno Mars"),
-        )
-        val adapter = MusicAdapter(musicList)
-        recyclerView.adapter = adapter
 
         return view
     }
@@ -138,4 +132,5 @@ class HomeFragment : Fragment() {
             textView.invalidate()
         }
     }
+
 }

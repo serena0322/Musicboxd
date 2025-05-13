@@ -1,6 +1,5 @@
 package com.example.musicboxd.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,23 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.MusicItem
 import com.example.musicboxd.R
 
-class MusicAdapter(private val items: List<MusicItem>) :
+class MusicAdapter(private var items: List<MusicItem>) :
     RecyclerView.Adapter<MusicAdapter.MusicViewHolder>() {
 
-    class MusicViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.musicTitle)
-        val artist: TextView = view.findViewById(R.id.musicArtist)
-        val row: View = view.findViewById(R.id.row)
+    class MusicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val title: TextView = itemView.findViewById(R.id.musicTitle)
+        val artist: TextView = itemView.findViewById(R.id.musicArtist)
     }
 
-    @SuppressLint("ResourceType")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.drawable.item_music, parent, false)
-        var holder= MusicViewHolder(view)
-        holder.row.setOnClickListener{
-            //al click
-        }
-        return holder
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_home, parent, false)
+        return MusicViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
@@ -35,5 +29,9 @@ class MusicAdapter(private val items: List<MusicItem>) :
     }
 
     override fun getItemCount(): Int = items.size
-}
 
+    fun updateData(newItems: List<MusicItem>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+}

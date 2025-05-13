@@ -115,18 +115,27 @@ class SettingsFragment: Fragment() {
         }
 
         //Logout
-        val signOut = view.findViewById<TextView>(R.id.signOut)
-        signOut.setOnClickListener {
+        val logout = view.findViewById<TextView>(R.id.signOut)
+        logout.setOnClickListener {
             // Cancella solo lo stato di login, ma lascia username e password
             val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
-            // Rimuovi solo lo stato di login
-            editor.remove("isLoggedIn")
-            editor.apply()
-            // Reindirizza l'utente alla schermata di login
-            val intent = Intent(requireContext(), SecondActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()  // Chiude l'attività corrente per evitare che l'utente torni indietro
+            AlertDialog.Builder(requireContext())
+                .setTitle("Esci")
+                .setMessage("Sei sicuro di voler uscire?")
+                .setPositiveButton("Sì") { dialog, _ ->
+                    // Rimuovi solo lo stato di login
+                    editor.remove("isLoggedIn")
+                    editor.apply()
+                    // Reindirizza l'utente alla schermata di login
+                    val intent = Intent(requireContext(), SecondActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish() // Chiude l'attività corrente per evitare che l'utente torni indietro
+                }
+                .setNegativeButton("Annulla") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
 
         //Eliminazione Account
