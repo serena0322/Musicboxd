@@ -8,7 +8,7 @@
     <!-- Fragment Home -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.musicboxd.HomeFragment"
+        android:name="com.example.musicboxd.fragments.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -28,7 +28,7 @@
     <!-- Fragment Search -->
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.musicboxd.SearchFragment"
+        android:name="com.example.musicboxd.fragments.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search"  >
         <action
@@ -40,7 +40,7 @@
     <!-- Fragment Add-->
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.example.musicboxd.AddFragment"
+        android:name="com.example.musicboxd.fragments.AddFragment"
         android:label="Add"
         tools:layout="@layout/fragment_add" >
 
@@ -53,7 +53,7 @@
     <!-- Fragment Activity-->
     <fragment
         android:id="@+id/activityFragment"
-        android:name="com.example.musicboxd.ActivityFragment"
+        android:name="com.example.musicboxd.fragments.ActivityFragment"
         android:label="Activity"
         tools:layout="@layout/fragment_activity" >
 
@@ -66,7 +66,7 @@
     <!-- Fragment Profile -->
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.musicboxd.ProfileFragment"
+        android:name="com.example.musicboxd.fragments.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -84,7 +84,7 @@
     <!-- Fragment Settings -->
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.musicboxd.SettingsFragment"
+        android:name="com.example.musicboxd.fragments.SettingsFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -95,7 +95,7 @@
     <!-- Fragment password-->
     <fragment
         android:id="@+id/changePassword"
-        android:name="com.example.musicboxd.PasswordFragment"
+        android:name="com.example.musicboxd.fragments.PasswordFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_change_password_" >
         <action
@@ -106,7 +106,7 @@
     <!-- Fragment ratedMusic-->
     <fragment
         android:id="@+id/ratedMusic"
-        android:name="com.example.musicboxd.MusicFragment"
+        android:name="com.example.musicboxd.fragments.MusicFragment"
         android:label="Music"
         tools:layout="@layout/fragment_rated_music" >
     </fragment>

@@ -1,12 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:orientation="horizontal" android:padding="8dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@color/scrollView">
 
     <ImageView
         android:id="@+id/albumCover"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="5dp"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -19,6 +23,8 @@
             android:id="@+id/songTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Title"
             android:textStyle="bold"
             android:textSize="16sp" />
 
@@ -26,6 +32,20 @@
             android:id="@+id/songArtist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Artist"
+            android:visibility="visible"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/albumName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Album Name"
+            android:visibility="visible"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
     </LinearLayout>
+
 </LinearLayout>

@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 android {
@@ -27,6 +29,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -69,11 +72,25 @@ dependencies {
 // Per la RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.0")
 
-// Per caricare immagini (copertina album)
-    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("com.squareup.picasso:picasso:2.71828") // Per caricare immagini (copertina album)
     //
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     //
-    implementation ("com.github.bumptech.glide:glide:4.15.1")  // Versione stabile di Glide
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")  // Necessario per la generazione del codice di Glide
+    implementation("com.github.bumptech.glide:glide:4.15.1") // OK
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0")) // OK
+    implementation("com.google.firebase:firebase-analytics") // OK
+
+    implementation("androidx.room:room-runtime:2.6.1") // OK
+    implementation("androidx.room:room-ktx:2.6.1") // OK
+    kapt("androidx.room:room-compiler:2.6.1") // Aggiunta corretta se usi annotation processing per Room
+
+    kapt("com.google.dagger:dagger-compiler:2.46") // OK se usi Dagger
+
+    implementation("com.google.firebase:firebase-firestore-ktx:24.7.1")
+    implementation("com.google.firebase:firebase-auth:22.1.1")
+
+
 }
+

@@ -41,7 +41,7 @@
 
             <!-- Signed in as -->
             <TextView
-                android:id="@+id/signedInText"
+                android:id="@+id/username"
                 style="@style/ClickableListItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,14 +69,14 @@
                 android:text="Password and authentication" />
 
             <TextView
-                android:id="@+id/first_name"
+                android:id="@+id/firstName"
                 style="@style/ClickableListItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="First name" />
 
             <TextView
-                android:id="@+id/last_name"
+                android:id="@+id/lastName"
                 style="@style/ClickableListItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

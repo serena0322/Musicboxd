@@ -1,4 +1,4 @@
-package com.example.musicboxd
+package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle

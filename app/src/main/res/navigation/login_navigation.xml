@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/loginFragment"
-            android:name="com.example.musicboxd.LoginFragment"
+            android:name="com.example.musicboxd.fragments.LoginFragment"
             android:label="Login"
             tools:layout="@layout/fragment_login" >
             <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.musicboxd.SignInFragment"
+        android:name="com.example.musicboxd.fragments.SignInFragment"
         android:label="SignIn"
         tools:layout="@layout/fragment_sign_in" >
         <action

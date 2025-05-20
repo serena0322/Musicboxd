@@ -11,12 +11,12 @@ class ProfileAdapter(private var items: List<String>) :
     RecyclerView.Adapter<ProfileAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val text: TextView = itemView.findViewById(R.id.itemText)
+        val text: TextView = itemView.findViewById(R.id.userName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_profile, parent, false)
+            .inflate(R.layout.item_user, parent, false)
         return ViewHolder(view)
     }
 

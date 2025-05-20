@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicboxd.ActivityItem
+import com.example.musicboxd.classes.ActivityItem
 import com.example.musicboxd.R
 
 class ActivityAdapter(private var items: List<ActivityItem>) :

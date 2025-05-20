@@ -1,4 +1,4 @@
-package com.example.musicboxd
+package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.musicboxd.R
 import com.example.musicboxd.adapter.ProfileAdapter
 import com.google.android.material.tabs.TabLayout
 
@@ -45,10 +46,6 @@ class ProfileFragment: Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = ProfileAdapter(emptyList())
-
-//        recyclerView.layoutManager = layoutManager
-//        adapter = ProfileAdapter(emptyList()) // inizializza con lista vuota
-//        recyclerView.adapter = adapter
 
         tabLayout = view.findViewById(R.id.tabLayout)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

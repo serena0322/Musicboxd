@@ -1,7 +1,6 @@
-package com.example.musicboxd
+package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.LinearGradient
 import android.graphics.Shader
@@ -16,10 +15,13 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.musicboxd.MainActivity
+import com.example.musicboxd.R
+import com.google.firebase.auth.FirebaseAuth
 
 
 class LoginFragment : Fragment(){
-    private lateinit var usernameEditText: EditText
+    private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
 
@@ -31,58 +33,42 @@ class LoginFragment : Fragment(){
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        usernameEditText = view.findViewById(R.id.username)
+        emailEditText = view.findViewById(R.id.email)
         passwordEditText = view.findViewById(R.id.password)
         loginButton = view.findViewById(R.id.buttonLogin)
 
-        loginButton.setOnClickListener {
-            val enteredIdentifier = usernameEditText.text.toString()
-            val enteredPassword = passwordEditText.text.toString()
-
-            val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            val savedUsername = sharedPreferences.getString("saved_username", null)
-            val savedEmail = sharedPreferences.getString("saved_email", null)
-            val savedPassword = sharedPreferences.getString("saved_password", null)
-
-            // Confronta enteredIdentifier con username o email
-            val isLoginValid = (enteredIdentifier == savedUsername || enteredIdentifier == savedEmail) &&
-                    enteredPassword == savedPassword
-            if (isLoginValid) {
-                sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
-                navigateToHomeScreen()
-            } else {
-                Toast.makeText(context, "Credenziali errate", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         val goToRegister = view.findViewById<TextView>(R.id.textViewSignup)
+
+        loginButton.setOnClickListener {
+            val enteredEmail = emailEditText.text.toString()
+            val enteredPassword = passwordEditText.text.toString()
+            val auth = FirebaseAuth.getInstance()
+
+            auth.signInWithEmailAndPassword(enteredEmail, enteredPassword)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        navigateToHomeScreen()
+                    } else {
+                        Toast.makeText(context, "Credenziali errate", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
         goToRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signInFragment)
         }
-
         return view
     }
 
     private fun navigateToHomeScreen() {
-        // Usa requireContext() o requireActivity() per ottenere il contesto
         val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()  // Chiudi la schermata di login
     }
 
-    //Login automatico al riavvio dell'app + sfumatura nome app
+
+    // sfumatura nome app
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Login automatico
-        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
-        if (isLoggedIn) {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-            requireActivity().finish()
-        }
-
-        //sfumatura nome app
 
         // Inizializzazione del TextView dopo l'inflazione e controllo su null
         val textView = view.findViewById<TextView>(R.id.Title)

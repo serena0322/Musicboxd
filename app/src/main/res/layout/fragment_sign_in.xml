@@ -12,7 +12,7 @@
         android:id="@+id/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="204dp"
+        android:layout_marginTop="200dp"
         android:fontFamily="@font/poppinsbold"
         android:text="Sign In"
         android:textAlignment="center"
@@ -20,15 +20,15 @@
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Email -->
     <EditText
         android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/edit_text_background"
         android:fontFamily="sans-serif"
         android:hint="Email"
@@ -37,24 +37,24 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/Title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Title" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Username -->
     <EditText
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:fontFamily="sans-serif"
         android:hint="Username"
+        android:inputType="textPersonName"
         android:padding="12dp"
-        android:layout_marginTop="10dp"
-        android:inputType="text"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:fontFamily="sans-serif"
-        android:background="@drawable/edit_text_background"
         app:layout_constraintTop_toBottomOf="@id/email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -64,15 +64,15 @@
         android:id="@+id/password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:fontFamily="sans-serif"
         android:hint="Password"
-        android:layout_marginTop="10dp"
+        android:inputType="textPassword"
         android:padding="12dp"
-        android:inputType="textVisiblePassword"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:fontFamily="sans-serif"
-        android:background="@drawable/edit_text_background"
         app:layout_constraintTop_toBottomOf="@id/username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -85,6 +85,7 @@
         android:text="Sign In"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_background"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "293689309038",
+    "project_id": "musicboxd-e0c37",
+    "storage_bucket": "musicboxd-e0c37.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293689309038:android:0677a6230f358fa5fef37f",
+        "android_client_info": {
+          "package_name": "com.example.musicboxd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3bdSxMhrUh8DxOTzPzPV-wP_aYGlKd5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
