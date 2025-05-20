@@ -1,88 +1,39 @@
 package com.example.musicboxd.fragments
 
-import android.content.Context
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.musicboxd.R
-import com.example.musicboxd.fragments.ReviewActivity
-import com.example.musicboxd.adapter.TrackAdapter
-import com.example.musicboxd.viewModels.SearchViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.R as MaterialR
 
-class AddFragment : BottomSheetDialogFragment() {
-
-    private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: TrackAdapter
-
+class AddFragment: Fragment(){
+    @SuppressLint("ServiceCast")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_add, container, false)
-    }
+        // Inflazione del layout
+        val view = inflater.inflate(R.layout.fragment_add, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Inizializza RecyclerView e Adapter (come in SearchFragment)
-        adapter = TrackAdapter() { selectedTrack ->
-            val intent = Intent(requireContext(), ReviewActivity::class.java).apply {
-                putExtra("title", selectedTrack.title)
-                putExtra("artist", selectedTrack.artist?.name)
-                putExtra("cover", selectedTrack.album?.cover)
-            }
-            startActivity(intent)
-        }
-        val recyclerView = view.findViewById<RecyclerView>(R.id.addScrollView)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Configura SearchView
+        // Inizializza la SearchView
         val searchView = view.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    viewModel.search(query)
-                    // Nasconde la tastiera dopo la ricerca
-                    val imm =
-                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(view.windowToken, 0)
-                }
-                return true
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean = false
-        })
+        // Personalizza il testo di ricerca e l'hint
+        searchView.queryHint = "Search with Musicboxd..." // Imposta l'hint
 
-        // Osserva i risultati della ricerca
-        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            adapter.submitList(tracks)
-        }
+        // Inizializza EditText interno della SearchView
+        val searchEditText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+
+        // Cambia il colore del testo e dell'hint tramite EditText
+        searchEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // colore del testo digitato
+        searchEditText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.white)) // colore dell'hint
+
+        return view
     }
-
-    override fun onStart() {
-        super.onStart()
-        val view = dialog?.findViewById<View>(MaterialR.id.design_bottom_sheet)
-        view?.let {
-            val layoutParams = it.layoutParams
-            layoutParams.height = (resources.displayMetrics.heightPixels * 0.95).toInt()
-            it.layoutParams = layoutParams
-            val behavior = BottomSheetBehavior.from(it)
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-            it.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded)
-        }
-    }
-
 }

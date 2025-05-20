@@ -3,13 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.musicboxd" >
 
-    <!-- Permessi per Android 13+ -->
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- Per compatibilità con versioni precedenti (Android 12 e inferiori) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -33,15 +26,6 @@
         </activity>
 
         <activity android:name=".MainActivity" />
-
-        <activity android:name=".fragments.ReviewActivity" />
-
-        <activity android:name=".fragments.InformationActivity" />
-
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
     </application>
 

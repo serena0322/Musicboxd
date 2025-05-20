@@ -1,67 +1,38 @@
 package com.example.musicboxd.fragments
 
 import android.os.Bundle
-import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
-import com.example.musicboxd.viewModels.SearchViewModel
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicboxd.R
-import android.content.Context
-import android.content.Intent
-import android.view.inputmethod.InputMethodManager
-import com.example.musicboxd.adapter.TrackResponse
-import com.example.musicboxd.fragments.InformationActivity
-import com.example.musicboxd.classes.Track
+
 
 class SearchFragment : Fragment() {
+    private lateinit var recyclerView: RecyclerView
 
-    private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: TrackResponse
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        val searchEditText =
+            searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = TrackResponse { selectedTrack ->
-            val intent = Intent(requireContext(), InformationActivity::class.java).apply {
-                putExtra("track", selectedTrack)
-                putExtra("cover", selectedTrack.album?.cover)
-            }
-            startActivity(intent)
-        }
-
-        adapter = TrackResponse { selectedTrack ->
-            val intent = Intent(requireContext(), InformationActivity::class.java).apply {
-                putExtra("track", selectedTrack)
-                putExtra("cover", selectedTrack.album?.cover)
-            }
-            startActivity(intent)
-        }
-
-        val recyclerView = view.findViewById<RecyclerView>(R.id.searchScrollView)
-        recyclerView.adapter = adapter
+        recyclerView = view.findViewById(R.id.searchRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val searchView = view.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    viewModel.search(query)
-                    //nasconde la tastiera dopo la ricerca
-                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(view.windowToken, 0)
-                }
-                return true
-            }
-            override fun onQueryTextChange(newText: String?): Boolean = false
-        })
+        recyclerView.visibility = View.GONE
 
-        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            adapter.submitList(tracks as List<Track?>?)
-        }
+        searchEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        searchEditText.setHintTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        return view
     }
 }

@@ -1,5 +1,5 @@
 package com.example.musicboxd.interfaces
-import com.example.musicboxd.local.User
+import com.example.musicboxd.classes.User
 
 
 //si occupa solo di accedere ai dati (lettura/scrittura su Firestore)

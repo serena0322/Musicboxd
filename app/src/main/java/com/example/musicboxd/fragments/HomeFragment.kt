@@ -1,22 +1,38 @@
 package com.example.musicboxd.fragments
+import Song
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
+import com.example.musicboxd.adapter.SongAdapter
+import com.example.musicboxd.classes.Album
+import com.example.musicboxd.classes.Artist
+import com.example.musicboxd.classes.Image
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class HomeFragment : Fragment() {
 
     private lateinit var tabLayout: TabLayout
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SongAdapter
+
+    // Liste dati
+    private val songs = mutableListOf<Song>()
+    private val artistMap = mutableMapOf<String, Artist>()
+    private val albumMap = mutableMapOf<String, Album>()
+    private val albumImagesMap = mutableMapOf<String, List<Image>>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +46,10 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.homeRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        adapter = SongAdapter(songs, artistMap, albumMap, albumImagesMap)
+        recyclerView.adapter = adapter
+
+        loadSongsFromFirestore()
         // Listener dei tab
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -66,6 +86,61 @@ class HomeFragment : Fragment() {
 
         return view
     }
+
+    private fun loadSongsFromFirestore() {
+        val db = Firebase.firestore
+
+        db.collection("Song").get().addOnSuccessListener { songSnapshot ->
+            val songList = songSnapshot.toObjects(Song::class.java)
+            songs.clear()
+            songs.addAll(songList)
+
+            db.collection("Artist").get().addOnSuccessListener { artistSnapshot ->
+                val newArtistMap: Map<String, Artist> = artistSnapshot.documents.mapNotNull { doc ->
+                    val artist = doc.toObject(Artist::class.java)
+                    val id = doc.id
+                    if (artist != null) id to artist else null
+                }.toMap()
+
+                this.artistMap.clear()
+                this.artistMap.putAll(newArtistMap)
+                adapter.updateArtistMap(this.artistMap)
+
+                db.collection("Album").get().addOnSuccessListener { albumSnapshot ->
+                    val newAlbumMap: Map<String, Album> = albumSnapshot.documents.mapNotNull { doc ->
+                        val album = doc.toObject(Album::class.java)
+                        val id = doc.id
+                        if (album != null) id to album else null
+                    }.toMap()
+
+                    this.albumMap.clear()
+                    this.albumMap.putAll(newAlbumMap)
+                    adapter.updateAlbumMap(this.albumMap)
+
+                    db.collection("Image").get().addOnSuccessListener { imageSnapshot ->
+                        val imageList = imageSnapshot.toObjects(Image::class.java)
+
+                        this.albumImagesMap.clear()
+                        this.albumImagesMap.putAll(
+                            imageList.filter { it.albumId.isNotBlank() }
+                                .groupBy { it.albumId }
+                        )
+
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }.addOnFailureListener {
+            Log.e("Firestore", "Errore nel caricamento songs: ${it.message}", it)
+            Toast.makeText(
+                requireContext(),
+                "Errore nel caricamento dati: ${it.message}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+
 
     //sfumatura titolo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

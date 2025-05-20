@@ -1,7 +1,7 @@
-package com.example.musicboxd.fragments
+package com.example.musicboxd
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -12,147 +12,134 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.musicboxd.SecondActivity
-import com.example.musicboxd.R
 import androidx.navigation.fragment.findNavController
-import com.example.musicboxd.`object`.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
-
-class SettingsFragment : Fragment() {
-
-    private lateinit var username: TextView
-    private lateinit var firstName: TextView
-    private lateinit var lastName: TextView
-    private lateinit var email: TextView
-
+class SettingsFragment: Fragment() {
+    @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
-    }
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // UI
+        val username = view.findViewById<TextView>(R.id.username)
+        val firstName = view.findViewById<TextView>(R.id.firstName)
+        val lastName = view.findViewById<TextView>(R.id.lastName)
+        val email = view.findViewById<TextView>(R.id.email)
 
-        // UI binding
-        username = view.findViewById(R.id.username)
-        firstName = view.findViewById(R.id.firstName)
-        lastName = view.findViewById(R.id.lastName)
-        email = view.findViewById(R.id.email)
+        // Inizializzazione Firebase
+        val auth = FirebaseAuth.getInstance()
+        val firestore = FirebaseFirestore.getInstance()
+        //Per ottenere l'ID dell’utente
+        val currentUser = auth.currentUser
+        //accedere al suo uid
+        val userDocRef = firestore.collection("users").document(currentUser!!.uid)
+        username.text = "Signed in as ${currentUser.email}"
 
-        // Osserva LiveData per aggiornare UI
-        UserRepository.currentUser.observe(viewLifecycleOwner) { userWithActivities ->
-            val user = userWithActivities?.user
-            user?.let {
-                username.text = "Signed in as ${it.username}"
-                firstName.text = "First name: ${it.firstName}"
-                lastName.text = "Last name: ${it.lastName}"
-                email.text = "Email: ${it.email}"
+        // Recupera i dati da Firestore
+        userDocRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                firstName.text = "First name: ${document.getString("firstName") ?: ""}"
+                lastName.text = "Last name: ${document.getString("lastName") ?: ""}"
+                email.text = "Email: ${document.getString("email") ?: currentUser.email}"
             }
         }
-
-        // Click listeners per aggiornare campi
-        username.setOnClickListener {
-            showInputDialog("Insert your username", "Enter your username", "username") {
-                username.text = "Signed in as $it"
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Errore nel recupero dati: ${it.message}", Toast.LENGTH_SHORT).show()
             }
-        }
 
+
+        // Aggiornamento nome
         firstName.setOnClickListener {
-            showInputDialog("Insert your name", "Enter your first name", "firstName") {
-                firstName.text = "First name: $it"
+            val editText = EditText(requireContext()).apply {
+                inputType = InputType.TYPE_CLASS_TEXT
+                hint = "Enter your first name"
             }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Insert your name")
+                .setView(editText)
+                .setPositiveButton("OK") { dialog, _ ->
+                    val name = editText.text.toString()
+                    if (name.isNotBlank()) {
+                        firstName.text = "First name: $name"
+                        userDocRef.set(mapOf("firstName" to name), SetOptions.merge())
+                        Toast.makeText(requireContext(), "Nome aggiornato", Toast.LENGTH_SHORT).show()
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+                .show()
         }
 
+        // Aggiornamento cognome
         lastName.setOnClickListener {
-            showInputDialog("Insert your last name", "Enter your last name", "lastName") {
-                lastName.text = "Last name: $it"
+            val editText = EditText(requireContext()).apply {
+                inputType = InputType.TYPE_CLASS_TEXT
+                hint = "Enter your last name"
             }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Insert your last name")
+                .setView(editText)
+                .setPositiveButton("OK") { dialog, _ ->
+                    val surname = editText.text.toString()
+                    if (surname.isNotBlank()) {
+                        lastName.text = "Last name: $surname"
+                        userDocRef.set(mapOf("lastName" to surname), SetOptions.merge())
+                        Toast.makeText(requireContext(), "Cognome aggiornato", Toast.LENGTH_SHORT).show()
+
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+                .show()
         }
 
         // Logout
         view.findViewById<TextView>(R.id.signOut).setOnClickListener {
-            showConfirmDialog("Esci", "Sei sicuro di voler uscire?") {
-                FirebaseAuth.getInstance().signOut()
-                startActivity(Intent(requireContext(), SecondActivity::class.java))
-                requireActivity().finish()
-            }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Esci")
+                .setMessage("Sei sicuro di voler uscire?")
+                .setPositiveButton("Sì") { _, _ ->
+                    auth.signOut()
+                    startActivity(Intent(requireContext(), SecondActivity::class.java))
+                    requireActivity().finish()
+                }
+                .setNegativeButton("Annulla", null)
+                .show()
         }
 
         // Eliminazione account
         view.findViewById<TextView>(R.id.cancel).setOnClickListener {
-            showConfirmDialog(
-                "Elimina account",
-                "Sei sicuro di voler eliminare il tuo account? Questa operazione è irreversibile."
-            ) {
-                deleteUser()
-            }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Elimina account")
+                .setMessage("Sei sicuro di voler eliminare il tuo account? Questa operazione è irreversibile.")
+                .setPositiveButton("Sì") { _, _ ->
+                    userDocRef.delete()
+                    currentUser.delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Account eliminato", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(requireContext(), SecondActivity::class.java))
+                            requireActivity().finish()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Errore: ${it.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+                .setNegativeButton("Annulla", null)
+                .show()
         }
 
         // Sicurezza
         view.findViewById<TextView>(R.id.security).setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_PasswordandAuthentication)
         }
-    }
 
-    private fun showInputDialog(
-        title: String,
-        hint: String,
-        field: String,
-        onUpdateTextView: (String) -> Unit
-    ) {
-        val editText = EditText(requireContext()).apply {
-            inputType = InputType.TYPE_CLASS_TEXT
-            this.hint = hint
-        }
-
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setView(editText)
-            .setPositiveButton("OK") { dialog, _ ->
-                val newValue = editText.text.toString()
-                if (newValue.isNotBlank()) {
-                    UserRepository.updateField(field, newValue, {
-                        onUpdateTextView(newValue)
-                        Toast.makeText(requireContext(), "$field aggiornato", Toast.LENGTH_SHORT).show()
-                    }, {
-                        Toast.makeText(requireContext(), "Errore: ${it.message}", Toast.LENGTH_SHORT).show()
-                    })
-                }
-                dialog.dismiss()
-            }
-            .setNegativeButton("Annulla") { dialog, _ -> dialog.cancel() }
-            .show()
-    }
-
-    private fun showConfirmDialog(title: String, message: String, onConfirm: () -> Unit) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Sì") { _, _ -> onConfirm() }
-            .setNegativeButton("Annulla", null)
-            .show()
-    }
-
-    private fun deleteUser() {
-        val auth = FirebaseAuth.getInstance()
-        val uid = auth.currentUser?.uid
-
-        if (uid != null) {
-            FirebaseFirestore.getInstance().collection("User").document(uid).delete()
-        }
-
-        auth.currentUser?.delete()
-            ?.addOnSuccessListener {
-                requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).edit().clear().apply()
-                Toast.makeText(requireContext(), "Account eliminato", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(requireContext(), SecondActivity::class.java))
-                requireActivity().finish()
-            }
-            ?.addOnFailureListener {
-                Toast.makeText(requireContext(), "Errore: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
+        return view
     }
 }
+
