@@ -31,7 +31,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/search_background"
+        android:background="@drawable/searchbar"
         android:queryHint="Cerca su Musicboxd..."
         app:iconifiedByDefault="false"
         app:layout_constraintTop_toBottomOf="@id/Title"
@@ -39,81 +39,16 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Contenuto scrollabile -->
-    <ScrollView
-        android:id="@+id/scrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:background="@color/scrollView"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/searchView">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/browseBy"
-                style="@style/ClickableListItem"
-                android:textColor="@color/white"
-                android:padding="10dp"
-                android:text="Browse by"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/releaseDate"
-                style="@style/ClickableListItem"
-                android:text="Release date" />
-
-            <TextView android:id="@+id/genreCountryLanguage" style="@style/ClickableListItem" android:text="Genre, country or language" />
-            <TextView android:id="@+id/service" style="@style/ClickableListItem" android:text="Service" />
-            <TextView android:id="@+id/mostPopular" style="@style/ClickableListItem" android:text="Most popular" />
-            <TextView android:id="@+id/highestRated" style="@style/ClickableListItem" android:text="Highest rated" />
-            <TextView android:id="@+id/mostAnticipated" style="@style/ClickableListItem" android:text="Most anticipated" />
-            <TextView android:id="@+id/top250" style="@style/ClickableListItem" android:text="Top 250 narrative features" />
-            <TextView android:id="@+id/featuredLists" style="@style/ClickableListItem" android:text="Featured lists" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="16dp"
-                android:background="#333" />
-
-            <TextView
-                android:id="@+id/Letteboxd"
-                style="@style/ClickableListItem"
-                android:textColor="@color/white"
-                android:padding="10dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="Letterboxd.com" />
-
-            <TextView android:id="@+id/journal" style="@style/ClickableListItem" android:text="Journal" />
-            <TextView android:id="@+id/podcast" style="@style/ClickableListItem" android:text="Podcast" />
-            <TextView android:id="@+id/showdown" style="@style/ClickableListItem" android:text="Showdown" />
-            <TextView android:id="@+id/yearinreview" style="@style/ClickableListItem" android:text="Year in Review" />
-            <TextView android:id="@+id/about" style="@style/ClickableListItem" android:text="About" />
-            <TextView android:id="@+id/social" style="@style/ClickableListItem" android:text="Social" />
-            <TextView android:id="@+id/giftguide" style="@style/ClickableListItem" android:text="Gift Guide" />
-            <TextView android:id="@+id/merch" style="@style/ClickableListItem" android:text="Merch" />
-            <TextView android:id="@+id/contact" style="@style/ClickableListItem" android:text="Lists" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchRecyclerView"
-        android:layout_width="396dp"
-        android:layout_height="719dp"
-        android:background="#181B20"
-        app:layout_constraintEnd_toEndOf="@+id/scrollView"
-        app:layout_constraintStart_toStartOf="@+id/scrollView"
-        app:layout_constraintTop_toTopOf="@+id/scrollView"
-        tools:ignore="UnknownId" />
-
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>
