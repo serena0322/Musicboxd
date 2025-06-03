@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.NavHostFragment
+import com.example.musicboxd.fragments.AddSongBottomSheet
 
 class MainActivity() : AppCompatActivity() {
 
@@ -58,8 +59,11 @@ class MainActivity() : AppCompatActivity() {
 
                 R.id.nav_add -> {
                     bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_add_icon)
-                    navController.navigate(R.id.addFragment)
-                    true
+                    // Mostra la Bottom Sheet invece di cambiare fragment
+                    val bottomSheet = AddSongBottomSheet()
+                    bottomSheet.show(supportFragmentManager, "BottomSheetAddSong")
+
+                    false // NON cambiamo fragment
                 }
 
                 R.id.nav_activity -> {

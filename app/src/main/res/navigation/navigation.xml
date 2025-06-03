@@ -42,7 +42,7 @@
         android:id="@+id/addFragment"
         android:name="com.example.musicboxd.fragments.AddFragment"
         android:label="Add"
-        tools:layout="@layout/fragment_add" >
+        tools:layout="@layout/bottom_sheet_add_song" >
 
         <action
             android:id="@+id/action_addFragment_pop_including_homeFragment"

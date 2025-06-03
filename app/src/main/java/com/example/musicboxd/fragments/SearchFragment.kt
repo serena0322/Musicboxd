@@ -13,18 +13,19 @@ import com.example.musicboxd.adapter.TrackAdapter
 import com.example.musicboxd.R
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import com.example.musicboxd.adapter.TrackAdapter2
 
 class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: TrackAdapter
+    private lateinit var adapter: TrackAdapter2
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = TrackAdapter()
+        adapter = TrackAdapter2()
         val recyclerView = view.findViewById<RecyclerView>(R.id.searchScrollView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
