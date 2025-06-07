@@ -11,8 +11,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="8dp"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/home_final" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="0dp"
