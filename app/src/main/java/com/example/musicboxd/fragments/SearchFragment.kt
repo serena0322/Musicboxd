@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.SearchView
 import com.example.musicboxd.viewModels.SearchViewModel
-import com.example.musicboxd.adapter.TrackAdapter
 import com.example.musicboxd.R
 import android.content.Context
+import android.content.Intent
 import android.view.inputmethod.InputMethodManager
 import com.example.musicboxd.adapter.TrackAdapter2
+import com.example.musicboxd.InformationActivity
 
 class SearchFragment : Fragment() {
 
@@ -25,7 +26,14 @@ class SearchFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = TrackAdapter2()
+        adapter = TrackAdapter2 { selectedTrack ->
+            val intent = Intent(requireContext(), InformationActivity::class.java).apply {
+                putExtra("track", selectedTrack)
+                putExtra("cover", selectedTrack.album?.cover)
+            }
+            startActivity(intent)
+        }
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.searchScrollView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

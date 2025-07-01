@@ -24,9 +24,9 @@ class TrackAdapter(
 
         fun bind(track: Track) {
             title.text = track.title
-            artist.text = track.artist.name
+            artist.text = track.artist?.name
             Glide.with(itemView.context)
-                .load(track.album.cover)
+                .load(track.album?.cover)
                 //.placeholder(R.drawable.ic_music_placeholder)
                 .into(cover)
 
@@ -47,7 +47,7 @@ class TrackAdapter(
     class DiffCallback : DiffUtil.ItemCallback<Track>() {
         override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
             return oldItem.title == newItem.title &&
-                   oldItem.artist.name == newItem.artist.name
+                   oldItem.artist?.name == newItem.artist?.name
         }
 
         override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {

@@ -8,27 +8,34 @@ import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.classes.Track
 
-class TrackAdapter2 : ListAdapter<Track, TrackAdapter2.TrackViewHolder>(DiffCallback()) {
+class TrackAdapter2(
+    private val onTrackClick: (Track) -> Unit
+) : ListAdapter<Track, TrackAdapter2.TrackViewHolder>(DiffCallback()) {
 
     class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title = itemView.findViewById<TextView>(R.id.title)
         private val artist = itemView.findViewById<TextView>(R.id.artist)
         private val cover = itemView.findViewById<ImageView>(R.id.cover)
 
-        fun bind(track: Track) {
+        fun bind(track: Track, onClick: (Track) -> Unit) {
             title.text = track.title
-            artist.text = track.artist.name
-            Glide.with(itemView.context).load(track.album.cover).into(cover)
+            artist.text = track.artist?.name
+            Glide.with(itemView.context).load(track.album?.cover).into(cover)
+
+            itemView.setOnClickListener {
+                onClick(track)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_track, parent, false)
         return TrackViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onTrackClick)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Track>() {

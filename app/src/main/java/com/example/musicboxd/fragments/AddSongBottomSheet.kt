@@ -41,8 +41,8 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         adapter = TrackAdapter() { selectedTrack ->
             val intent = Intent(requireContext(), ReviewActivity::class.java).apply {
                 putExtra("title", selectedTrack.title)
-                putExtra("artist", selectedTrack.artist.name)
-                putExtra("cover", selectedTrack.album.cover)
+                putExtra("artist", selectedTrack.artist?.name)
+                putExtra("cover", selectedTrack.album?.cover)
             }
             startActivity(intent)
         }
