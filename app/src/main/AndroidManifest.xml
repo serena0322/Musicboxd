@@ -27,6 +27,11 @@
 
         <activity android:name=".MainActivity" />
 
+        <activity android:name=".ReviewActivity" />
+
+        <activity android:name=".InformationActivity" />
+
+
     </application>
 
 </manifest>

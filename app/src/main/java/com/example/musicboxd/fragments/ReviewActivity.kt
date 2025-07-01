@@ -73,7 +73,7 @@ class ReviewActivity : AppCompatActivity() {
         val message = "Hai recensito \"$title\" di $artist"
         val activityData = mapOf(
             "action" to message,
-            "timestamp" to Timestamp.now()
+            "timestamp" to Timestamp.Companion.now()
         )
         FirebaseFirestore.getInstance()
             .collection("User")
@@ -88,7 +88,7 @@ class ReviewActivity : AppCompatActivity() {
         val activity = mutableMapOf<String, Any>(
             "actionType" to "review",
             "sourceUserId" to uid,
-            "timestamp" to Timestamp.now()
+            "timestamp" to Timestamp.Companion.now()
         )
 
         if (songTitle != null) activity["songTitle"] = songTitle
