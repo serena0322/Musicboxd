@@ -146,8 +146,7 @@ class SettingsFragment : Fragment() {
 
         auth.currentUser?.delete()
             ?.addOnSuccessListener {
-                requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                    .edit().clear().apply()
+                requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).edit().clear().apply()
                 Toast.makeText(requireContext(), "Account eliminato", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(requireContext(), SecondActivity::class.java))
                 requireActivity().finish()

@@ -45,7 +45,6 @@ class Network : Fragment() {
             val bundle = Bundle().apply {
                 putString("USER_ID", user.id)
             }
-
             findNavController().navigate(R.id.action_network_to_userProfile, bundle)
         }
 
@@ -83,7 +82,6 @@ class Network : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-
         return view
     }
 

@@ -81,8 +81,6 @@ class UserAdapter(
             val db = FirebaseFirestore.getInstance()
             db.collection("User").document(currentUserId).get()
                 .addOnSuccessListener { document ->
-                    val currentUsername = document.getString("username") ?: "Qualcuno"
-
                     when (menuItem.itemId) {
                         R.id.follow_user -> {
                             followUser(user.id)
@@ -98,16 +96,13 @@ class UserAdapter(
                             logUserActivity(logMsg)
                             Toast.makeText(view.context, "Non segui più ${user.username}", Toast.LENGTH_SHORT).show()
                         }
-
                     }
                 }
                 .addOnFailureListener {
                     Toast.makeText(view.context, "Errore nel recupero dell'utente", Toast.LENGTH_SHORT).show()
                 }
-
             return@setOnMenuItemClickListener true
         }
-
         popup.show()
     }
 
@@ -128,13 +123,7 @@ class UserAdapter(
             .collection("ActivityForOthers")
             .add(activity)
 
-        Log.d("ActivityDebug", "Salvo attività in User/$targetUserId/ActivityForOthers: $actionType da $currentUserId")
-
     }
-
-
-
-
 
     private fun logUserActivity(actionMessage: String) {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -239,14 +228,10 @@ class UserAdapter(
 
         batch.commit()
             .addOnSuccessListener {
-                Log.d("Unfollow", "Unfollow eseguito correttamente")
                 // Rimuove utente dalla lista corrente
                 val currentList = currentList.toMutableList()
                 currentList.removeAll { it.id == targetUserId }
                 submitList(currentList)
-            }
-            .addOnFailureListener {
-                Log.d("Unfollow", "Errore nel commit unfollow")
             }
     }
 

@@ -13,6 +13,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ReviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +41,21 @@ class ReviewActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.textView5)
         val saveButton = findViewById<TextView>(R.id.button2)
 
+        saveButton.setOnClickListener {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                val reviewedTitle = title ?: "una canzone"
+                val reviewedArtist = artist ?: "un artista"
+
+                // Log
+                logUserActivity(reviewedTitle, reviewedArtist)
+                logUserActivityForOthers( reviewedTitle, reviewedArtist)
+            }
+
+            // Chiudi il fragment corrente (es. BottomSheet o Fragment "interno")
+            finish()
+        }
+
         heartImage.setOnClickListener {
             val isLiked = !heartImage.isSelected
             heartImage.isSelected = isLiked
@@ -48,6 +66,39 @@ class ReviewActivity : AppCompatActivity() {
             Log.d("ReviewActivity", "Rating changed: $rating")
             textView.text = if (rating > 0) "Rated" else "Rate"
         }
+    }
+
+    fun logUserActivity(title: String, artist: String) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val message = "Hai recensito \"$title\" di $artist"
+        val activityData = mapOf(
+            "action" to message,
+            "timestamp" to Timestamp.now()
+        )
+        FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(uid)
+            .collection("Activity")
+            .add(activityData)
+    }
+
+    fun logUserActivityForOthers(songTitle: String? = null, artistName: String? = null) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        val activity = mutableMapOf<String, Any>(
+            "actionType" to "review",
+            "sourceUserId" to uid,
+            "timestamp" to Timestamp.now()
+        )
+
+        if (songTitle != null) activity["songTitle"] = songTitle
+        if (artistName != null) activity["artistName"] = artistName
+
+        FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(uid)
+            .collection("ActivityForOthers")
+            .add(activity)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

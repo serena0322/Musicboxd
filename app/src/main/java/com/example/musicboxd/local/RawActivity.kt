@@ -6,5 +6,7 @@ data class RawActivity(
     val actionType: String,
     val sourceUserId: String?,
     val targetUserId: String?,
-    val timestamp: Timestamp
+    val timestamp: Timestamp,
+    val songTitle: String? = null,
+    val artistName: String? = null
 )

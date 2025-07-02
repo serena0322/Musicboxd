@@ -125,9 +125,6 @@ class ActivityFragment: Fragment(){
                         .limit(10)
                         .get()
                     tasks.add(task)
-
-                    Log.d("ActivityDebug", "Sto leggendo attività da User/$followedUserId/ActivityForOthers")
-
                 }
 
                 Tasks.whenAllSuccess<QuerySnapshot>(tasks)
@@ -143,9 +140,10 @@ class ActivityFragment: Fragment(){
 
                                 val targetUserId = activityDoc.getString("targetUserId")
                                 val timestamp = activityDoc.getTimestamp("timestamp") ?: continue
-                                Log.d("DEBUG", "actionType = $actionType da $sourceUserId")
+                                val songTitle = activityDoc.getString("songTitle")
+                                val artistName = activityDoc.getString("artistName")
 
-                                rawActivities.add(RawActivity(actionType, sourceUserId, targetUserId, timestamp))
+                                rawActivities.add(RawActivity(actionType, sourceUserId, targetUserId, timestamp, songTitle, artistName))
                             }
 
                         }
@@ -169,26 +167,30 @@ class ActivityFragment: Fragment(){
 
                         Tasks.whenAllComplete(fetchTasks).addOnSuccessListener {
                             // Costruisci messaggi leggendo da userMap
-                            for ((actionType, sourceUserId, targetUserId, timestamp) in rawActivities) {
-                                val sourceUsername = userMap[sourceUserId] ?: "Utente"
-                                val isTargetCurrentUser = (targetUserId == currentUser.uid)
-                                val targetUsername = userMap[targetUserId] ?: "qualcuno"
+                            for (activity in rawActivities) {
+                                val sourceUsername = userMap[activity.sourceUserId] ?: "Utente"
+                                val isTargetCurrentUser = (activity.targetUserId == currentUser.uid)
+                                val targetUsername = userMap[activity.targetUserId] ?: "qualcuno"
+                                val songTitle = activity.songTitle ?: "una canzone"
+                                val artistName = activity.artistName?: "artistName"
 
-                                val actionMessage = when (actionType) {
+                                val actionMessage = when (activity.actionType) {
                                     "follow" -> if (isTargetCurrentUser) {
                                         "$sourceUsername ha iniziato a seguirti"
                                     } else {
                                         "$sourceUsername ha iniziato a seguire $targetUsername"
                                     }
+
                                     "unfollow" -> if (isTargetCurrentUser) {
                                         "$sourceUsername ha smesso di seguirti"
                                     } else {
                                         "$sourceUsername ha smesso di seguire $targetUsername"
                                     }
+                                    "review" -> "$sourceUsername ha recensito \"$songTitle\" di $artistName"
                                     else -> "$sourceUsername ha effettuato un'azione"
                                 }
 
-                                activityList.add(ActivityItem(actionMessage, timestamp))
+                                activityList.add(ActivityItem(actionMessage, activity.timestamp))
                             }
 
                             // Ordina e aggiorna la lista
