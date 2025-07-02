@@ -65,9 +65,6 @@ android {
         implementation(libs.androidx.constraintlayout)
         implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-        // Cronet (networking avanzato)
-        implementation(libs.cronet.embedded)
-
         // HTTP (Retrofit e OkHttp)
         implementation("com.squareup.retrofit2:retrofit:2.9.0")
         implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -85,6 +82,10 @@ android {
         implementation("com.google.firebase:firebase-analytics")
         implementation("com.google.firebase:firebase-firestore-ktx:24.7.1")
         implementation("com.google.firebase:firebase-auth:22.1.1")
+        implementation("com.google.firebase:firebase-storage")
+        implementation ("com.google.firebase:firebase-storage:20.2.0") // o ultima versione disponibile
+
+
 
         // Room (database locale)
         implementation("androidx.room:room-runtime:2.6.1")
@@ -108,5 +109,6 @@ android {
         debugImplementation(libs.androidx.ui.test.manifest)
         //Material
         implementation ("com.google.android.material:material:1.12.0")
+
     }
 

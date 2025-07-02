@@ -24,4 +24,9 @@
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 
+    <style name="ImageViewRounded" parent="">
+        <item name="cornerSize">9dp</item>
+    </style>
+
+
 </resources>

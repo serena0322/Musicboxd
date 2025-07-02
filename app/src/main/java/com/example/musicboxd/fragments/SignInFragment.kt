@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.musicboxd.R
-import com.example.musicboxd.classes.User
+import com.example.musicboxd.local.User
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -52,36 +52,49 @@ class SignInFragment : Fragment() {
                             id = firebaseUser?.uid ?: "",
                             username = username,
                             email = email,
-                            picture = "",
-                            bio = "",
-                            followersCount = 0,
-                            followingCount = 0,
+                            followers = 0,
+                            following = 0,
                             createdAt = Timestamp.now()
                         )
-                        // Salvataggio su Firestore
-                        FirebaseFirestore.getInstance().collection("User")
-                            .document(user.id)
-                            .set(user)
-                            .addOnSuccessListener {
-                                Toast.makeText(requireContext(), "Registrazione completata", Toast.LENGTH_SHORT).show()
-                                findNavController().navigate(R.id.action_signInFragment_to_loginFragment)
-                                // Dopo il successo nel salvataggio su Firestore:
-                                saveNewCredentials(email, username, password)
+                        isUsernameTaken(username) { taken ->
+                            if (taken) {
+                                Toast.makeText(context, "Username già in uso", Toast.LENGTH_SHORT).show()
+                            } else {
+                                // Salvataggio su Firestore
+                                FirebaseFirestore.getInstance().collection("User")
+                                    .document(user.id)
+                                    .set(user)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(requireContext(), "Registrazione completata", Toast.LENGTH_SHORT).show()
+                                        findNavController().navigate(R.id.action_signInFragment_to_loginFragment)
+                                        // Dopo il successo nel salvataggio su Firestore:
+                                        saveNewCredentials(email, username, password)
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(requireContext(), "Errore durante la registrazione", Toast.LENGTH_SHORT).show()
+                                    }
                             }
-                            .addOnFailureListener {
-                                Toast.makeText(requireContext(), "Errore durante la registrazione", Toast.LENGTH_SHORT).show()
-                            }
-
-                        // Se vuoi salvare le credenziali localmente
-                        // saveNewCredentials(email, username, password)
+                        }
 
                     } else {
                         Toast.makeText(requireContext(), "Errore: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
-
         return view
+    }
+
+    fun isUsernameTaken(username: String, callback: (Boolean) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("User")
+            .whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener { result ->
+                callback(!result.isEmpty) // true se esiste, false se è libero
+            }
+            .addOnFailureListener {
+                callback(false) // per sicurezza, meglio gestire eventuali errori con fallback
+            }
     }
 
     private fun saveNewCredentials(enteredEmail: String, username: String, password: String) {

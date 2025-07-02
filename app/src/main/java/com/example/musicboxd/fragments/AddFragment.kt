@@ -1,6 +1,5 @@
 package com.example.musicboxd.fragments
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,15 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
-import com.example.musicboxd.ReviewActivity
+import com.example.musicboxd.fragments.ReviewActivity
 import com.example.musicboxd.adapter.TrackAdapter
 import com.example.musicboxd.viewModels.SearchViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.R as MaterialR
 
-class AddSongBottomSheet : BottomSheetDialogFragment() {
+class AddFragment : BottomSheetDialogFragment() {
 
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var adapter: TrackAdapter
@@ -31,7 +29,7 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.bottom_sheet_add_song, container, false)
+        return inflater.inflate(R.layout.fragment_add, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +49,7 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Configura SearchView
-        val searchView = view.findViewById<SearchView>(R.id.searchView2)
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty()) {
@@ -73,26 +71,18 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         val view = dialog?.findViewById<View>(MaterialR.id.design_bottom_sheet)
         view?.let {
             val layoutParams = it.layoutParams
-            layoutParams.height = (resources.displayMetrics.heightPixels * 0.90).toInt()
+            layoutParams.height = (resources.displayMetrics.heightPixels * 0.95).toInt()
             it.layoutParams = layoutParams
             val behavior = BottomSheetBehavior.from(it)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+            it.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded)
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        dialog.setOnShowListener {
-            val bottomSheet =
-                dialog.findViewById<View>(MaterialR.id.design_bottom_sheet)
-            bottomSheet?.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded)
-        }
-        return dialog
-    }
 }

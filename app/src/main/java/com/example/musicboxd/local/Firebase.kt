@@ -1,4 +1,4 @@
-package com.example.musicboxd.classes
+package com.example.musicboxd.local
 import com.example.musicboxd.interfaces.UserDao
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class FirebaseUserDaoImpl : UserDao {
 
     private val db = FirebaseFirestore.getInstance()
-    private val usersCollection = db.collection("users")
+    private val usersCollection = db.collection("User")
 
     override fun getAll(callback: (List<User>) -> Unit) { //per notificare il chiamante dell'esito (successo o fallimento)
         usersCollection.get()

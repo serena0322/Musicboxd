@@ -2,17 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@drawable/bg_bottom_sheet_rounded">
 
     <!--Titolo-->
     <TextView
         android:id="@+id/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="47dp"
+        android:layout_marginTop="43dp"
         android:fontFamily="@font/poppinsbold"
         android:text="Add a Song"
         android:textColor="@color/white"
@@ -25,29 +24,30 @@
 
     <!-- Barra di ricerca -->
     <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView2"
+        android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/searchbar"
         android:queryHint="Name of song"
         app:iconifiedByDefault="false"
-        app:layout_constraintTop_toBottomOf="@id/Title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/Title" />
 
+    <!-- Contenuto scrollabile -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:background="@color/scrollView"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchView2">
+        app:layout_constraintTop_toBottomOf="@id/searchView">
 
     </androidx.recyclerview.widget.RecyclerView>
 

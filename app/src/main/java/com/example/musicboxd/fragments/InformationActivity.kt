@@ -1,14 +1,14 @@
-package com.example.musicboxd
+package com.example.musicboxd.fragments
 
-import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.musicboxd.classes.Track
-import android.media.MediaPlayer
 import com.bumptech.glide.Glide
+import com.example.musicboxd.R
+import com.example.musicboxd.classes.Track
 
 class InformationActivity : AppCompatActivity() {
 

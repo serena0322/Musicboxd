@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.SearchView
@@ -13,20 +12,29 @@ import com.example.musicboxd.R
 import android.content.Context
 import android.content.Intent
 import android.view.inputmethod.InputMethodManager
-import com.example.musicboxd.adapter.TrackAdapter2
-import com.example.musicboxd.InformationActivity
+import com.example.musicboxd.adapter.TrackResponse
+import com.example.musicboxd.fragments.InformationActivity
+import com.example.musicboxd.classes.Track
 
 class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: TrackAdapter2
+    private lateinit var adapter: TrackResponse
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = TrackAdapter2 { selectedTrack ->
+        adapter = TrackResponse { selectedTrack ->
+            val intent = Intent(requireContext(), InformationActivity::class.java).apply {
+                putExtra("track", selectedTrack)
+                putExtra("cover", selectedTrack.album?.cover)
+            }
+            startActivity(intent)
+        }
+
+        adapter = TrackResponse { selectedTrack ->
             val intent = Intent(requireContext(), InformationActivity::class.java).apply {
                 putExtra("track", selectedTrack)
                 putExtra("cover", selectedTrack.album?.cover)
@@ -52,8 +60,8 @@ class SearchFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean = false
         })
 
-        viewModel.tracks.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
+        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
+            adapter.submitList(tracks as List<Track?>?)
+        }
     }
 }

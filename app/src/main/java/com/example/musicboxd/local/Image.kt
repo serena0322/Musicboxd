@@ -1,4 +1,4 @@
-package com.example.musicboxd.classes
+package com.example.musicboxd.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

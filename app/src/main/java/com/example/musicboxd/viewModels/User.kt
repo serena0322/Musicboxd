@@ -3,7 +3,7 @@ package com.example.musicboxd.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.musicboxd.classes.User
+import com.example.musicboxd.local.User
 import com.example.musicboxd.interfaces.UserDao
 
 //fa da intermediario tra DAO e UI, gestisce il flusso dati,

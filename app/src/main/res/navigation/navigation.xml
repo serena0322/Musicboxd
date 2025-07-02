@@ -42,7 +42,7 @@
         android:id="@+id/addFragment"
         android:name="com.example.musicboxd.fragments.AddFragment"
         android:label="Add"
-        tools:layout="@layout/bottom_sheet_add_song" >
+        tools:layout="@layout/fragment_add" >
 
         <action
             android:id="@+id/action_addFragment_pop_including_homeFragment"
@@ -77,15 +77,18 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_profileFragment_to_ratedMusic"
-            app:destination="@id/ratedMusic" />
+            android:id="@+id/action_profileFragment_to_network"
+            app:destination="@id/network" />
+        <action
+            android:id="@+id/action_profileFragment_to_playlist"
+            app:destination="@id/playlist" />
     </fragment>
 
     <!-- Fragment Settings -->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.musicboxd.fragments.SettingsFragment"
-        android:label="Profile"
+        android:label="Settings"
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_PasswordandAuthentication"
@@ -96,19 +99,38 @@
     <fragment
         android:id="@+id/changePassword"
         android:name="com.example.musicboxd.fragments.PasswordFragment"
-        android:label="Profile"
+        android:label="Password"
         tools:layout="@layout/fragment_change_password_" >
         <action
             android:id="@+id/action_changePassword_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
 
-    <!-- Fragment ratedMusic-->
+    <!-- Fragment network-->
     <fragment
-        android:id="@+id/ratedMusic"
-        android:name="com.example.musicboxd.fragments.MusicFragment"
-        android:label="Music"
-        tools:layout="@layout/fragment_rated_music" >
+        android:id="@+id/network"
+        android:name="com.example.musicboxd.fragments.Network"
+        android:label="Network"
+        tools:layout="@layout/network" >
+        <action
+            android:id="@+id/action_network_to_userProfile"
+            app:destination="@id/userProfile" />
+    </fragment>
+
+    <!-- Fragment userProfile-->
+    <fragment
+        android:id="@+id/userProfile"
+        android:name="com.example.musicboxd.fragments.UserProfile"
+        android:label="userProfile"
+        tools:layout="@layout/user_profile" >
+    </fragment>
+
+    <!-- Fragment Playlist-->
+    <fragment
+        android:id="@+id/playlist"
+        android:name="com.example.musicboxd.fragments.Playlist"
+        android:label="Playlist"
+        tools:layout="@layout/playlist" >
     </fragment>
 
 

@@ -1,7 +1,5 @@
 package com.example.musicboxd.fragments
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,76 +14,119 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.ProfileAdapter
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-class ProfileFragment: Fragment() {
+class ProfileFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var scrollView: ScrollView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ProfileAdapter  // da creare
-    private val layoutManager by lazy { LinearLayoutManager(requireContext()) }
+    private lateinit var adapter: ProfileAdapter
 
-    @SuppressLint("ServiceCast", "MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflazione del layout
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        // Trova il TextView dal layout
-        val username: TextView = view.findViewById(R.id.Title)
-        // Recupera l'username da SharedPreferences
-        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val savedUsername = sharedPreferences.getString("saved_username", "Guest")  // "Guest" è il valore predefinito nel caso non sia stato salvato nessun username
-        // Imposta l'username nel TextView
-        username.text = savedUsername
 
+        // TextView dove mostrare lo username
+        val usernameTextView: TextView = view.findViewById(R.id.Title)
+
+        // Ottieni l'ID dell'utente loggato
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUserId = currentUser?.uid
+
+        if (currentUserId != null) {
+            val db = FirebaseFirestore.getInstance()
+            db.collection("User")
+                .document(currentUserId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val username = document.getString("username") ?: "Sconosciuto"
+                        usernameTextView.text = username
+                    } else {
+                        usernameTextView.text = "Utente non trovato"
+                    }
+                }
+                .addOnFailureListener {
+                    usernameTextView.text = "Errore nel caricamento"
+                }
+        } else {
+            usernameTextView.text = "Non autenticato"
+        }
+
+    // Views
         tabLayout = view.findViewById(R.id.tabLayout)
         scrollView = view.findViewById(R.id.scrollView)
         recyclerView = view.findViewById(R.id.profileRecyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = ProfileAdapter(emptyList())
+        adapter = ProfileAdapter(emptyList())
+        recyclerView.adapter = adapter
 
-        tabLayout = view.findViewById(R.id.tabLayout)
+        // Tab logic
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val context = requireContext()
                 when (tab.position) {
                     0 -> {
-                        // Profile
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(context, R.color.home))
+                        tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.home
+                            )
+                        )
                         scrollView.visibility = View.VISIBLE
                         recyclerView.visibility = View.GONE
                     }
 
                     1 -> {
-                        // Diary
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(context, R.color.add))
+                        tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.add
+                            )
+                        )
                         scrollView.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
-                        adapter.updateData(
-                            listOf("Diario 1", "Appunto 2", "Nota 3")
-                        )
+                        adapter.updateData(listOf("Diario 1", "Appunto 2", "Nota 3"))
                     }
 
                     2 -> {
-                        // Lists
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(context, R.color.teal_200))
+                        tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.teal_200
+                            )
+                        )
                         scrollView.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                         adapter.updateData(
-                            listOf("Lista Album Preferiti", "Top 10 Canzoni", "Playlist Chill")
+                            listOf(
+                                "Lista Album Preferiti",
+                                "Top 10 Canzoni",
+                                "Playlist Chill"
+                            )
                         )
                     }
 
                     3 -> {
-                        // Watchlist
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(context, R.color.profile))
+                        tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.profile
+                            )
+                        )
                         scrollView.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                         adapter.updateData(
-                            listOf("Album da ascoltare", "Da riascoltare", "Nuove uscite")
+                            listOf(
+                                "Album da ascoltare",
+                                "Da riascoltare",
+                                "Nuove uscite"
+                            )
                         )
                     }
                 }
@@ -95,15 +136,21 @@ class ProfileFragment: Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        val settings = view.findViewById<TextView>(R.id.settings)
-        settings.setOnClickListener {
+        // Navigazioni
+        view.findViewById<TextView>(R.id.settings).setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
         }
-        val music = view.findViewById<TextView>(R.id.music)
-        music.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_ratedMusic)
+
+        view.findViewById<TextView>(R.id.network).setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_network)
+        }
+
+        val playlist : TextView = view.findViewById<TextView>(R.id.playlist)
+        playlist.setOnClickListener{
+            findNavController().navigate(R.id.action_profileFragment_to_playlist)
         }
 
         return view
     }
+
 }

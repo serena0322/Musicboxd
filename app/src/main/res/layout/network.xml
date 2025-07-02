@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="47dp"
         android:fontFamily="@font/poppinsbold"
-        android:text="Activity"
+        android:text="Network"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -39,14 +39,33 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Friends" />
+            android:text="Search" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You" />
+            android:text="Followers" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Following" />
 
     </com.google.android.material.tabs.TabLayout>
+
+    <!-- Barra di ricerca -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/searchbar"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!--RecyclerView-->
     <androidx.recyclerview.widget.RecyclerView
@@ -54,11 +73,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="6dp"
-        android:background="@color/scrollView"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/userProfile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,59 @@
+package com.example.musicboxd.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.musicboxd.R
+import com.example.musicboxd.remote.RemoteTrack
+
+
+//Usato per: mostrare direttamente i dati ricevuti dall’API (senza trasformarli)
+class TrackAdapter(
+    private val onItemClick: (RemoteTrack) -> Unit
+) : ListAdapter<RemoteTrack, TrackAdapter.TrackViewHolder>(DiffCallback()) {
+
+    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val title: TextView = itemView.findViewById(R.id.title)
+        private val artist: TextView = itemView.findViewById(R.id.artist)
+        private val cover: ImageView = itemView.findViewById(R.id.cover)
+
+        fun bind(track: RemoteTrack) {
+            title.text = track.title
+            artist.text = track.artist.name
+
+            Glide.with(itemView.context)
+                .load(track.album.cover)
+                //.placeholder(R.drawable.ic_music_placeholder)
+                .into(cover)
+
+            itemView.setOnClickListener { onItemClick(track) }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_track, parent, false)
+        return TrackViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<RemoteTrack>() {
+        override fun areItemsTheSame(oldItem: RemoteTrack, newItem: RemoteTrack): Boolean {
+            return oldItem.title == newItem.title &&
+                    oldItem.artist.name == newItem.artist.name
+        }
+
+        override fun areContentsTheSame(oldItem: RemoteTrack, newItem: RemoteTrack): Boolean {
+            return oldItem == newItem
+        }
+    }
+}

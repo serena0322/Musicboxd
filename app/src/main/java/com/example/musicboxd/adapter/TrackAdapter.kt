@@ -1,36 +1,33 @@
 package com.example.musicboxd.adapter
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.classes.Track
 
-class TrackAdapter(
-    private val onItemClick: (Track) -> Unit
-) : ListAdapter<Track, TrackAdapter.TrackViewHolder>(DiffCallback()) {
 
-    // Classe ViewHolder
-    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val title: TextView = itemView.findViewById(R.id.title)
-        private val artist: TextView = itemView.findViewById(R.id.artist)
-        private val cover: ImageView = itemView.findViewById(R.id.cover)
+//Usato per mostrare i dati dopo che sono stati trasformati da RemoteTrack a Track
 
-        fun bind(track: Track) {
+class TrackResponse(
+    private val onTrackClick: (Track) -> Unit
+) : ListAdapter<Track, TrackResponse.TrackViewHolder>(DiffCallback()) {
+
+    class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val title = itemView.findViewById<TextView>(R.id.title)
+        private val artist = itemView.findViewById<TextView>(R.id.artist)
+        private val cover = itemView.findViewById<ImageView>(R.id.cover)
+
+        fun bind(track: Track, onClick: (Track) -> Unit) {
             title.text = track.title
             artist.text = track.artist?.name
-            Glide.with(itemView.context)
-                .load(track.album?.cover)
-                //.placeholder(R.drawable.ic_music_placeholder)
-                .into(cover)
+            Glide.with(itemView.context).load(track.album?.cover).into(cover)
 
-            itemView.setOnClickListener { onItemClick(track) } // Gestione click qui
+            itemView.setOnClickListener {
+                onClick(track)
+            }
         }
     }
 
@@ -41,17 +38,11 @@ class TrackAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onTrackClick)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Track>() {
-        override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
-            return oldItem.title == newItem.title &&
-                   oldItem.artist?.name == newItem.artist?.name
-        }
-
-        override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {
-            return oldItem == newItem
-        }
+        override fun areItemsTheSame(oldItem: Track, newItem: Track) = oldItem.title == newItem.title
+        override fun areContentsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
     }
 }

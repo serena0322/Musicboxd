@@ -2,6 +2,8 @@ package com.example.musicboxd.classes
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+
+//Passaggio tra schermate, visualizzazione UI
 @Parcelize
 data class DeezerResponse(val data: List<Track>): Parcelable
 

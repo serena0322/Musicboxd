@@ -2,17 +2,18 @@ package com.example.musicboxd
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.musicboxd.fragments.AddSongBottomSheet
+import com.example.musicboxd.fragments.AddFragment
+import com.example.musicboxd.`object`.UserRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,13 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(0, 0, 0, systemBars.bottom)
             insets
+        }
+
+        lifecycleScope.launch {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid != null) {
+                UserRepository.loadUser()
+            }
         }
 
         val destination = intent.getStringExtra("destination")
@@ -65,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.itemIconTintList =
                         ContextCompat.getColorStateList(this, R.color.nav_add_icon)
                     // Mostra la Bottom Sheet invece di cambiare fragment
-                    val bottomSheet = AddSongBottomSheet()
+                    val bottomSheet = AddFragment()
                     bottomSheet.show(supportFragmentManager, "BottomSheetAddSong")
 
                     false // NON cambiamo fragment

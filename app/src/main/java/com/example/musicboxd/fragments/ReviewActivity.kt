@@ -1,6 +1,6 @@
-package com.example.musicboxd
+package com.example.musicboxd.fragments
 
-import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -12,6 +12,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.musicboxd.R
 
 class ReviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +36,7 @@ class ReviewActivity : AppCompatActivity() {
         val likeText = findViewById<TextView>(R.id.textView6)
         val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
         val textView = findViewById<TextView>(R.id.textView5)
+        val saveButton = findViewById<TextView>(R.id.button2)
 
         heartImage.setOnClickListener {
             val isLiked = !heartImage.isSelected
@@ -47,11 +49,12 @@ class ReviewActivity : AppCompatActivity() {
             textView.text = if (rating > 0) "Rated" else "Rate"
         }
     }
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
             if (v is EditText) {
-                val outRect = android.graphics.Rect()
+                val outRect = Rect()
                 v.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
                     v.clearFocus()
@@ -63,7 +66,7 @@ class ReviewActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard(view: View) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
