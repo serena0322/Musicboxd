@@ -40,9 +40,9 @@
     <!-- Fragment Add-->
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.example.musicboxd.fragments.AddFragment"
+        android:name="com.example.musicboxd.fragments.AddSongBottomSheet"
         android:label="Add"
-        tools:layout="@layout/fragment_add" >
+        tools:layout="@layout/bottom_sheet_add_song" >
 
         <action
             android:id="@+id/action_addFragment_pop_including_homeFragment"
@@ -88,7 +88,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.musicboxd.fragments.SettingsFragment"
-        android:label="Settings"
+        android:label="Profile"
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_PasswordandAuthentication"
@@ -99,30 +99,31 @@
     <fragment
         android:id="@+id/changePassword"
         android:name="com.example.musicboxd.fragments.PasswordFragment"
-        android:label="Password"
+        android:label="Profile"
         tools:layout="@layout/fragment_change_password_" >
         <action
             android:id="@+id/action_changePassword_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
 
-    <!-- Fragment network-->
+    <!-- Fragment Network-->
     <fragment
         android:id="@+id/network"
         android:name="com.example.musicboxd.fragments.Network"
-        android:label="Network"
+        android:label="network"
         tools:layout="@layout/network" >
         <action
             android:id="@+id/action_network_to_userProfile"
             app:destination="@id/userProfile" />
     </fragment>
 
-    <!-- Fragment userProfile-->
+    <!-- Fragment UserProfile-->
     <fragment
         android:id="@+id/userProfile"
         android:name="com.example.musicboxd.fragments.UserProfile"
-        android:label="userProfile"
+        android:label="Profile"
         tools:layout="@layout/user_profile" >
+
     </fragment>
 
     <!-- Fragment Playlist-->
@@ -131,7 +132,7 @@
         android:name="com.example.musicboxd.fragments.Playlist"
         android:label="Playlist"
         tools:layout="@layout/playlist" >
-    </fragment>
 
+    </fragment>
 
 </navigation>

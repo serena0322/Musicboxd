@@ -99,9 +99,15 @@ class ProfileFragment: Fragment() {
         settings.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_settingsFragment)
         }
-        val music = view.findViewById<TextView>(R.id.music)
-        music.setOnClickListener {
 
+        val network = view.findViewById<TextView>(R.id.network)
+        network.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_network)
+        }
+
+        val playlist = view.findViewById<TextView>(R.id.playlist)
+        playlist.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_playlist)
         }
 
         return view

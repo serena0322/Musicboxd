@@ -44,9 +44,10 @@ class UserAdapter(
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(user: User) {
-            itemView.findViewById<TextView>(R.id.userName).text = user.username
-            itemView.findViewById<TextView>(R.id.firstName).text = user.firstName
-            itemView.findViewById<TextView>(R.id.lastName).text = user.lastName
+            itemView.findViewById<TextView>(R.id.username).text = user.username
+            val firstAndLast = "${user.firstName} ${user.lastName}"
+            itemView.findViewById<TextView>(R.id.name).text = firstAndLast
+
 
             itemView.setOnLongClickListener {
                 showPopupMenu(it, user)
