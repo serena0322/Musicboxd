@@ -101,7 +101,7 @@ class ProfileFragment: Fragment() {
         }
         val music = view.findViewById<TextView>(R.id.music)
         music.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_ratedMusic)
+
         }
 
         return view

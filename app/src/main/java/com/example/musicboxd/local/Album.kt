@@ -1,11 +1,9 @@
-package com.example.musicboxd.classes
+package com.example.musicboxd.local
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.firebase.Timestamp
+import com.example.musicboxd.classes.Image
 
-
-@Entity class Album(
+data class Album (
     @PrimaryKey val id: String = "",
     val title: String = "",
     val artistId: String = "",

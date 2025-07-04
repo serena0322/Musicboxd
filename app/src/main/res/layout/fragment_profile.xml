@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="47dp"
         android:fontFamily="@font/poppinsbold"
-        android:text="Profile"
+        android:text=""
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="30sp"
@@ -27,13 +27,13 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Title"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/home"
         app:tabMode="fixed"
-        app:tabTextAppearance="@style/CustomTabTextAppearance"
-        app:layout_constraintTop_toBottomOf="@id/Title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:tabTextAppearance="@style/CustomTabTextAppearance">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -45,15 +45,6 @@
             android:layout_height="wrap_content"
             android:text="Diary" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lists" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Watchlist" />
     </com.google.android.material.tabs.TabLayout>
 
     <!-- Contenuto scrollabile -->
@@ -61,7 +52,7 @@
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:paddingBottom="30dp"
         android:background="@color/scrollView"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
@@ -82,26 +73,15 @@
                 android:text="Music" />
 
             <TextView
-                android:id="@+id/diary"
-                style="@style/ClickableListItem"
-                android:text="Diary" />
-
-
-            <TextView
                 android:id="@+id/reviews"
                 style="@style/ClickableListItem"
                 android:text="Reviews" />
 
-
             <TextView
-                android:id="@+id/lists"
+                android:id="@+id/playlist"
                 style="@style/ClickableListItem"
-                android:text="Lists" />
-
-            <TextView
-                android:id="@+id/watchlist"
-                style="@style/ClickableListItem"
-                android:text="Watchlist" />
+                android:clickable="true"
+                android:text="Playlist" />
 
             <TextView
                 android:id="@+id/likes"
@@ -109,14 +89,9 @@
                 android:text="Likes" />
 
             <TextView
-                android:id="@+id/tags"
-                style="@style/ClickableListItem"
-                android:text="Tags" />
-
-            <TextView
                 android:id="@+id/network"
                 style="@style/ClickableListItem"
-                android:text="Network" />
+                android:text="Followers and Following" />
 
             <TextView
                 android:id="@+id/settings"

@@ -1,6 +1,5 @@
 package com.example.musicboxd.adapter
 
-import Song
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +9,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
-import com.example.musicboxd.classes.Album
-import com.example.musicboxd.classes.Artist
 import com.example.musicboxd.classes.Image
+import com.example.musicboxd.local.Album
+import com.example.musicboxd.local.Artist
+import com.example.musicboxd.local.Song
 
 //componente che consente di mostrare una lista di canzoni (song) in modo efficiente e dinamico
 

@@ -1,5 +1,4 @@
 package com.example.musicboxd.fragments
-import Song
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
@@ -15,9 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.SongAdapter
-import com.example.musicboxd.classes.Album
-import com.example.musicboxd.classes.Artist
 import com.example.musicboxd.classes.Image
+import com.example.musicboxd.local.Album
+import com.example.musicboxd.local.Artist
+import com.example.musicboxd.local.Song
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore

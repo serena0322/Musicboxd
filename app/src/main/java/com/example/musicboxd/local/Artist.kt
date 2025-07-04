@@ -1,10 +1,8 @@
-package com.example.musicboxd.classes
+package com.example.musicboxd.local
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "artist")
-data class Artist(
+data class Artist (
     @PrimaryKey val id: String = "",
     val name: String = "",
     val genre: String = "",
