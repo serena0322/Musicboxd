@@ -66,7 +66,7 @@ android {
         implementation("androidx.recyclerview:recyclerview:1.3.2")
 
         // Cronet (networking avanzato)
-        implementation(libs.cronet.embedded)
+        implementation("org.chromium.net:cronet-embedded:101.4951.41")
 
         // HTTP (Retrofit e OkHttp)
         implementation("com.squareup.retrofit2:retrofit:2.9.0")
