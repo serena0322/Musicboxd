@@ -1,5 +1,6 @@
 package com.example.musicboxd.classes
 import com.example.musicboxd.interfaces.UserDao
+import com.example.musicboxd.local.User
 import com.google.firebase.firestore.FirebaseFirestore
 
 //DAO (Data Access Object) specializzato per lavorare con Firebase
@@ -8,7 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class FirebaseUserDaoImpl : UserDao {
 
     private val db = FirebaseFirestore.getInstance()
-    private val usersCollection = db.collection("users")
+    private val usersCollection = db.collection("User")
 
     override fun getAll(callback: (List<User>) -> Unit) { //per notificare il chiamante dell'esito (successo o fallimento)
         usersCollection.get()

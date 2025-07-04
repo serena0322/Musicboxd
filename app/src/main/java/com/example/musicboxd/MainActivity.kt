@@ -7,20 +7,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.musicboxd.fragments.AddFragment
-import com.example.musicboxd.`object`.UserRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
+import androidx.navigation.fragment.NavHostFragment
+import com.example.musicboxd.fragments.AddSongBottomSheet
+import com.example.musicboxd.`object`.UserRepository
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity() {
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        lifecycleScope.launch {
+            UserRepository.loadUser()
+        }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
@@ -30,18 +33,10 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        lifecycleScope.launch {
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            if (uid != null) {
-                UserRepository.loadUser()
-            }
-        }
-
         val destination = intent.getStringExtra("destination")
 
         // Trova il NavHostFragment e ottieni il NavController
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         val navController = navHostFragment.navController
 
@@ -49,22 +44,22 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.homeFragment)
         }
 
+
         // Collega la bottom navigation al NavController
         bottomNav.setupWithNavController(navController)
 
         // Setta il ColorStateList prima di selezionare le icone
-        bottomNav.setOnItemSelectedListener { item ->
+        bottomNav.setOnItemSelectedListener()
+        { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    bottomNav.itemIconTintList =
-                        ContextCompat.getColorStateList(this, R.color.nav_home_icon)
+                    bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_home_icon)
                     navController.navigate(R.id.homeFragment)
                     true
                 }
 
                 R.id.nav_search -> {
-                    bottomNav.itemIconTintList =
-                        ContextCompat.getColorStateList(this, R.color.nav_search_icon)
+                    bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_search_icon)
                     navController.navigate(R.id.searchFragment)
                     true
                 }
@@ -73,28 +68,31 @@ class MainActivity : AppCompatActivity() {
                     bottomNav.itemIconTintList =
                         ContextCompat.getColorStateList(this, R.color.nav_add_icon)
                     // Mostra la Bottom Sheet invece di cambiare fragment
-                    val bottomSheet = AddFragment()
+                    val bottomSheet = AddSongBottomSheet()
                     bottomSheet.show(supportFragmentManager, "BottomSheetAddSong")
 
                     false // NON cambiamo fragment
                 }
 
                 R.id.nav_activity -> {
-                    bottomNav.itemIconTintList =
-                        ContextCompat.getColorStateList(this, R.color.nav_activity_icon)
+                    bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_activity_icon)
                     navController.navigate(R.id.activityFragment)
                     true
                 }
 
                 R.id.nav_profile -> {
-                    bottomNav.itemIconTintList =
-                        ContextCompat.getColorStateList(this, R.color.nav_profile_icon)
+                    bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_profile_icon)
                     navController.navigate(R.id.profileFragment)
                     true
                 }
-
                 else -> false
             }
         }
     }
 }
+
+
+
+
+
+

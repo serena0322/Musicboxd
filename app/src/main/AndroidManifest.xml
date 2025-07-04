@@ -27,9 +27,9 @@
 
         <activity android:name=".MainActivity" />
 
-        <activity android:name=".ReviewActivity" />
+        <activity android:name=".fragments.ReviewActivity" />
 
-        <activity android:name=".InformationActivity" />
+        <activity android:name=".fragments.InformationActivity" />
 
 
     </application>

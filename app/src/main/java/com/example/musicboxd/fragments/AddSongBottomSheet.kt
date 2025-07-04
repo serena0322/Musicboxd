@@ -13,8 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
+import com.example.musicboxd.fragments.ReviewActivity
 import com.example.musicboxd.adapter.TrackAdapter
-import com.example.musicboxd.classes.Track
 import com.example.musicboxd.viewModels.SearchViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -31,7 +31,7 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_add, container, false)
+        return inflater.inflate(R.layout.bottom_sheet_add_song, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +51,7 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Configura SearchView
-        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        val searchView = view.findViewById<SearchView>(R.id.searchView2)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrEmpty()) {
@@ -69,9 +69,10 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
 
         // Osserva i risultati della ricerca
         viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            adapter.submitList(tracks as List<Track?>?)
+            adapter.submitList(tracks)
         }
     }
+
 
     override fun onStart() {
         super.onStart()

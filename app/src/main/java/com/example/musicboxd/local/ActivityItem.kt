@@ -4,6 +4,6 @@ import com.google.firebase.Timestamp
 
 
 data class ActivityItem(
-    val action: String = "",
+    val content: String = "",
     val timestamp: Timestamp? = null
 )

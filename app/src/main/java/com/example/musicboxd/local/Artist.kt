@@ -2,7 +2,7 @@ package com.example.musicboxd.local
 
 import androidx.room.PrimaryKey
 
-data class ArtistEntity (
+data class Artist (
     @PrimaryKey val id: String = "",
     val name: String = "",
     val genre: String = "",

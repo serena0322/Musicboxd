@@ -1,8 +1,9 @@
 package com.example.musicboxd.local
 
 import androidx.room.PrimaryKey
+import com.example.musicboxd.classes.Image
 
-data class AlbumEntity (
+data class Album (
     @PrimaryKey val id: String = "",
     val title: String = "",
     val artistId: String = "",

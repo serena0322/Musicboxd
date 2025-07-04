@@ -1,13 +1,13 @@
 package com.example.musicboxd.viewModels
 
 import androidx.lifecycle.*
-import com.example.musicboxd.remote.RetrofitInstance
-import com.example.musicboxd.remote.RemoteTrack
+import com.example.musicboxd.classes.RetrofitInstance
+import com.example.musicboxd.classes.Track
 import kotlinx.coroutines.launch
 
 class SearchViewModel : ViewModel() {
-    private val _tracks = MutableLiveData<List<RemoteTrack>>()
-    val tracks: LiveData<List<RemoteTrack>> = _tracks
+    private val _tracks = MutableLiveData<List<Track>>()
+    val tracks: LiveData<List<Track>> = _tracks
 
     fun search(query: String) {
         viewModelScope.launch {

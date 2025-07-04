@@ -11,7 +11,7 @@ class ProfileAdapter(private var items: List<String>) :
     RecyclerView.Adapter<ProfileAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val text: TextView = itemView.findViewById(R.id.userName)
+        val text: TextView = itemView.findViewById(R.id.username)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

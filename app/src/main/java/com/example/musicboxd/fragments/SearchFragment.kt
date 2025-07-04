@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.inputmethod.InputMethodManager
 import com.example.musicboxd.adapter.TrackAdapter2
+import com.example.musicboxd.fragments.InformationActivity
 
 class SearchFragment : Fragment() {
 
@@ -33,7 +34,7 @@ class SearchFragment : Fragment() {
             startActivity(intent)
         }
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.searchScrollView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.searchRecyclerView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

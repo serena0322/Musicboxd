@@ -101,6 +101,7 @@ class ReviewActivity : AppCompatActivity() {
             .add(activity)
     }
 
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
