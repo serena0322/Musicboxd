@@ -2,7 +2,6 @@ package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.ActivityAdapter
 import com.example.musicboxd.local.ActivityItem
-import com.example.musicboxd.local.RawActivity
+import com.example.musicboxd.local.UserActivity
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.android.material.tabs.TabLayout
@@ -21,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
-import java.security.Timestamp
 
 class ActivityFragment: Fragment(){
 
@@ -129,7 +127,7 @@ class ActivityFragment: Fragment(){
 
                 Tasks.whenAllSuccess<QuerySnapshot>(tasks)
                     .addOnSuccessListener { snapshots ->
-                        val rawActivities = mutableListOf<RawActivity>()
+                        val rawActivities = mutableListOf<UserActivity>()
 
                         // Estrai attività dalle snapshot
                         for (snapshot in snapshots) {
@@ -143,7 +141,7 @@ class ActivityFragment: Fragment(){
                                 val songTitle = activityDoc.getString("songTitle")
                                 val artistName = activityDoc.getString("artistName")
 
-                                rawActivities.add(RawActivity(actionType, sourceUserId, targetUserId, timestamp, songTitle, artistName))
+                                rawActivities.add(UserActivity(actionType, sourceUserId, targetUserId, timestamp, songTitle, artistName))
                             }
 
                         }

@@ -1,4 +1,4 @@
-package com.example.musicboxd.remote
+package com.example.musicboxd.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

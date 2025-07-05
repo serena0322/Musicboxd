@@ -1,4 +1,4 @@
-package com.example.musicboxd.classes
+package com.example.musicboxd.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query

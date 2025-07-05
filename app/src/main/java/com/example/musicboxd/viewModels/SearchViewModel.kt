@@ -1,8 +1,8 @@
 package com.example.musicboxd.viewModels
 
 import androidx.lifecycle.*
-import com.example.musicboxd.classes.RetrofitInstance
-import com.example.musicboxd.classes.Track
+import com.example.musicboxd.network.RetrofitInstance
+import com.example.musicboxd.network.Track
 import kotlinx.coroutines.launch
 
 class SearchViewModel : ViewModel() {

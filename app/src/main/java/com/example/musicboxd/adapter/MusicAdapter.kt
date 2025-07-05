@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicboxd.classes.MusicItem
+import com.example.musicboxd.local.MusicItem
 import com.example.musicboxd.R
 
 class MusicAdapter(private var items: List<MusicItem>) :

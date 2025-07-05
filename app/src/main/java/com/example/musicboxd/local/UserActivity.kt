@@ -2,7 +2,7 @@ package com.example.musicboxd.local
 
 import com.google.firebase.Timestamp
 
-data class RawActivity(
+data class UserActivity(
     val actionType: String,
     val sourceUserId: String?,
     val targetUserId: String?,

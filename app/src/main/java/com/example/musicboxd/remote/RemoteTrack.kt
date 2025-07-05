@@ -1,6 +1,7 @@
 package com.example.musicboxd.remote
 
-//JSON da API Deezer
+//da API Deezer a JSON
+
 data class DeezerResponse(val data: List<RemoteTrack>)
 
 data class RemoteTrack(

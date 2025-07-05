@@ -1,7 +1,8 @@
-package com.example.musicboxd.classes
+package com.example.musicboxd.network
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+
 @Parcelize
 data class DeezerResponse(val data: List<Track>): Parcelable
 

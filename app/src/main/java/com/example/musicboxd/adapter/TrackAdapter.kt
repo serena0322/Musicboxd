@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
-import com.example.musicboxd.classes.Track
+import com.example.musicboxd.network.Track
 
 class TrackAdapter(
     private val onItemClick: (Track) -> Unit

@@ -2,7 +2,7 @@ package com.example.musicboxd.`object`
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.musicboxd.local.RawActivity
+import com.example.musicboxd.local.UserActivity
 import com.example.musicboxd.local.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,9 +10,10 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
 //Intermediario tra l’interfaccia utente (UI) e Firebase Firestore
+
 data class UserWithActivities(
     val user: User?,
-    val activities: List<RawActivity>
+    val activities: List<UserActivity>
 )
 
 object UserRepository {
@@ -31,7 +32,7 @@ object UserRepository {
             .get()
             .await()
 
-        val activities = activityDocs.mapNotNull { it.toObject(RawActivity::class.java) }
+        val activities = activityDocs.mapNotNull { it.toObject(UserActivity::class.java) }
 
         _currentUser.postValue(UserWithActivities(user, activities))
     }
