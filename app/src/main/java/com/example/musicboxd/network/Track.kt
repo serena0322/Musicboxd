@@ -8,6 +8,7 @@ data class DeezerResponse(val data: List<Track>): Parcelable
 
 @Parcelize
 data class Track(
+    val id: Long?,
     val title: String?,
     val artist: Artist?,
     val album: Album?,

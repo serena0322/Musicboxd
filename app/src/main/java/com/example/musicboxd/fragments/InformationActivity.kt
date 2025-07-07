@@ -1,20 +1,32 @@
 package com.example.musicboxd.fragments
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.AttributeSet
+import android.util.Log
+import android.view.ContextThemeWrapper
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 
 class InformationActivity : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.information)
@@ -71,10 +83,95 @@ class InformationActivity : AppCompatActivity() {
                 isPlaying = false
             }
         }
+
+        val playlist = findViewById<Button>(R.id.playlist)
+        playlist.setOnClickListener {
+            AddToPlaylist(track)
+        }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
+    fun AddToPlaylist(track: Track?) {
+        if (track == null) return
+
+        val context = this
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        Log.d("PLAYLIST_DEBUG", "Current userId: $userId")
+        val db = FirebaseFirestore.getInstance()
+
+        // Recupera tutte le playlist dell’utente
+        db.collection("User")
+            .document(userId)
+            .collection("Playlists")
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("PLAYLIST_DEBUG", "Documenti trovati: ${result.size()}")
+                for (doc in result.documents) {
+                    Log.d(
+                        "PLAYLIST_DEBUG",
+                        "ID: ${doc.id}, name=${doc.get("name")}, createdBy=${doc.get("createdBy")}"
+                    )
+                }
+
+                val playlists = result.documents.mapNotNull { it.getString("name") }
+
+                if (playlists.isEmpty()) {
+                    Toast.makeText(context, "Non hai ancora playlist", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                AlertDialog.Builder(context)
+                    .setTitle("Aggiungi a playlist")
+                    .setItems(playlists.toTypedArray()) { _, which ->
+                        val selectedPlaylist = playlists[which]
+                        addTrackToPlaylist(userId, selectedPlaylist, track)
+                    }
+                    .setNegativeButton("Annulla", null)
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Errore nel recupero delle playlist", Toast.LENGTH_SHORT)
+                    .show()
+            }
+    }
+
+
+        private fun addTrackToPlaylist(userId: String, playlistName: String, track: Track) {
+        val db = FirebaseFirestore.getInstance()
+
+        // Identifica la playlist corretta dell’utente
+        db.collection("User")
+            .document(userId)
+            .collection("Playlists")
+            .whereEqualTo("createdBy", userId)
+            .whereEqualTo("name", playlistName)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.isEmpty) return@addOnSuccessListener
+
+                val playlistDoc = result.documents[0].reference
+
+                // Aggiunge il titolo (o ID) del brano al campo tracks (array union)
+                playlistDoc.update("tracks", FieldValue.arrayUnion(track.id?.toString() ?: "ID non disponibile"))
+                    .addOnSuccessListener {
+                        Log.d("Playlist", "Brano aggiunto con successo")
+                        Toast.makeText(
+                            this@InformationActivity,
+                            "${track.title} aggiunta a $playlistName",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Playlist", "Errore nell'aggiunta del brano", e)
+                    }
+            }
+    }
+
 }

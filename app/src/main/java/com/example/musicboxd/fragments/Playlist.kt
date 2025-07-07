@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
@@ -34,18 +35,31 @@ class Playlist : Fragment() {
         val view = inflater.inflate(R.layout.playlist, container, false)
 
         auth = FirebaseAuth.getInstance()
+
+        // 1. Inizializza prima l'adapter con il listener
+        adapter = PlaylistAdapter(playlists) { playlistItem ->
+            val action = PlaylistDirections.actionPlaylistToShowSongPlaylist(playlistItem.name)
+            findNavController().navigate(action)
+        }
+
+        // 2. Poi assegnalo al RecyclerView
         recyclerView = view.findViewById(R.id.activityRecyclerView)
-        adapter = PlaylistAdapter(playlists)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
+        // 3. Assegna listener al pulsante
         view.findViewById<TextView>(R.id.button).setOnClickListener {
             createPlaylist()
         }
 
+        // 4. Carica i dati (verrà chiamato dopo aver impostato l’adapter)
         loadPlaylists()
+
         return view
     }
+
+
+
 
     private fun loadPlaylists() {
         val userId = auth.currentUser?.uid ?: return

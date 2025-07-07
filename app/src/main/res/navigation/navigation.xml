@@ -133,6 +133,21 @@
         android:label="Playlist"
         tools:layout="@layout/playlist" >
 
+        <action
+            android:id="@+id/action_playlist_to_showSongPlaylist"
+            app:destination="@id/showSongPlaylist" />
+    </fragment>
+
+    <!-- Fragment ShowSong-->
+    <fragment
+        android:id="@+id/showSongPlaylist"
+        android:name="com.example.musicboxd.fragments.ShowSongPlaylist"
+        android:label="Playlist"
+        tools:layout="@layout/show_song_playlist" >
+        <argument
+            android:name="playlistName"
+            app:argType="string" />
+
     </fragment>
 
 </navigation>

@@ -66,8 +66,8 @@ class UserAdapter(
         val popup = PopupMenu(view.context, view)
 
         when (tabIndex) {
-            0 -> popup.inflate(R.menu.user_item_menu)      // E.g. Follow
-            2 -> popup.inflate(R.menu.user_following_menu)   // E.g. Unfollow
+            0 -> popup.inflate(R.menu.user_item_menu)        // Follow
+            2 -> popup.inflate(R.menu.user_following_menu)   // Unfollow
         }
 
         popup.setOnMenuItemClickListener { menuItem ->
@@ -79,31 +79,32 @@ class UserAdapter(
                 return@setOnMenuItemClickListener false
             }
 
-            val db = FirebaseFirestore.getInstance()
-            db.collection("User").document(currentUserId).get()
-                .addOnSuccessListener { document ->
-                    when (menuItem.itemId) {
-                        R.id.follow_user -> {
-                            followUser(user.id)
-                            logUserActivityforOthers("follow", targetUserId = user.id) // <-- valore standard
+            when (menuItem.itemId) {
+                R.id.follow_user -> {
+                    followUser(user.id) { success ->
+                        if (success) {
+                            logUserActivityforOthers("follow", targetUserId = user.id)
                             val logMsg = "Hai iniziato a seguire ${user.username}"
                             logUserActivity(logMsg)
                             Toast.makeText(view.context, "Ora segui ${user.username}", Toast.LENGTH_SHORT).show()
-                        }
-                        R.id.unfollow_user -> {
-                            unfollowUser(user.id)
-                            logUserActivityforOthers("unfollow", targetUserId = user.id) // <-- valore standard
-                            val logMsg = "Hai smesso di seguire ${user.username}"
-                            logUserActivity(logMsg)
-                            Toast.makeText(view.context, "Non segui più ${user.username}", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(view.context, "Segui già ${user.username}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
-                .addOnFailureListener {
-                    Toast.makeText(view.context, "Errore nel recupero dell'utente", Toast.LENGTH_SHORT).show()
+
+                R.id.unfollow_user -> {
+                    unfollowUser(user.id)
+                    logUserActivityforOthers("unfollow", targetUserId = user.id)
+                    val logMsg = "Hai smesso di seguire ${user.username}"
+                    logUserActivity(logMsg)
+                    Toast.makeText(view.context, "Non segui più ${user.username}", Toast.LENGTH_SHORT).show()
                 }
+            }
+
             return@setOnMenuItemClickListener true
         }
+
         popup.show()
     }
 
@@ -142,7 +143,7 @@ class UserAdapter(
     }
 
     //funzione follow
-    private fun followUser(targetUserId: String) {
+    private fun followUser(targetUserId: String, onResult: (Boolean) -> Unit) {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val db = FirebaseFirestore.getInstance()
 
@@ -152,14 +153,13 @@ class UserAdapter(
         val followerDocRef = targetUserRef.collection("followersList").document(currentUserId)
         val followingDocRef = currentUserRef.collection("followingList").document(targetUserId)
 
-        // Controllo se già segue
         followerDocRef.get().addOnSuccessListener { followerSnapshot ->
             if (followerSnapshot.exists()) {
                 Log.d("Follow", "Utente già tra i followers: operazione ignorata")
+                onResult(false) // <-- follow NON eseguito
                 return@addOnSuccessListener
             }
 
-            // Se non esiste, procedo con il follow
             Tasks.whenAllSuccess<DocumentSnapshot>(
                 currentUserRef.get(),
                 targetUserRef.get()
@@ -177,35 +177,38 @@ class UserAdapter(
                     updates.add(targetUserRef.set(mapOf("followers" to 0L), SetOptions.merge()))
                 }
 
-                Tasks.whenAll(updates)
-                    .addOnSuccessListener {
-                        val batch = db.batch()
+                Tasks.whenAll(updates).addOnSuccessListener {
+                    val batch = db.batch()
 
-                        batch.set(followerDocRef, mapOf("followedAt" to Timestamp.now()))
-                        batch.set(followingDocRef, mapOf("followedAt" to Timestamp.now()))
+                    batch.set(followerDocRef, mapOf("followedAt" to Timestamp.now()))
+                    batch.set(followingDocRef, mapOf("followedAt" to Timestamp.now()))
 
-                        batch.update(targetUserRef, "followers", FieldValue.increment(1L))
-                        batch.update(currentUserRef, "following", FieldValue.increment(1L))
+                    batch.update(targetUserRef, "followers", FieldValue.increment(1L))
+                    batch.update(currentUserRef, "following", FieldValue.increment(1L))
 
-                        batch.commit()
-                            .addOnSuccessListener {
-                                Log.d("Follow", "Follow eseguito correttamente")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("Follow", "Errore nel commit", e)
-                            }
+                    batch.commit().addOnSuccessListener {
+                        Log.d("Follow", "Follow eseguito correttamente")
+                        onResult(true) // <-- follow eseguito
+                    }.addOnFailureListener { e ->
+                        Log.e("Follow", "Errore nel commit", e)
+                        onResult(false)
                     }
-                    .addOnFailureListener { e ->
-                        Log.e("Follow", "Errore nell'inizializzazione dei campi", e)
-                    }
+                }.addOnFailureListener { e ->
+                    Log.e("Follow", "Errore aggiornamento contatori", e)
+                    onResult(false)
+                }
+
             }.addOnFailureListener { e ->
-                Log.e("Follow", "Errore nel recupero dei documenti", e)
+                Log.e("Follow", "Errore nel recupero documenti", e)
+                onResult(false)
             }
 
         }.addOnFailureListener { e ->
-            Log.e("Follow", "Errore nel controllo esistenza follower", e)
+            Log.e("Follow", "Errore nel controllo follower", e)
+            onResult(false)
         }
     }
+
 
 
     //unfollow
