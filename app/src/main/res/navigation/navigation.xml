@@ -32,9 +32,9 @@
         android:label="Search"
         tools:layout="@layout/fragment_search"  >
         <action
-            android:id="@+id/action_searchFragment_pop_including_homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_searchFragment_pop"
+            app:popUpTo="@id/searchFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <!-- Fragment Add-->
@@ -44,10 +44,6 @@
         android:label="Add"
         tools:layout="@layout/bottom_sheet_add_song" >
 
-        <action
-            android:id="@+id/action_addFragment_pop_including_homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Fragment Activity-->
@@ -56,11 +52,6 @@
         android:name="com.example.musicboxd.fragments.ActivityFragment"
         android:label="Activity"
         tools:layout="@layout/fragment_activity" >
-
-        <action
-            android:id="@+id/action_activityFragment_pop_including_homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- Fragment Profile -->
@@ -74,8 +65,7 @@
             app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_profileFragment_pop_including_homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/profileFragment" />
         <action
             android:id="@+id/action_profileFragment_to_network"
             app:destination="@id/network" />
@@ -85,6 +75,7 @@
         <action
             android:id="@+id/action_profileFragment_to_showReviews"
             app:destination="@id/showReviews" />
+
     </fragment>
 
     <!-- Fragment Settings -->
@@ -141,7 +132,7 @@
         android:label="Playlist"
         tools:layout="@layout/show_song_playlist" >
         <argument
-            android:name="playlistName"
+            android:name="playlistId"
             app:argType="string" />
 
     </fragment>
@@ -163,7 +154,8 @@
         tools:layout="@layout/user_profile">
         <argument
             android:name="userId"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="" />
 
         <action
             android:id="@+id/action_userProfile_to_Userplaylist"

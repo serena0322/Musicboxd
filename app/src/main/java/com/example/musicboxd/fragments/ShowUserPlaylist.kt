@@ -38,9 +38,12 @@ class ShowUserPlaylist : Fragment() {
         val userId = args.userId
 
         recyclerView = view.findViewById(R.id.RecyclerView)
-        adapter = TrackAdapter { track ->
-            Log.d("TrackClick", "Hai cliccato su: ${track.title}")
-        }
+        adapter = TrackAdapter(
+            onItemClick = { track ->
+                Log.d("TrackClick", "Hai cliccato su: ${track.title}")
+            },
+            onLongClick = {}
+        )
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 

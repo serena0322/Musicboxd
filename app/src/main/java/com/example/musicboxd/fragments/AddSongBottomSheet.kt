@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
-import com.example.musicboxd.fragments.ReviewActivity
 import com.example.musicboxd.adapter.TrackAdapter
 import com.example.musicboxd.viewModels.SearchViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -38,14 +37,17 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Inizializza RecyclerView e Adapter (come in SearchFragment)
-        adapter = TrackAdapter() { selectedTrack ->
-            val intent = Intent(requireContext(), ReviewActivity::class.java).apply {
-                putExtra("title", selectedTrack.title)
-                putExtra("artist", selectedTrack.artist?.name)
-                putExtra("cover", selectedTrack.album?.cover)
-            }
-            startActivity(intent)
-        }
+        adapter = TrackAdapter(
+            onItemClick = { selectedTrack ->
+                val intent = Intent(requireContext(), ReviewActivity::class.java).apply {
+                    putExtra("track", selectedTrack)
+                }
+                startActivity(intent)
+            },
+            onLongClick = { }
+        )
+
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.addScrollView)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -72,7 +74,6 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
             adapter.submitList(tracks)
         }
     }
-
 
     override fun onStart() {
         super.onStart()

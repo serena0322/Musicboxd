@@ -1,6 +1,7 @@
 package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -10,19 +11,27 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
+import com.example.musicboxd.network.RetrofitInstance.api
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackInformation : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.information)
@@ -30,22 +39,42 @@ class TrackInformation : AppCompatActivity() {
         val track = intent.getParcelableExtra<Track>("track")
 
         val title = track?.title
-        val artist = intent.getStringExtra("artist")
+        val artist = track?.artist?.name
         val albumTitle = track?.album?.title
         val duration = track?.duration
-        val releaseDate = track?.album?.release_date
-        val lyrics = track?.explicit_lyrics
         val preview = track?.preview
-        val rank = track?.rank
         val coverUrl = intent.getStringExtra("cover")
 
-        findViewById<TextView>(R.id.textView8).text = "🎧 Titolo: ${title ?: "N/A"}"
-        findViewById<TextView>(R.id.textView9).text = "👤 Artista: ${artist ?: "N/A"}"
-        findViewById<TextView>(R.id.textView7).text = "Album: ${albumTitle ?: "N/A"}"
-        findViewById<TextView>(R.id.textView10).text = "Durata: ${duration?.toString() ?: "N/A"} sec"
-        findViewById<TextView>(R.id.textView11).text = "Data: ${releaseDate ?: "N/A"}"
-        findViewById<TextView>(R.id.textView14).text = "Explicit: ${lyrics ?: "N/A"}"
-        findViewById<TextView>(R.id.textView12).text = "Rank: ${rank?.toString() ?: "N/A"}"
+        val albumId = track?.album?.id
+        if (albumId != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response =
+                        api.getAlbumDetails(albumId)  // Qui arriva l'oggetto Album aggiornato
+
+                    withContext(Dispatchers.Main) {
+                        val releaseDate = response.releaseDate ?: "N/A"
+                        val genre = response.genres?.data?.firstOrNull()?.name ?: "N/A"
+                        val date = formatDate(releaseDate)
+
+                        findViewById<TextView>(R.id.date).text = "Data uscita: $date"
+                        findViewById<TextView>(R.id.genre).text = "Genere: $genre"
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("Deezer", "Errore nel recupero dettagli album", e)
+                }
+            }
+        }
+
+        val songId = track?.id?.toString() ?: return
+        val rating = findViewById<TextView>(R.id.rating)
+        findViewById<TextView>(R.id.title).text = "${title ?: "N/A"}"
+        findViewById<TextView>(R.id.artist).text = "${artist ?: "N/A"}"
+        findViewById<TextView>(R.id.album).text = "${albumTitle ?: "N/A"}"
+        val formattedDuration = formatDuration(duration)
+        findViewById<TextView>(R.id.duration).text = "Durata: $formattedDuration"
+
         val coverImageView = findViewById<ImageView>(R.id.infoCover)
         Glide.with(this)
             .load(coverUrl)
@@ -53,23 +82,54 @@ class TrackInformation : AppCompatActivity() {
             .error(R.drawable.person)       // immagine se il caricamento fallisce
             .into(coverImageView)
 
-        val playButton = findViewById<Button>(R.id.button3)
+        val db = FirebaseFirestore.getInstance()
+        db.collection("Songs").document(songId).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val totalSum = document.getDouble("totalRatingSum") ?: 0.0
+                    val totalCount = document.getLong("totalRatings") ?: 0L
+
+                    val averageRating = if (totalCount > 0) totalSum / totalCount else null
+
+                    if (averageRating != null) {
+                        rating.text = "%.1f".format(averageRating)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                rating.text = ""
+                Log.e("Firestore", "Errore nel recupero rating", it)
+            }
+
+        val playButton = findViewById<Button>(R.id.play)
 
         playButton.setOnClickListener {
-            if (!isPlaying && preview != null) {
+            if (!isPlaying && !preview.isNullOrEmpty()) {
                 mediaPlayer = MediaPlayer().apply {
-                    setDataSource(preview)
-                    setOnPreparedListener { start() }
-                    prepareAsync()
-                }
-                isPlaying = true
-                playButton.text = "⏸️ Stop"
-
-                mediaPlayer?.setOnCompletionListener {
-                    playButton.text = "▶️ Preview"
-                    isPlaying = false
-                    mediaPlayer?.release()
-                    mediaPlayer = null
+                    try {
+                        setDataSource(preview)
+                        setAudioAttributes(
+                            AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .build()
+                        )
+                        setOnPreparedListener {
+                            start()
+                            this@TrackInformation.isPlaying = true
+                            playButton.text = "⏸️ Stop"
+                        }
+                        setOnCompletionListener {
+                            playButton.text = "▶️ Preview"
+                            this@TrackInformation.isPlaying = false
+                            release()
+                            mediaPlayer = null
+                        }
+                        prepareAsync()
+                    } catch (e: Exception) {
+                        Log.e("MediaPlayer", "Errore durante la riproduzione: ${e.message}", e)
+                        Toast.makeText(this@TrackInformation, "Errore audio", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } else {
                 mediaPlayer?.stop()
@@ -80,16 +140,37 @@ class TrackInformation : AppCompatActivity() {
             }
         }
 
+
         val playlist = findViewById<Button>(R.id.playlist)
         playlist.setOnClickListener {
             addToPlaylist(track)
         }
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer?.release()
         mediaPlayer = null
+    }
+
+    fun formatDuration(seconds: Int?): String {
+        if (seconds == null) return "Durata sconosciuta"
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format("%d:%02d min", minutes, remainingSeconds)
+    }
+
+    fun formatDate(dateString: String?): String {
+        if (dateString.isNullOrBlank()) return "Data sconosciuta"
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val outputFormat = SimpleDateFormat("d MMMM yyyy", Locale.ITALY)
+            val date = inputFormat.parse(dateString)
+            outputFormat.format(date!!)
+        } catch (e: Exception) {
+            "Data sconosciuta"
+        }
     }
 
     fun addToPlaylist(track: Track?) {

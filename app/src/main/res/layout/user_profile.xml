@@ -71,6 +71,14 @@
                 android:layout_height="wrap_content"
                 android:text="Followers" />
 
+            <!-- Followers -->
+            <TextView
+                android:id="@+id/likes"
+                style="@style/ClickableListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Likes" />
+
         </LinearLayout>
     </ScrollView>
 

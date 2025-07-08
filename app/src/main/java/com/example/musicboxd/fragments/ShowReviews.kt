@@ -14,6 +14,9 @@ import com.example.musicboxd.local.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.firebase.firestore.Query
 
 
 class ShowReviews : Fragment() {
@@ -34,12 +37,22 @@ class ShowReviews : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.recyclerView)
-        adapter = ReviewAdapter(reviewList)
+
+        //eliminazione recensione
+        adapter = ReviewAdapter(reviewList) { review ->
+            AlertDialog.Builder(requireContext())
+                .setTitle("Eliminare recensione")
+                .setMessage("Sei sicura di voler eliminare questa recensione?")
+                .setPositiveButton("Elimina") { _, _ ->
+                    deleteReview(review.sourceUserId, review.documentId)
+                }
+                .setNegativeButton("Annulla", null)
+                .show()
+        }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
         loadReviews()
-
         return view
     }
 
@@ -50,6 +63,7 @@ class ShowReviews : Fragment() {
         db.collection("User")
             .document(userId)
             .collection("Reviews")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
                 reviewList.clear()
@@ -63,6 +77,7 @@ class ShowReviews : Fragment() {
                     val cover = doc.getString("cover") ?: ""
 
                     val review = Review(
+                        documentId = doc.id,
                         actionType = "review",
                         artistName = artistName,
                         songTitle = songTitle,
@@ -72,7 +87,6 @@ class ShowReviews : Fragment() {
                         reviewText = reviewText,
                         timestamp = timestamp
                     )
-
                     reviewList.add(review)
                 }
 
@@ -82,5 +96,21 @@ class ShowReviews : Fragment() {
                 Log.e("Firestore", "Errore nel caricamento recensioni", it)
             }
     }
+
+    private fun deleteReview(userId: String, documentId: String) {
+        db.collection("User")
+            .document(userId)
+            .collection("Reviews")
+            .document(documentId)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(context, "Recensione eliminata", Toast.LENGTH_SHORT).show()
+                loadReviews() // ricarica la lista aggiornata
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
 }

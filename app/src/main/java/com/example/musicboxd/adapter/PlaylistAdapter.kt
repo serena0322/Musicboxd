@@ -8,7 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.local.PlaylistItem
 
-class PlaylistAdapter(private val playlists: MutableList<PlaylistItem>, private val onItemClick: (PlaylistItem) -> Unit) :
+class PlaylistAdapter(
+    private val playlists: MutableList<PlaylistItem>,
+    private val onItemClick: (PlaylistItem) -> Unit,
+    private val onLongClick: (PlaylistItem) -> Unit) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     inner class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,7 +27,6 @@ class PlaylistAdapter(private val playlists: MutableList<PlaylistItem>, private 
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_playlist, parent, false)
@@ -32,8 +34,16 @@ class PlaylistAdapter(private val playlists: MutableList<PlaylistItem>, private 
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.nameTextView.text = playlists[position].name
+        val playlist = playlists[position]
+
+        holder.itemView.setOnLongClickListener {
+            onLongClick(playlist)
+            true
+        }
+        holder.nameTextView.text = playlist.name
     }
+
+
 
     override fun getItemCount(): Int = playlists.size
 

@@ -13,7 +13,8 @@ import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
 
 class TrackAdapter(
-    private val onItemClick: (Track) -> Unit
+    private val onItemClick: (Track) -> Unit,
+    private val onLongClick: (Track) -> Unit
 ) : ListAdapter<Track, TrackAdapter.TrackViewHolder>(DiffCallback()) {
 
     // Classe ViewHolder
@@ -42,6 +43,14 @@ class TrackAdapter(
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(getItem(position))
+
+        val track = getItem(position)
+
+        holder.itemView.setOnLongClickListener {
+            onLongClick(track)
+            true
+        }
+
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Track>() {

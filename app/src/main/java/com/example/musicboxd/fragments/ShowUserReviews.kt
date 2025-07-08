@@ -14,7 +14,6 @@ import com.example.musicboxd.adapter.ReviewAdapter
 import com.example.musicboxd.local.Review
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 
 
@@ -36,7 +35,7 @@ class ShowUserReviews : Fragment() {
         val view = inflater.inflate(R.layout.show_reviews, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        adapter = ReviewAdapter(reviewList)
+        adapter = ReviewAdapter(reviewList) { /* Nessuna azione */ }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -56,6 +55,7 @@ class ShowUserReviews : Fragment() {
                 recyclerView.visibility = View.VISIBLE
 
                 for (doc in result) {
+                    val documentId = doc.id
                     val songTitle = doc.getString("title") ?: continue
                     val artistName = doc.getString("artist") ?: continue
                     val timestamp = doc.getTimestamp("timestamp")
@@ -64,6 +64,7 @@ class ShowUserReviews : Fragment() {
                     val cover = doc.getString("cover") ?: ""
 
                     val review = Review(
+                        documentId = documentId,
                         actionType = "review",
                         artistName = artistName,
                         songTitle = songTitle,

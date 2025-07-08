@@ -62,11 +62,11 @@ class ActivityFragment: Fragment(){
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        // Esegui comunque il caricamento iniziale se il tab corrente è già selezionato
-        if (tabLayout.selectedTabPosition == 1) {
+        tabLayout.post {
+            val initialTab = tabLayout.getTabAt(1)
+            initialTab?.select()
+            adapter.updateTabIndex(1)
             loadCurrentUserActivity()
-        } else if (tabLayout.selectedTabPosition == 0) {
-            loadFriendsActivities()
         }
 
         return view
@@ -94,7 +94,6 @@ class ActivityFragment: Fragment(){
                 Toast.makeText(requireContext(), "Errore nel caricamento delle attività", Toast.LENGTH_SHORT).show()
             }
     }
-
 
     private fun loadFriendsActivities() {
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return

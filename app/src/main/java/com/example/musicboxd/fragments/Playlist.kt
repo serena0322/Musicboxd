@@ -37,9 +37,23 @@ class Playlist : Fragment() {
         auth = FirebaseAuth.getInstance()
 
         // 1. Inizializza prima l'adapter con il listener
-        adapter = PlaylistAdapter(playlists) { playlistItem ->
-            findNavController().navigate(R.id.action_playlist_to_showSongPlaylist)
-        }
+        adapter = PlaylistAdapter(
+            playlists,
+            onItemClick = { playlistItem ->
+                val action = PlaylistDirections.actionPlaylistToShowSongPlaylist(playlistItem.id)
+                findNavController().navigate(action)
+            },
+            onLongClick = { playlistItem ->
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Elimina playlist")
+                    .setMessage("Vuoi eliminare la playlist \"${playlistItem.name}\"?")
+                    .setPositiveButton("Elimina") { _, _ ->
+                        deletePlaylist(playlistItem)
+                    }
+                    .setNegativeButton("Annulla", null)
+                    .show()
+            }
+        )
 
         // 2. Poi assegnalo al RecyclerView
         recyclerView = view.findViewById(R.id.activityRecyclerView)
@@ -57,6 +71,27 @@ class Playlist : Fragment() {
         return view
     }
 
+    private fun deletePlaylist(playlistItem: PlaylistItem) {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("User")
+            .document(userId)
+            .collection("Playlists")
+            .document(playlistItem.id)
+            .delete()
+            .addOnSuccessListener {
+                val index = playlists.indexOfFirst { it.id == playlistItem.id }
+                if (index != -1) {
+                    playlists.removeAt(index)
+                    adapter.notifyItemRemoved(index)
+                }
+                Toast.makeText(requireContext(), "Playlist eliminata", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Errore durante l'eliminazione", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun loadPlaylists() {
         val userId = auth.currentUser?.uid ?: return
         db.collection("User")
@@ -66,7 +101,7 @@ class Playlist : Fragment() {
                 if (error != null || snapshots == null) return@addSnapshotListener
                 playlists.clear()
                 for (doc in snapshots) {
-                    val item = doc.toObject(PlaylistItem::class.java)
+                    val item = doc.toObject(PlaylistItem::class.java).copy(id = doc.id)
                     playlists.add(item)
                 }
                 adapter.notifyDataSetChanged()

@@ -11,11 +11,12 @@ data class User(
     val email: String = "",
     var firstName: String = "",
     var lastName: String = "",
+    var likes: Long = 0,
     val followers: Long = 0,
     val following: Long = 0,
     val createdAt: Timestamp = Timestamp.now(),
 ) {
-    constructor() : this("", "", "", "", "", 0, 0, Timestamp.now())
+    constructor() : this("", "", "", "", "",0, 0, 0, Timestamp.now())
 }
 
 

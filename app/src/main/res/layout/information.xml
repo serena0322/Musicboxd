@@ -1,108 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#303C4A" >
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="224dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="17dp"
+        android:textSize="18dp"
+        android:text="Title"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/infoCover"
+        app:layout_constraintTop_toTopOf="@+id/infoCover" />
 
     <TextView
-        android:id="@+id/textView11"
-        android:layout_width="62dp"
-        android:layout_height="27dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.896"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.237"
-        android:textColor="#FFFFFF" />
-
+        android:id="@+id/album"
+        android:layout_width="224dp"
+        android:textSize="14dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="12dp"
+        android:text="Album"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@+id/artist"
+        app:layout_constraintTop_toBottomOf="@+id/artist" />
 
     <TextView
-        android:id="@+id/textView9"
-        android:layout_width="145dp"
-        android:layout_height="31dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.864"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        android:textColor="#FFFFFF" />
-
+        android:id="@+id/duration"
+        android:layout_width="224dp"
+        android:layout_height="21dp"
+        android:textSize="14dp"
+        android:layout_marginTop="12dp"
+        android:text="Duration"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@+id/date"
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/textView8"
-        android:layout_width="145dp"
-        android:layout_height="31dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.864"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.037"
-        android:textColor="#FFFFFF" />
+        android:id="@+id/artist"
+        android:textSize="16dp"
+        android:layout_width="224dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="12dp"
+        android:textStyle="italic"
+        android:text="Artist"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="224dp"
+        android:layout_height="21dp"
+        android:textSize="14dp"
+        android:layout_marginTop="12dp"
+        android:text="Date"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@+id/album"
+        app:layout_constraintTop_toBottomOf="@+id/album" />
 
     <ImageView
         android:id="@+id/infoCover"
-        android:layout_width="201dp"
-        android:layout_height="180dp"
+        android:layout_width="147dp"
+        android:layout_height="159dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintHorizontal_bias="0.064"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.025" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="145dp"
-        android:layout_height="31dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.864"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.164"
-        android:textColor="#FFFFFF" />
-
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="62dp"
-        android:layout_height="27dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.659"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.237"
-        android:textColor="#FFFFFF" />
+        app:layout_constraintVertical_bias="0.045" />
 
 
     <LinearLayout
         android:id="@+id/ratingHistogram"
         android:layout_width="271dp"
         android:layout_height="72dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/transparent"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
         android:weightSum="10"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.357"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.579">
+        app:layout_constraintTop_toBottomOf="@+id/Ratings"
+        tools:ignore="MissingConstraints">
 
         <!-- 0.5★ -->
         <View
@@ -123,6 +113,7 @@
             android:background="@drawable/rating_bar_background" />
 
         <!-- 1.5★ -->
+
         <View
             android:id="@+id/bar_1_5"
             android:layout_width="0dp"
@@ -196,34 +187,44 @@
 
     </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="368dp"
-        android:layout_height="74dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.414"
-        android:textColor="#FFFFFF" />
-
-
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Riproduci Anteprima"
         android:textSize="8sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.233"
+        app:layout_constraintHorizontal_bias="0.166"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.31" />
+        app:layout_constraintTop_toBottomOf="@+id/genre"
+        app:layout_constraintVertical_bias="0.108" />
 
+    <TextView
+        android:id="@+id/Ratings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="RATINGS"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play" />
+
+    <TextView
+        android:id="@+id/lyrics"
+        android:layout_width="358dp"
+        android:layout_height="181dp"
+        android:layout_marginBottom="16dp"
+        android:text="Lyrics"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingHistogram" />
 
     <Button
         android:id="@+id/playlist"
@@ -231,77 +232,61 @@
         android:layout_height="wrap_content"
         android:text="Aggiungi alla Playlist"
         android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.76"
+        app:layout_constraintHorizontal_bias="0.739"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.31" />
+        app:layout_constraintTop_toTopOf="@+id/play" />
 
     <TextView
-        android:id="@+id/textView14"
-        android:layout_width="333dp"
-        android:layout_height="236dp"
-        android:text="TextView"
+        android:id="@+id/rating"
+        android:layout_width="53dp"
+        android:layout_height="28dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.941"
-        android:textColor="#FFFFFF" />
-
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RATINGS"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.198"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.509"
-        android:textColor="#FFFFFF" />
-
-
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="57dp"
-        android:layout_height="48dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.963"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.559"
-        android:textColor="#FFFFFF" />
+        app:layout_constraintTop_toTopOf="@+id/ratingHistogram"
+        app:layout_constraintVertical_bias="0.035" />
 
     <TextView
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:text="★"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#11F54E"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingHistogram"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.143"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.61"
-        android:textColor="#11F54E" />
+        app:layout_constraintHorizontal_bias="0.065"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:text="★★★★★"
         android:textColor="#11F54E"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ratingHistogram"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.979"
+        app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.609" />
+        app:layout_constraintTop_toBottomOf="@+id/rating"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/genre"
+        android:layout_width="224dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="20dp"
+        android:text="Genre"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="@+id/infoCover"
+        app:layout_constraintTop_toBottomOf="@+id/infoCover"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

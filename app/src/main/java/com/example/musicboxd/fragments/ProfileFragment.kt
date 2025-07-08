@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.ProfileAdapter
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ProfileFragment: Fragment() {
 
@@ -34,6 +36,16 @@ class ProfileFragment: Fragment() {
         val savedUsername = sharedPreferences.getString("saved_username", "Guest")  // "Guest" è il valore predefinito nel caso non sia stato salvato nessun username
         // Imposta l'username nel TextView
         username.text = savedUsername
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        val likes = view.findViewById<TextView>(R.id.likes)
+        val userDoc = FirebaseFirestore.getInstance().collection("User").document(uid)
+
+        userDoc.get().addOnSuccessListener { document ->
+            val likeCount = document.getLong("likes") ?: 0L
+            likeCount.toString()
+            likes.text = "Likes: $likeCount "
+        }
 
         val reviews = view.findViewById<TextView>(R.id.reviews)
         reviews.setOnClickListener {
@@ -57,4 +69,5 @@ class ProfileFragment: Fragment() {
 
         return view
     }
+
 }

@@ -18,9 +18,7 @@ class UserProfile : Fragment() {
     private lateinit var usernameTextView: TextView
     private lateinit var followersCountTextView: TextView
     private lateinit var followingCountTextView: TextView
-
     private val args: UserProfileArgs by navArgs()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +37,15 @@ class UserProfile : Fragment() {
         usernameTextView = view.findViewById(R.id.username)
         followersCountTextView = view.findViewById(R.id.followers)
         followingCountTextView = view.findViewById(R.id.following)
+        val likes = view.findViewById<TextView>(R.id.likes)
         val playlist = view.findViewById<TextView>(R.id.playlist)
+        val userDoc = FirebaseFirestore.getInstance().collection("User").document(userId)
+
+        userDoc.get().addOnSuccessListener { document ->
+            val likeCount = document.getLong("likes") ?: 0L
+            likeCount.toString()
+            likes.text = "Likes: $likeCount "
+        }
 
         playlist.setOnClickListener {
             val action = UserProfileDirections.actionUserProfileToUserplaylist(userId)

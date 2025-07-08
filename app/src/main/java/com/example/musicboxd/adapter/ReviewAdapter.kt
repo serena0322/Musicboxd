@@ -13,8 +13,10 @@ import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ReviewAdapter(private val reviews: List<Review>) :
-    RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
+class ReviewAdapter(
+    private val reviews: List<Review>,
+    private val onDeleteClick: (Review) -> Unit // nuovo parametro
+) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     inner class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val songTitle = view.findViewById<TextView>(R.id.songTitle)
@@ -41,6 +43,11 @@ class ReviewAdapter(private val reviews: List<Review>) :
 
         // Imposta il testo dell'EditText
         holder.reviewText.setText(review.reviewText)
+
+        holder.itemView.setOnLongClickListener {
+            onDeleteClick(review)
+            true
+        }
 
         val ratingFormatted = if ((review.rating % 1).toFloat() == 0f) {
             review.rating.toInt().toString()

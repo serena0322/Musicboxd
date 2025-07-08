@@ -1,6 +1,7 @@
 package com.example.musicboxd.network
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -14,12 +15,39 @@ data class Track(
     val album: Album?,
     val duration: Int?,
     val preview: String?,
-    val rank: Int?,
-    val explicit_lyrics: Boolean?
 ): Parcelable
 
 @Parcelize
 data class Artist(val name: String?): Parcelable
 
 @Parcelize
-data class Album(val title: String?, val cover: String?, val release_date: String?): Parcelable
+data class Album(
+    val id: Long?,
+    val title: String?,
+    val genres: GenreResponse?,
+    val cover: String?,
+    val releaseDate: String?
+) : Parcelable
+
+
+@Parcelize
+data class AlbumDetailsResponse(
+    val id: Long?,
+    val title: String?,
+    @SerializedName("release_date")
+    val releaseDate: String?,
+    val cover: String?,
+    val genres: GenreResponse?
+) : Parcelable
+
+
+@Parcelize
+data class GenreResponse(
+    val data: List<Genre>?
+) : Parcelable
+
+@Parcelize
+data class Genre(
+    val id: Long?,
+    val name: String?
+) : Parcelable
