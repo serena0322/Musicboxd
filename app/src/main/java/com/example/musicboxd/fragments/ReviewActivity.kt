@@ -2,7 +2,6 @@ package com.example.musicboxd.fragments
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -16,43 +15,78 @@ import com.example.musicboxd.R
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.material.textfield.TextInputEditText
+
 
 class ReviewActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.review)
 
-        val title = intent.getStringExtra("title")
-        val artist = intent.getStringExtra("artist")
-        val coverUrl = intent.getStringExtra("cover")
+        val title = intent.getStringExtra("title") ?: "una canzone"
+        val artist = intent.getStringExtra("artist") ?: "un artista"
+        val coverUrl = intent.getStringExtra("cover") ?: ""
 
-        findViewById<TextView>(R.id.title).text = title
-        findViewById<TextView>(R.id.artist).text = artist
-        val coverImageView = findViewById<ImageView>(R.id.cover)
+        val coverImage = findViewById<ImageView>(R.id.coverImage)
+        val titleText = findViewById<TextView>(R.id.title)
+        val artistText = findViewById<TextView>(R.id.artist)
+        val heartImage = findViewById<ImageView>(R.id.heartImage)
+        val likeText = findViewById<TextView>(R.id.like)
+        val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
+        val rate = findViewById<TextView>(R.id.rate)
+        val saveButton = findViewById<TextView>(R.id.save)
+        val textReviewInput = findViewById<TextInputEditText>(R.id.textReview)
+        val date = findViewById<TextView>(R.id.textView4)
+        val timestamp = Timestamp.now()
+        date.text = timestamp.toDate().toString()
+
+        titleText.text = title
+        artistText.text = artist
+
         Glide.with(this)
             .load(coverUrl)
-            .placeholder(R.drawable.person) // immagine di default durante il caricamento
-            .error(R.drawable.person)       // immagine se il caricamento fallisce
-            .into(coverImageView)
-
-        val heartImage = findViewById<ImageView>(R.id.heartImage)
-        val likeText = findViewById<TextView>(R.id.textView6)
-        val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
-        val textView = findViewById<TextView>(R.id.textView5)
-        val saveButton = findViewById<TextView>(R.id.button2)
+            .placeholder(R.drawable.person)
+            .error(R.drawable.person)
+            .into(coverImage)
 
         saveButton.setOnClickListener {
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            if (currentUser != null) {
-                val reviewedTitle = title ?: "una canzone"
-                val reviewedArtist = artist ?: "un artista"
+            val currentUser = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
+            val uid = currentUser.uid
+            val reviewText = textReviewInput.text?.toString()?.trim() ?: ""
+            val rating = ratingBar.rating.toDouble()
+            val timestamp = Timestamp.now()
 
-                // Log
-                logUserActivity(reviewedTitle, reviewedArtist)
-                logUserActivityForOthers( reviewedTitle, reviewedArtist)
-            }
+            val db = FirebaseFirestore.getInstance()
 
-            // Chiudi il fragment corrente (es. BottomSheet o Fragment "interno")
+            val reviewData = mapOf(
+                "action" to "review",
+                "timestamp" to timestamp,
+                "textReview" to reviewText,
+                "title" to title,
+                "artist" to artist,
+                "rating" to rating,
+                "cover" to coverUrl
+            )
+
+            val activityData = mapOf(
+                "action" to "Hai recensito \"$title\" di $artist",
+                "timestamp" to timestamp
+            )
+
+            val publicActivity = mapOf(
+                "actionType" to "review",
+                "sourceUserId" to uid,
+                "songTitle" to title,
+                "artistName" to artist,
+                "timestamp" to timestamp
+            )
+
+            // Salvataggio in parallelo ma asincrono
+            db.collection("User").document(uid).collection("Reviews").add(reviewData)
+            db.collection("User").document(uid).collection("Activity").add(activityData)
+            db.collection("User").document(uid).collection("ActivityForOthers").add(publicActivity)
+
             finish()
         }
 
@@ -63,44 +97,9 @@ class ReviewActivity : AppCompatActivity() {
         }
 
         ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
-            Log.d("ReviewActivity", "Rating changed: $rating")
-            textView.text = if (rating > 0) "Rated" else "Rate"
+            rate.text = if (rating > 0) "Rated" else "Rate"
         }
     }
-
-    fun logUserActivity(title: String, artist: String) {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val message = "Hai recensito \"$title\" di $artist"
-        val activityData = mapOf(
-            "action" to message,
-            "timestamp" to Timestamp.Companion.now()
-        )
-        FirebaseFirestore.getInstance()
-            .collection("User")
-            .document(uid)
-            .collection("Activity")
-            .add(activityData)
-    }
-
-    fun logUserActivityForOthers(songTitle: String? = null, artistName: String? = null) {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
-        val activity = mutableMapOf<String, Any>(
-            "actionType" to "review",
-            "sourceUserId" to uid,
-            "timestamp" to Timestamp.Companion.now()
-        )
-
-        if (songTitle != null) activity["songTitle"] = songTitle
-        if (artistName != null) activity["artistName"] = artistName
-
-        FirebaseFirestore.getInstance()
-            .collection("User")
-            .document(uid)
-            .collection("ActivityForOthers")
-            .add(activity)
-    }
-
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {

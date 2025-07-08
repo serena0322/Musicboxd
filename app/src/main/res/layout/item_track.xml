@@ -4,6 +4,7 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:layout_width="match_parent"
+    android:background="@color/scrollView"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -30,6 +31,7 @@
         <TextView
             android:id="@+id/artist"
             android:textSize="14sp"
+            android:textStyle="italic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF" />

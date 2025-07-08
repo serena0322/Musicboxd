@@ -82,6 +82,9 @@
         <action
             android:id="@+id/action_profileFragment_to_playlist"
             app:destination="@id/playlist" />
+        <action
+            android:id="@+id/action_profileFragment_to_showReviews"
+            app:destination="@id/showReviews" />
     </fragment>
 
     <!-- Fragment Settings -->
@@ -117,22 +120,15 @@
             app:destination="@id/userProfile" />
     </fragment>
 
-    <!-- Fragment UserProfile-->
-    <fragment
-        android:id="@+id/userProfile"
-        android:name="com.example.musicboxd.fragments.UserProfile"
-        android:label="Profile"
-        tools:layout="@layout/user_profile" >
-
-    </fragment>
-
     <!-- Fragment Playlist-->
     <fragment
         android:id="@+id/playlist"
         android:name="com.example.musicboxd.fragments.Playlist"
         android:label="Playlist"
         tools:layout="@layout/playlist" >
-
+        <argument
+            android:name="userId"
+            app:argType="string" />
         <action
             android:id="@+id/action_playlist_to_showSongPlaylist"
             app:destination="@id/showSongPlaylist" />
@@ -148,6 +144,78 @@
             android:name="playlistName"
             app:argType="string" />
 
+    </fragment>
+
+    <!-- Fragment ShowReviews-->
+    <fragment
+        android:id="@+id/showReviews"
+        android:name="com.example.musicboxd.fragments.ShowReviews"
+        android:label="Reviews"
+        tools:layout="@layout/show_reviews" >
+
+    </fragment>
+
+    <!-- Fragment UserProfile-->
+    <fragment
+        android:id="@+id/userProfile"
+        android:name="com.example.musicboxd.fragments.UserProfile"
+        android:label="Profile"
+        tools:layout="@layout/user_profile">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_userProfile_to_Userplaylist"
+            app:destination="@id/Userplaylist" />
+        <action
+            android:id="@+id/action_userProfile_to_showUserReviews"
+            app:destination="@id/UsershowReviews" />
+    </fragment>
+
+
+
+    <!-- Fragment UserPlaylist-->
+    <fragment
+        android:id="@+id/Userplaylist"
+        android:name="com.example.musicboxd.fragments.UserPlaylists"
+        android:label="Playlist"
+        tools:layout="@layout/playlist" >
+
+        <argument
+            android:name="userId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_userplaylist_to_showUserPlaylist"
+            app:destination="@id/showUserPlaylist" />
+    </fragment>
+
+
+    <!-- Fragment UserShowSong-->
+    <fragment
+        android:id="@+id/showUserPlaylist"
+        android:name="com.example.musicboxd.fragments.ShowUserPlaylist"
+        android:label="Playlist"
+        tools:layout="@layout/show_song_playlist" >
+        <argument
+            android:name="playlistName"
+            app:argType="string" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
+
+    </fragment>
+
+    <!-- Fragment UserShowReviews-->
+    <fragment
+        android:id="@+id/UsershowReviews"
+        android:name="com.example.musicboxd.fragments.ShowUserReviews"
+        android:label="Reviews"
+        tools:layout="@layout/show_reviews" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
     </fragment>
 
 </navigation>

@@ -42,10 +42,8 @@ class Network : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = UserAdapter(tabIndex = 0) { user ->
-            val bundle = Bundle().apply {
-                putString("USER_ID", user.id)
-            }
-            findNavController().navigate(R.id.action_network_to_userProfile, bundle)
+            val action = NetworkDirections.actionNetworkToUserProfile(user.id)
+            findNavController().navigate(action)
         }
 
         recyclerView.adapter = adapter

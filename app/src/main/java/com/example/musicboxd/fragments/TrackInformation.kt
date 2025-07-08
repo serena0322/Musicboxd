@@ -1,13 +1,9 @@
 package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
-import android.view.ContextThemeWrapper
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
-class InformationActivity : AppCompatActivity() {
+class TrackInformation : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
@@ -63,8 +59,8 @@ class InformationActivity : AppCompatActivity() {
             if (!isPlaying && preview != null) {
                 mediaPlayer = MediaPlayer().apply {
                     setDataSource(preview)
-                    prepare()
-                    start()
+                    setOnPreparedListener { start() }
+                    prepareAsync()
                 }
                 isPlaying = true
                 playButton.text = "⏸️ Stop"
@@ -86,7 +82,7 @@ class InformationActivity : AppCompatActivity() {
 
         val playlist = findViewById<Button>(R.id.playlist)
         playlist.setOnClickListener {
-            AddToPlaylist(track)
+            addToPlaylist(track)
         }
     }
 
@@ -96,7 +92,7 @@ class InformationActivity : AppCompatActivity() {
         mediaPlayer = null
     }
 
-    fun AddToPlaylist(track: Track?) {
+    fun addToPlaylist(track: Track?) {
         if (track == null) return
 
         val context = this
@@ -163,7 +159,7 @@ class InformationActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         Log.d("Playlist", "Brano aggiunto con successo")
                         Toast.makeText(
-                            this@InformationActivity,
+                            this@TrackInformation,
                             "${track.title} aggiunta a $playlistName",
                             Toast.LENGTH_SHORT
                         ).show()

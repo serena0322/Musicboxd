@@ -14,7 +14,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.inputmethod.InputMethodManager
 import com.example.musicboxd.adapter.TrackAdapter2
-import com.example.musicboxd.fragments.InformationActivity
 
 class SearchFragment : Fragment() {
 
@@ -27,7 +26,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = TrackAdapter2 { selectedTrack ->
-            val intent = Intent(requireContext(), InformationActivity::class.java).apply {
+            val intent = Intent(requireContext(), TrackInformation::class.java).apply {
                 putExtra("track", selectedTrack)
                 putExtra("cover", selectedTrack.album?.cover)
             }

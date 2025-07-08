@@ -38,8 +38,7 @@ class Playlist : Fragment() {
 
         // 1. Inizializza prima l'adapter con il listener
         adapter = PlaylistAdapter(playlists) { playlistItem ->
-            val action = PlaylistDirections.actionPlaylistToShowSongPlaylist(playlistItem.name)
-            findNavController().navigate(action)
+            findNavController().navigate(R.id.action_playlist_to_showSongPlaylist)
         }
 
         // 2. Poi assegnalo al RecyclerView
@@ -57,9 +56,6 @@ class Playlist : Fragment() {
 
         return view
     }
-
-
-
 
     private fun loadPlaylists() {
         val userId = auth.currentUser?.uid ?: return

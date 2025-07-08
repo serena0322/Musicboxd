@@ -2,7 +2,6 @@ package com.example.musicboxd.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-
 import retrofit2.http.Path
 
 interface DeezerApi {
@@ -13,7 +12,6 @@ interface DeezerApi {
     ): DeezerResponse
 
     @GET("track/{id}")
-    suspend fun getTrackById(
-        @Path("id") id: String
-    ): Track
+    suspend fun getTrack(@Path("id") trackId: String): Track
 }
+

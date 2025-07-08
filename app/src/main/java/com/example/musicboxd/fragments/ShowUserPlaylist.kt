@@ -20,10 +20,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-class ShowSongPlaylist : Fragment() {
+class ShowUserPlaylist : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private val trackList = mutableListOf<Track>()  // usa il tuo modello completo
+    private val trackList = mutableListOf<Track>()
     private lateinit var adapter: TrackAdapter
     private val db = FirebaseFirestore.getInstance()
 
@@ -33,13 +33,12 @@ class ShowSongPlaylist : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.show_song_playlist, container, false)
 
-        val args: ShowSongPlaylistArgs by navArgs()
+        val args: ShowUserPlaylistArgs by navArgs()
         val playlistName = args.playlistName
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return view
+        val userId = args.userId
 
         recyclerView = view.findViewById(R.id.RecyclerView)
         adapter = TrackAdapter { track ->
-            // Azione al click (puoi lasciare vuoto o gestirlo)
             Log.d("TrackClick", "Hai cliccato su: ${track.title}")
         }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -47,7 +46,7 @@ class ShowSongPlaylist : Fragment() {
 
         view.findViewById<TextView>(R.id.NamePlaylist).text = playlistName
 
-        // 🔍 Recupera i track ID da Firestore
+        // 🔍 Recupera la playlist dell’utente specificato
         db.collection("User")
             .document(userId)
             .collection("Playlists")
@@ -61,9 +60,7 @@ class ShowSongPlaylist : Fragment() {
 
                     if (!trackIds.isNullOrEmpty()) {
                         trackList.clear()
-
                         for (trackId in trackIds) {
-                            // 🔁 Qui chiama la tua API per ottenere il brano completo
                             fetchTrackById(trackId)
                         }
                     }
@@ -78,11 +75,10 @@ class ShowSongPlaylist : Fragment() {
             try {
                 val track = RetrofitInstance.api.getTrack(trackId)
                 trackList.add(track)
-                adapter.submitList(trackList.toList()) // forza il ricalcolo della differenza
+                adapter.submitList(trackList.toList())
             } catch (e: Exception) {
                 Log.e("API_ERROR", "Errore nel recupero traccia $trackId", e)
             }
         }
     }
-
 }
