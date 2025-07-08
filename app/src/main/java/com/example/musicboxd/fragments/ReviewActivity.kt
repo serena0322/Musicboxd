@@ -9,16 +9,20 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import com.example.musicboxd.network.Track
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
+import com.example.musicboxd.`object`.UserRepository
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.launch
 import org.chromium.base.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -61,6 +65,7 @@ class ReviewActivity : AppCompatActivity() {
             .into(coverImage)
 
         saveButton.setOnClickListener {
+            saveButton.isEnabled = false
             val currentUser = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
             val uid = currentUser.uid
             val reviewText = textReviewInput.text?.toString()?.trim() ?: ""
@@ -121,7 +126,8 @@ class ReviewActivity : AppCompatActivity() {
             }.addOnSuccessListener {
                 Log.d("Firestore", "Dati canzone aggiornati correttamente")
             }.addOnFailureListener {
-                Log.e("Firestore", "Errore aggiornamento dati canzone", it)
+                saveButton.isEnabled = true
+                Toast.makeText(this, "Errore nel salvataggio della recensione", Toast.LENGTH_SHORT).show()
             }
 
             // Aggiorna contatore dei like se il cuore è selezionato
@@ -134,8 +140,11 @@ class ReviewActivity : AppCompatActivity() {
                         Log.e("Firestore", "Errore aggiornamento like utente", it)
                     }
             }
-            finish()
+            lifecycleScope.launch {
+                UserRepository.loadUser()
+                finish()
             }
+        }
 
             heartImage.setOnClickListener {
                 val isLiked = !heartImage.isSelected

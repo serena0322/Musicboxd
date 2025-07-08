@@ -13,8 +13,10 @@ import com.example.musicboxd.R
 import com.example.musicboxd.adapter.ReviewAdapter
 import com.example.musicboxd.local.Review
 import com.google.firebase.firestore.FirebaseFirestore
-import android.util.Log
-import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import com.example.musicboxd.`object`.UserRepository
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 class ShowUserReviews : Fragment() {
@@ -35,55 +37,51 @@ class ShowUserReviews : Fragment() {
         val view = inflater.inflate(R.layout.show_reviews, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        adapter = ReviewAdapter(reviewList) { /* Nessuna azione */ }
+        adapter = ReviewAdapter(reviewList) { }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        loadReviews(args.userId)
+        // Caricamento recensioni asincrono
+        viewLifecycleOwner.lifecycleScope.launch {
+            val reviews = UserRepository.loadReviewsForUser(args.userId)
+            reviewList.clear()
+            reviewList.addAll(reviews)
+            adapter.notifyDataSetChanged()
+            recyclerView.visibility = View.VISIBLE
+        }
 
         return view
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun loadReviews(userId: String) {
-        db.collection("User")
+    private suspend fun loadReviews(userId: String): List<Review> {
+        val result = db.collection("User")
             .document(userId)
             .collection("Reviews")
             .get()
-            .addOnSuccessListener { result ->
-                reviewList.clear()
-                recyclerView.visibility = View.VISIBLE
+            .await()
 
-                for (doc in result) {
-                    val documentId = doc.id
-                    val songTitle = doc.getString("title") ?: continue
-                    val artistName = doc.getString("artist") ?: continue
-                    val timestamp = doc.getTimestamp("timestamp")
-                    val rating = doc.getDouble("rating") ?: 0.0
-                    val reviewText = doc.getString("textReview") ?: ""
-                    val cover = doc.getString("cover") ?: ""
+        return result.mapNotNull { doc ->
+            val documentId = doc.id
+            val songTitle = doc.getString("title") ?: return@mapNotNull null
+            val artistName = doc.getString("artist") ?: return@mapNotNull null
+            val timestamp = doc.getTimestamp("timestamp")
+            val rating = doc.getDouble("rating") ?: 0.0
+            val reviewText = doc.getString("textReview") ?: ""
+            val cover = doc.getString("cover") ?: ""
 
-                    val review = Review(
-                        documentId = documentId,
-                        actionType = "review",
-                        artistName = artistName,
-                        songTitle = songTitle,
-                        sourceUserId = userId,
-                        albumCoverUrl = cover,
-                        rating = rating,
-                        reviewText = reviewText,
-                        timestamp = timestamp
-                    )
-
-                    reviewList.add(review)
-                }
-
-                adapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Errore nel caricamento recensioni", it)
-                Toast.makeText(requireContext(), "Errore nel caricamento", Toast.LENGTH_SHORT).show()
-            }
+            Review(
+                documentId = documentId,
+                actionType = "review",
+                artistName = artistName,
+                songTitle = songTitle,
+                sourceUserId = userId,
+                albumCoverUrl = cover,
+                rating = rating,
+                reviewText = reviewText,
+                timestamp = timestamp
+            )
+        }
     }
-
 }
