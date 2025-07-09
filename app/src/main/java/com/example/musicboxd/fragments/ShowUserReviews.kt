@@ -44,6 +44,7 @@ class ShowUserReviews : Fragment() {
         // Caricamento recensioni asincrono
         viewLifecycleOwner.lifecycleScope.launch {
             val reviews = UserRepository.loadReviewsForUser(args.userId)
+                .sortedByDescending { it.timestamp } // Ordina per data (dal più recente)
             reviewList.clear()
             reviewList.addAll(reviews)
             adapter.notifyDataSetChanged()
