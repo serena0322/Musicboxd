@@ -1,5 +1,6 @@
 package com.example.musicboxd.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
@@ -12,24 +13,21 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.musicboxd.network.Track
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
-import com.example.musicboxd.`object`.UserRepository
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
-import kotlinx.coroutines.launch
 import org.chromium.base.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
 class ReviewActivity : AppCompatActivity() {
 
+    @SuppressLint("DefaultLocale")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.review)
@@ -110,25 +108,51 @@ class ReviewActivity : AppCompatActivity() {
             // Aggiornamento dati aggregati nella canzone
             val songRef = db.collection("Songs").document(songId)
 
-            db.runTransaction { transaction ->
-                val snapshot = transaction.get(songRef)
-                val currentSum = snapshot.getDouble("totalRatingSum") ?: 0.0
-                val currentCount = snapshot.getLong("totalRatings") ?: 0L
+            songRef.get().addOnSuccessListener { snapshot ->
+                if (!snapshot.exists()) {
+                    val initialHistogram = mapOf(
+                        "0.5" to 0L,
+                        "1.0" to 0L,
+                        "1.5" to 0L,
+                        "2.0" to 0L,
+                        "2.5" to 0L,
+                        "3.0" to 0L,
+                        "3.5" to 0L,
+                        "4.0" to 0L,
+                        "4.5" to 0L,
+                        "5.0" to 0L
+                    )
 
-                transaction.set(
-                    songRef,
-                    mapOf(
+                    val initialData = mapOf(
+                        "totalRatingSum" to 0.0,
+                        "totalRatings" to 0,
+                        "ratingsHistogram" to initialHistogram
+                    )
+                    songRef.set(initialData)
+                }
+
+                // Prosegui con la transazione (come già fai)
+                db.runTransaction { transaction ->
+                    val doc = transaction.get(songRef)
+                    val currentSum = doc.getDouble("totalRatingSum") ?: 0.0
+                    val currentCount = doc.getLong("totalRatings") ?: 0L
+                    val ratingKey = String.format("%.1f", rating.toDouble())
+                    Log.d("DEBUG", "rating = $rating, ratingKey = $ratingKey")
+
+                    val updates = mapOf(
                         "totalRatingSum" to currentSum + rating,
-                        "totalRatings" to currentCount + 1
-                    ),
-                    SetOptions.merge()
-                )
-            }.addOnSuccessListener {
-                Log.d("Firestore", "Dati canzone aggiornati correttamente")
-            }.addOnFailureListener {
-                saveButton.isEnabled = true
-                Toast.makeText(this, "Errore nel salvataggio della recensione", Toast.LENGTH_SHORT).show()
+                        "totalRatings" to currentCount + 1,
+                        "ratingsHistogram.$ratingKey" to FieldValue.increment(1)
+                    )
+                    transaction.set(songRef, updates, SetOptions.merge())
+                }.addOnSuccessListener {
+                    Log.d("Firestore", "Dati canzone aggiornati correttamente")
+                }.addOnFailureListener {
+                    saveButton.isEnabled = true
+                    Toast.makeText(this, "Errore nel salvataggio della recensione", Toast.LENGTH_SHORT).show()
+                }
             }
+
 
             // Aggiorna contatore dei like se il cuore è selezionato
             if (heartImage.isSelected) {
@@ -140,10 +164,7 @@ class ReviewActivity : AppCompatActivity() {
                         Log.e("Firestore", "Errore aggiornamento like utente", it)
                     }
             }
-            lifecycleScope.launch {
-                UserRepository.loadUser()
-                finish()
-            }
+            finish()
         }
 
             heartImage.setOnClickListener {

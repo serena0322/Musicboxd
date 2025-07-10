@@ -53,6 +53,19 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+    <TextView
+        android:id="@+id/followStatsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Followers: 0  ·  Following: 0"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/poppinsmedium"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/Title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Barra di ricerca -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"

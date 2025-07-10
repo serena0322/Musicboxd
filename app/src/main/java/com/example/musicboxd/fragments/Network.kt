@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,15 +19,20 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.example.musicboxd.adapter.UserAdapter
 import com.example.musicboxd.local.User
+import android.widget.TextView
+import com.example.musicboxd.viewModels.UserViewModel
 import com.google.android.gms.tasks.Tasks
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.getValue
 import kotlin.jvm.java
 
 class Network : Fragment() {
+    private val userViewModel: UserViewModel by viewModels()
+
     private lateinit var tabLayout: TabLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter
@@ -40,6 +46,16 @@ class Network : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.activityRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val followStatsText = view.findViewById<TextView>(R.id.followStatsTextView)
+
+        userViewModel.loadMyBasicProfile(forceReload = true)
+
+        userViewModel.basicProfile.observe(viewLifecycleOwner) { profile ->
+            val followers = profile?.user?.followers ?: 0
+            val following = profile?.user?.following ?: 0
+            followStatsText.text = "Followers: $followers · Following: $following"
+        }
 
         adapter = UserAdapter(tabIndex = 0) { user ->
             val action = NetworkDirections.actionNetworkToUserProfile(user.id)

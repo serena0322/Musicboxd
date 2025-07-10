@@ -1,5 +1,6 @@
 package com.example.musicboxd.fragments
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -11,7 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
+import android.view.View
+import android.view.animation.DecelerateInterpolator
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
@@ -30,6 +32,8 @@ class TrackInformation : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
+    var animation_duration: Long = 0
+
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,22 +87,64 @@ class TrackInformation : AppCompatActivity() {
             .into(coverImageView)
 
         val db = FirebaseFirestore.getInstance()
+        val histogramViews = mapOf(
+            "0.5" to findViewById<View>(R.id.bar_0_5),
+            "1.0" to findViewById<View>(R.id.bar_1_0),
+            "1.5" to findViewById<View>(R.id.bar_1_5),
+            "2.0" to findViewById<View>(R.id.bar_2_0),
+            "2.5" to findViewById<View>(R.id.bar_2_5),
+            "3.0" to findViewById<View>(R.id.bar_3_0),
+            "3.5" to findViewById<View>(R.id.bar_3_5),
+            "4.0" to findViewById<View>(R.id.bar_4_0),
+            "4.5" to findViewById<View>(R.id.bar_4_5),
+            "5.0" to findViewById<View>(R.id.bar_5_0)
+        )
+
         db.collection("Songs").document(songId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
+                    // Media voto
                     val totalSum = document.getDouble("totalRatingSum") ?: 0.0
                     val totalCount = document.getLong("totalRatings") ?: 0L
-
                     val averageRating = if (totalCount > 0) totalSum / totalCount else null
-
                     if (averageRating != null) {
                         rating.text = "%.1f".format(averageRating)
+                    }
+
+                    // Istogramma
+                    val histogram = document.get("ratingsHistogram") as? Map<String, Long>
+                    if (histogram != null) {
+                        val maxCount = histogram.values.maxOrNull()?.toFloat() ?: 1f
+
+                        histogram.forEach { (key, count) ->
+                            Log.d("ISTOGRAMMA", "Chiave: $key - Conteggio: $count")
+                            val barView = histogramViews[key]
+                            if (barView != null) {
+                                val targetHeight = (count / maxCount * 72).toInt().coerceAtLeast(1)
+                                val currentHeight = barView.height
+
+                                val animator = ValueAnimator.ofInt(currentHeight, targetHeight).apply {
+                                    animation_duration = 400 // durata in ms
+                                    interpolator = DecelerateInterpolator()
+                                    addUpdateListener { animation ->
+                                        val newHeight = animation.animatedValue as Int
+                                        barView.layoutParams = barView.layoutParams.apply {
+                                            height = newHeight
+                                        }
+                                        barView.requestLayout()
+                                    }
+                                }
+                                animator.start()
+                            } else {
+                                Log.w("ISTOGRAMMA", "Nessuna barra trovata per $key")
+                            }
+                        }
                     }
                 }
             }
             .addOnFailureListener {
                 rating.text = ""
-                Log.e("Firestore", "Errore nel recupero rating", it)
+                Log.e("Firestore", "Errore nel recupero dati", it)
             }
 
         val playButton = findViewById<Button>(R.id.play)

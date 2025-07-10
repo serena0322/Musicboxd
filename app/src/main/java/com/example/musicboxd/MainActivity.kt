@@ -2,6 +2,7 @@ package com.example.musicboxd
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -11,18 +12,22 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicboxd.fragments.AddSongBottomSheet
-import com.example.musicboxd.`object`.UserRepository
 import kotlinx.coroutines.launch
+import com.example.musicboxd.viewModels.UserViewModel
 
 class MainActivity() : AppCompatActivity() {
+
+    private val userViewModel: UserViewModel by viewModels()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Carica dati utente e attività all'avvio
         lifecycleScope.launch {
-            UserRepository.loadUser()
+            userViewModel.loadMyBasicProfile()
+            userViewModel.observeMyUserRealtime() //aggiorna dati in real time
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
@@ -43,7 +48,6 @@ class MainActivity() : AppCompatActivity() {
         if (destination == "home") {
             navController.navigate(R.id.homeFragment)
         }
-
 
         // Collega la bottom navigation al NavController
         bottomNav.setupWithNavController(navController)
@@ -77,6 +81,7 @@ class MainActivity() : AppCompatActivity() {
                 R.id.nav_activity -> {
                     bottomNav.itemIconTintList = ContextCompat.getColorStateList(this, R.color.nav_activity_icon)
                     navController.navigate(R.id.activityFragment)
+                    userViewModel.loadMyAndFriendsActivities()
                     true
                 }
 

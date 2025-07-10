@@ -1,16 +1,38 @@
 package com.example.musicboxd.local
 
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.PropertyName
 
 data class Review(
-    val documentId: String,
-    val actionType: String = "",
-    val artistName: String = "",
-    val songTitle: String = "",
-    val sourceUserId: String = "",
-    val albumCoverUrl: String = "",
-    val rating: Double = 0.0,
-    val reviewText: String = "",
-    val timestamp: Timestamp? = Timestamp.now()
+    var documentId: String = "",
+
+    @get:PropertyName("action")
+    @set:PropertyName("action")
+    var actionType: String = "",
+
+    @get:PropertyName("artist")
+    @set:PropertyName("artist")
+    var artistName: String = "",
+
+    @get:PropertyName("title")
+    @set:PropertyName("title")
+    var songTitle: String = "",
+
+    var sourceUserId: String = "",
+
+    @get:PropertyName("cover")
+    @set:PropertyName("cover")
+    var albumCoverUrl: String = "",
+
+    var rating: Double = 0.0,
+
+    @get:PropertyName("textReview")
+    @set:PropertyName("textReview")
+    var reviewText: String = "",
+
+    var timestamp: Timestamp? = null
 )
+{
+    constructor() : this("", "", "", "", "", "", 0.0, "", null)
+}
 

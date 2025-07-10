@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,63 +19,43 @@ import com.example.musicboxd.R
 import com.example.musicboxd.adapter.TrackAdapter
 import com.example.musicboxd.network.RetrofitInstance
 import com.example.musicboxd.network.Track
+import com.example.musicboxd.viewModels.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class ShowSongPlaylist : Fragment() {
-
-    private lateinit var recyclerView: RecyclerView
-    private val trackList = mutableListOf<Track>()  // usa il tuo modello completo
-    private lateinit var adapter: TrackAdapter
-    private val db = FirebaseFirestore.getInstance()
-
+    private val userViewModel: UserViewModel by activityViewModels()
     private val args: ShowSongPlaylistArgs by navArgs()
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: TrackAdapter
+    private lateinit var nameTextView: TextView
+    private val trackList = mutableListOf<Track>()
 
-    @SuppressLint("MissingInflatedId")
+    private var playlistListener: ListenerRegistration? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.show_song_playlist, container, false)
-        val playlistId = args.playlistId
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return view
+    ): View = inflater.inflate(R.layout.show_song_playlist, container, false)
 
-        val db = FirebaseFirestore.getInstance()
-        val playlistRef = db.collection("User")
-            .document(userId)
-            .collection("Playlists")
-            .document(playlistId)
+    @SuppressLint("MissingInflatedId")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // 🔹 Recupera il nome e la lista dei brani
-        playlistRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    val playlistName = document.getString("name") ?: "Playlist"
-                    view.findViewById<TextView>(R.id.NamePlaylist).text = playlistName
+        // Forza il refresh del profilo in caso sia obsoleto (specie dopo modifiche)
+        userViewModel.loadMyBasicProfile(forceReload = true)
 
-                    val trackIds = document.get("tracks") as? List<String>
-                    if (!trackIds.isNullOrEmpty()) {
-                        trackList.clear()
-                        for (trackId in trackIds) {
-                            fetchTrackById(trackId) // 🔁 tua funzione per caricare il brano
-                        }
-                    }
-                } else {
-                    view.findViewById<TextView>(R.id.NamePlaylist).text = "Playlist non trovata"
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Errore nel recupero playlist", e)
-                view.findViewById<TextView>(R.id.NamePlaylist).text = "Errore caricamento"
-            }
+        nameTextView = view.findViewById(R.id.NamePlaylist)
 
-        // 🔹 Setup RecyclerView
+        // Setup RecyclerView
         recyclerView = view.findViewById(R.id.RecyclerView)
         adapter = TrackAdapter(
             onItemClick = { track ->
-                // azione al click normale (puoi lasciarlo vuoto o gestirlo)
                 Log.d("TrackClick", "Hai cliccato su: ${track.title}")
             },
             onLongClick = { track ->
@@ -91,7 +72,54 @@ class ShowSongPlaylist : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        return view
+        observePlaylistChanges()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        playlistListener?.remove()
+    }
+
+    private fun loadTracksFromIds(trackIds: List<String>) {
+        lifecycleScope.launch {
+            trackList.clear() // Pulizia preventiva
+            val fetchedTracks = mutableListOf<Track>()
+
+            for (id in trackIds) {
+                try {
+                    val track = RetrofitInstance.api.getTrack(id)
+                    fetchedTracks.add(track)
+                } catch (e: Exception) {
+                    Log.e("API", "Errore caricamento traccia $id", e)
+                }
+            }
+
+            trackList.addAll(fetchedTracks)
+            adapter.submitList(trackList.toList())  // Nuova lista, per sicurezza
+        }
+    }
+
+    private fun observePlaylistChanges() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val playlistId = args.playlistId
+
+        playlistListener?.remove() // rimuove un eventuale listener precedente
+
+        val playlistRef = FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(userId)
+            .collection("Playlists")
+            .document(playlistId)
+
+        playlistListener = playlistRef.addSnapshotListener { snapshot, error ->
+            if (error != null || snapshot == null || !snapshot.exists()) return@addSnapshotListener
+
+            val name = snapshot.getString("name") ?: "Playlist"
+            nameTextView.text = name
+
+            val trackIds = snapshot.get("tracks") as? List<String> ?: emptyList()
+            loadTracksFromIds(trackIds)
+        }
     }
 
     private fun removeTrackFromPlaylist(track: Track) {
@@ -104,31 +132,19 @@ class ShowSongPlaylist : Fragment() {
             .collection("Playlists")
             .document(playlistId)
 
-        playlistRef.update("tracks", FieldValue.arrayRemove(track.id))
+        val trackIdString = track.id.toString() // conversione
+
+        playlistRef.update("tracks", FieldValue.arrayRemove(trackIdString))
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Brano rimosso", Toast.LENGTH_SHORT).show()
 
-                val index = trackList.indexOfFirst { it.id == track.id }
-                if (index != -1) {
-                    trackList.removeAt(index)
-                    adapter.notifyItemRemoved(index)
-                }
+                // Aggiorna localmente
+                trackList.removeAll { it.id.toString() == trackIdString }
+                adapter.submitList(trackList.toList())
             }
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Errore nella rimozione", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    private fun fetchTrackById(trackId: String) {
-        lifecycleScope.launch {
-            try {
-                val track = RetrofitInstance.api.getTrack(trackId)
-                trackList.add(track)
-                adapter.submitList(trackList.toList()) // forza il ricalcolo della differenza
-            } catch (e: Exception) {
-                Log.e("API_ERROR", "Errore nel recupero traccia $trackId", e)
-            }
-        }
     }
 
 }

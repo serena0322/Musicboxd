@@ -3,25 +3,22 @@ package com.example.musicboxd.`object`
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.musicboxd.local.ActivityItem
+import com.example.musicboxd.local.PlaylistItem
 import com.example.musicboxd.local.Review
-import com.example.musicboxd.local.UserActivity
 import com.example.musicboxd.local.User
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
 //Intermediario tra l’interfaccia utente (UI) e Firebase Firestore
 
-data class UserProfileData(
-    val username: String,
-    val likes: Long,
-    val followersCount: Int,
-    val followingCount: Int
+data class BasicProfileData(
+    val user: User?,
+    val reviews: List<Review>,
+    val playlists: List<PlaylistItem>
 )
 
 //Per visualizzare Friends Activities
@@ -32,7 +29,7 @@ data class UserActivity(
 
 data class UserWithData(
     val user: User?,
-    val activities: List<com.example.musicboxd.`object`.UserActivity>,
+    val activities: List<UserActivity>,
     val reviews: List<Review>,
     val friendsActivities: List<ActivityItem>,
     val following: List<String>,
@@ -43,153 +40,197 @@ object UserRepository {
     private val _currentUser = MutableLiveData<UserWithData?>()
     val currentUser: LiveData<UserWithData?> = _currentUser
 
-    //Recupero dei dati personali dell'utente (User, attività, recensioni, following, followers).
-    suspend fun loadUser() {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+    suspend fun loadMyActivitiesAndFollowersActivities(): Pair<List<ActivityItem>, List<ActivityItem>> {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return Pair(emptyList(), emptyList())
         val firestore = FirebaseFirestore.getInstance()
 
-        // Recupero utente
-        val userDoc = firestore
-            .collection("User")
-            .document(uid)
-            .get()
-            .await()
-        val user = userDoc.toObject(User::class.java)
-
-        // Recupero attività proprie
-        val activityDocs = firestore
-            .collection("User")
+        // Attività personali
+        val personalActivityDocs = firestore.collection("User")
             .document(uid)
             .collection("Activity")
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .get()
             .await()
-        val activities = activityDocs.mapNotNull { doc ->
-            val action = doc.getString("action")
-            val timestamp = doc.getTimestamp("timestamp")
-            if (action != null && timestamp != null) {
-                UserActivity(action = action, timestamp = timestamp)
-            } else null
+
+        val myActivities = personalActivityDocs.mapNotNull { doc ->
+            val action = doc.getString("action") ?: return@mapNotNull null
+            val timestamp = doc.getTimestamp("timestamp") ?: return@mapNotNull null
+            ActivityItem(content = action, timestamp = timestamp)
         }
 
-        // Recupero recensioni
-        val reviewDocs = firestore
-            .collection("User")
-            .document(uid)
-            .collection("Review")
-            .get()
-            .await()
-        val reviews = reviewDocs.mapNotNull { it.toObject(Review::class.java) }
-
-        // Recupero following
-        val followingSnapshot = firestore.collection("User")
+        // Recupera ID degli utenti seguiti
+        val followingDocs = firestore.collection("User")
             .document(uid)
             .collection("followingList")
             .get()
             .await()
-        val following = followingSnapshot.documents.map { it.id }
 
-        // Recupero followers
-        val followersSnapshot = firestore
-            .collection("User")
-            .document(uid)
-            .collection("followersList")
-            .get()
-            .await()
-        val followers = followersSnapshot.documents.map { it.id }
+        val followingIds = followingDocs.map { it.id }
+        val friendsActivities = mutableListOf<ActivityItem>()
+        val userMap = mutableMapOf<String, String>() // uid -> username
 
+        // Recupera username associati
+        for (fId in followingIds) {
+            val userSnapshot = firestore.collection("User").document(fId).get().await()
+            val username = userSnapshot.getString("username") ?: "Utente"
+            userMap[fId] = username
+        }
 
-        //Per il tab "Friends"
-        val rawActivities = mutableListOf<UserActivity>()
-        val userIdSet = mutableSetOf<String>()
-
-        for (doc in followingSnapshot) {
-            val followedUserId = doc.id
-            if (followedUserId == uid) continue // già corretto
-
-            val friendActivitiesSnapshot = firestore
-                .collection("User")
-                .document(followedUserId)
+        for (fId in followingIds) {
+            val activityDocs = firestore.collection("User")
+                .document(fId)
                 .collection("ActivityForOthers")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .limit(10)
                 .get()
                 .await()
 
-            for (activityDoc in friendActivitiesSnapshot) {
-                val actionType = activityDoc.getString("actionType") ?: continue
-                val sourceUserId = activityDoc.getString("sourceUserId") ?: continue
+            for (doc in activityDocs) {
+                val actionType = doc.getString("actionType") ?: continue
+                val sourceUserId = doc.getString("sourceUserId") ?: continue
+                val targetUserId = doc.getString("targetUserId")
+                val timestamp = doc.getTimestamp("timestamp") ?: continue
+                val songTitle = doc.getString("songTitle")
+                val artistName = doc.getString("artistName")
 
-                // Escludi se sourceUserId == uid (cioè attività tue stesse)
-                if (sourceUserId == uid) continue
-
-                val timestamp = activityDoc.getTimestamp("timestamp") ?: continue
-                val songTitle = activityDoc.getString("songTitle")
-                val artistName = activityDoc.getString("artistName")
-                val targetUserId = activityDoc.getString("targetUserId")
-
-                userIdSet.add(sourceUserId)
-                if (targetUserId != null) userIdSet.add(targetUserId)
-
-                rawActivities.add(
-                    UserActivity(
-                        actionType = actionType,
-                        sourceUserId = sourceUserId,
-                        targetUserId = targetUserId,
-                        timestamp = timestamp,
-                        songTitle = songTitle,
-                        artistName = artistName
-                    )
-                )
-            }
-        }
-
-        // Recupera username da Firestore
-        val userMap = mutableMapOf<String, String>()
-        val userDocTasks = userIdSet.map { userId ->
-            firestore.collection("User").document(userId).get()
-        }
-
-        Tasks.whenAllSuccess<DocumentSnapshot>(userDocTasks)
-            .addOnSuccessListener { documents ->
-                for (doc in documents) {
-                    if (doc.exists()) {
-                        val id = doc.id
-                        val username = doc.getString("username") ?: "Utente"
-                        userMap[id] = username
-                    }
+                val sourceName = userMap[sourceUserId] ?: "Utente"
+                val content = when (actionType) {
+                    "follow" -> if (targetUserId == uid) "$sourceName ha iniziato a seguirti" else null
+                    "review" -> "$sourceName ha recensito \"${songTitle ?: "una canzone"}\" di ${artistName ?: "un artista"}"
+                    else -> null
                 }
 
-                // Dopo aver popolato userMap, costruisci i messaggi leggibili
-                val friendsActivities = rawActivities.mapNotNull { activity ->
-                    val sourceName = userMap[activity.sourceUserId] ?: "Utente"
-
-                    val message = when (activity.actionType) {
-                        "follow" -> if (activity.targetUserId == uid)
-                            "$sourceName ha iniziato a seguirti"
-                        else return@mapNotNull null
-
-                        "review" -> "$sourceName ha recensito \"${activity.songTitle ?: "una canzone"}\" di ${activity.artistName ?: "un artista"}"
-
-                        else -> return@mapNotNull null
-                    }
-
-                    ActivityItem(message, activity.timestamp)
-                }.sortedByDescending { it.timestamp }
-
-                _currentUser.postValue(
-                    UserWithData(
-                        user = user,
-                        activities = activities,
-                        reviews = reviews,
-                        friendsActivities = friendsActivities,
-                        following = following,
-                        followers = followers
-                    )
-                )
+                content?.let {
+                    friendsActivities.add(ActivityItem(it, timestamp))
+                }
             }
-            .addOnFailureListener {
+        }
+        return Pair(myActivities, friendsActivities.sortedByDescending { it.timestamp })
+    }
+
+    private var myActivityListener: ListenerRegistration? = null
+    private var followersActivityListeners = mutableListOf<ListenerRegistration>()
+
+    fun observeMyActivityRealtime(onUpdate: (List<ActivityItem>) -> Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        myActivityListener?.remove()
+        myActivityListener = FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(uid)
+            .collection("Activity")
+            .addSnapshotListener { snapshots, _ ->
+                if (snapshots != null) {
+                    val list = snapshots.mapNotNull { doc ->
+                        val action = doc.getString("action") ?: return@mapNotNull null
+                        val timestamp = doc.getTimestamp("timestamp") ?: return@mapNotNull null
+                        ActivityItem(action, timestamp)
+                    }.sortedByDescending { it.timestamp }
+                    onUpdate(list)
+                }
             }
     }
+
+    fun observeFriendsActivitiesRealtime(
+        followingList: List<String>,
+        onUpdate: (List<ActivityItem>) -> Unit
+    ) {
+        followersActivityListeners.forEach { it.remove() }
+        followersActivityListeners.clear()
+
+        val firestore = FirebaseFirestore.getInstance()
+        val combinedActivities = mutableListOf<ActivityItem>()
+        val userMap = mutableMapOf<String, String>()
+        var listenersReady = 0
+
+        followingList.forEach { friendId ->
+            val listener = firestore.collection("User")
+                .document(friendId)
+                .collection("ActivityForOthers")
+                .addSnapshotListener { snapshot, _ ->
+                    if (snapshot != null) {
+                        firestore.collection("User").document(friendId).get()
+                            .addOnSuccessListener { userDoc ->
+                                val username = userDoc.getString("username") ?: "Utente"
+                                val activities = snapshot.mapNotNull { doc ->
+                                    val actionType = doc.getString("actionType") ?: return@mapNotNull null
+                                    val timestamp = doc.getTimestamp("timestamp") ?: return@mapNotNull null
+                                    val targetUserId = doc.getString("targetUserId")
+                                    val songTitle = doc.getString("songTitle")
+                                    val artistName = doc.getString("artistName")
+
+                                    val content = when (actionType) {
+                                        "follow" -> if (targetUserId != null)
+                                            "$username ha iniziato a seguire qualcuno"
+                                        else null
+                                        "review" -> "$username ha recensito \"${songTitle ?: "una canzone"}\" di ${artistName ?: "un artista"}"
+                                        else -> null
+                                    }
+                                    content?.let { ActivityItem(it, timestamp) }
+                                }
+                                synchronized(combinedActivities) {
+                                    combinedActivities.removeAll { it.content.startsWith(username) }
+                                    combinedActivities.addAll(activities)
+                                    onUpdate(combinedActivities.sortedByDescending { it.timestamp })
+                                }
+                            }
+                    }
+                }
+            followersActivityListeners.add(listener)
+        }
+    }
+
+    fun observeUserReviewsRealtime(
+        userId: String,
+        onUpdate: (List<Review>) -> Unit
+    ): ListenerRegistration {
+        return FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(userId)
+            .collection("Reviews")
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    val reviews = snapshot.mapNotNull { doc ->
+                        val documentId = doc.id
+                        val songTitle = doc.getString("title") ?: return@mapNotNull null
+                        val artistName = doc.getString("artist") ?: return@mapNotNull null
+                        val timestamp = doc.getTimestamp("timestamp")
+                        val rating = doc.getDouble("rating") ?: 0.0
+                        val reviewText = doc.getString("textReview") ?: ""
+                        val cover = doc.getString("cover") ?: ""
+                        Review(
+                            documentId, "review", artistName, songTitle, userId,
+                            cover, rating, reviewText, timestamp
+                        )
+                    }
+                    onUpdate(reviews.sortedByDescending { it.timestamp })
+                }
+            }
+    }
+
+    fun observeUserPlaylistsRealtime(
+        userId: String,
+        onUpdate: (List<PlaylistItem>) -> Unit
+    ): ListenerRegistration {
+        return FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(userId)
+            .collection("Playlists")
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    val playlists = snapshot.mapNotNull { doc ->
+                        val id = doc.id
+                        val name = doc.getString("name") ?: return@mapNotNull null
+                        val createdBy = doc.getString("createdBy") ?: ""
+                        val timestamp = doc.getTimestamp("timestamp")
+                        val tracks = doc.get("tracks") as? List<String> ?: emptyList()
+                        PlaylistItem(id, name, createdBy, timestamp, tracks)
+                    }
+                    onUpdate(playlists.sortedByDescending { it.timestamp })
+                }
+            }
+    }
+
 
     //Recupera Recensioni degli Utenti per ShowUserReviews
     suspend fun loadReviewsForUser(userId: String): List<Review> {
@@ -223,7 +264,6 @@ object UserRepository {
             )
         }
     }
-
 
     //Permette di aggiornare uno specifico campo del documento utente in Firestore dal Fragment Profile
     fun updateField(
@@ -263,43 +303,142 @@ object UserRepository {
             .addOnFailureListener { onFailure(it) }
     }
 
-    //Recupero dati profilo essenziali dell'Utente
-    fun loadUserProfile(
-        userId: String,
-        onSuccess: (UserProfileData) -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        val db = FirebaseFirestore.getInstance()
-        val userDoc = db.collection("User").document(userId)
+    //Recupero dati profilo loggato (Utente, Reviews, Playlist)
+    suspend fun loadMyBasicDataWithReviewsAndPlaylists(): BasicProfileData {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return BasicProfileData(null, emptyList(), emptyList())
+        val firestore = FirebaseFirestore.getInstance()
 
-        userDoc.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                val username = document.getString("username") ?: "Unknown"
-                val likes = document.getLong("likes") ?: 0L
+        // Documento principale
+        val userDoc = firestore.collection("User")
+            .document(uid)
+            .get()
+            .await()
+        val user = userDoc.toObject(User::class.java)
 
-                val followingRef = userDoc.collection("followingList")
-                val followersRef = userDoc.collection("followersList")
+        // Recensioni
+        val reviewDocs = firestore.collection("User")
+            .document(uid)
+            .collection("Reviews")
+            .get()
+            .await()
 
-                followingRef.get().addOnSuccessListener { followingDocs ->
-                    val followingCount = followingDocs.size()
+        val reviews = reviewDocs.mapNotNull { doc ->
+            val documentId = doc.id
+            val songTitle = doc.getString("title") ?: return@mapNotNull null
+            val artistName = doc.getString("artist") ?: return@mapNotNull null
+            val timestamp = doc.getTimestamp("timestamp")
+            val rating = doc.getDouble("rating") ?: 0.0
+            val reviewText = doc.getString("textReview") ?: ""
+            val cover = doc.getString("cover") ?: ""
 
-                    followersRef.get().addOnSuccessListener { followersDocs ->
-                        val followersCount = followersDocs.size()
+            Review(
+                documentId = documentId,
+                actionType = "review",
+                artistName = artistName,
+                songTitle = songTitle,
+                sourceUserId = uid,
+                albumCoverUrl = cover,
+                rating = rating,
+                reviewText = reviewText,
+                timestamp = timestamp
+            )
+        }
 
-                        onSuccess(
-                            UserProfileData(
-                                username = username,
-                                likes = likes,
-                                followersCount = followersCount,
-                                followingCount = followingCount
-                            )
-                        )
-                    }.addOnFailureListener(onFailure)
-                }.addOnFailureListener(onFailure)
-            } else {
-                onFailure(Exception("Documento utente non trovato"))
-            }
-        }.addOnFailureListener(onFailure)
+        // Playlist
+        val playlistDocs = firestore.collection("User")
+            .document(uid)
+            .collection("Playlists")
+            .get()
+            .await()
+
+        val playlists = playlistDocs.mapNotNull { doc ->
+            val id = doc.id
+            val name = doc.getString("name") ?: return@mapNotNull null
+            val createdBy = doc.getString("createdBy") ?: ""
+            val timestamp = doc.getTimestamp("timestamp")
+            val tracks = doc.get("tracks") as? List<String> ?: emptyList()
+
+            PlaylistItem(
+                id = id,
+                name = name,
+                createdBy = createdBy,
+                timestamp = timestamp,
+                tracks = tracks
+            )
+        }
+
+        return BasicProfileData(user, reviews, playlists)
     }
+
+    fun observeUserDocument(userId: String, onChange: (User?) -> Unit): ListenerRegistration {
+        return FirebaseFirestore.getInstance()
+            .collection("User")
+            .document(userId)
+            .addSnapshotListener { snapshot, _ ->
+                val user = snapshot?.toObject(User::class.java)
+                onChange(user)
+            }
+    }
+
+    //Recupero dati profilo di un utente qualsiasi (Utente, reviews, playlist)
+    suspend fun loadUserBasicDataWithReviewsAndPlaylists(userId: String): BasicProfileData {
+        val firestore = FirebaseFirestore.getInstance()
+
+        // Documento principale dell’utente
+        val userDoc = firestore.collection("User")
+            .document(userId)
+            .get()
+            .await()
+        val user = userDoc.toObject(User::class.java)
+
+        // Recensioni dell’utente
+        val reviewDocs = firestore.collection("User")
+            .document(userId)
+            .collection("Reviews")
+            .get()
+            .await()
+
+        val reviews = reviewDocs.mapNotNull { doc ->
+            val documentId = doc.id
+            val songTitle = doc.getString("title") ?: return@mapNotNull null
+            val artistName = doc.getString("artist") ?: return@mapNotNull null
+            val timestamp = doc.getTimestamp("timestamp")
+            val rating = doc.getDouble("rating") ?: 0.0
+            val reviewText = doc.getString("textReview") ?: ""
+            val cover = doc.getString("cover") ?: ""
+
+            Review(
+                documentId = documentId,
+                actionType = "review",
+                artistName = artistName,
+                songTitle = songTitle,
+                sourceUserId = userId,
+                albumCoverUrl = cover,
+                rating = rating,
+                reviewText = reviewText,
+                timestamp = timestamp
+            )
+        }
+
+        // Playlist dell’utente
+        val playlistDocs = firestore.collection("User")
+            .document(userId)
+            .collection("Playlists")
+            .get()
+            .await()
+
+        val playlists = playlistDocs.mapNotNull { doc ->
+            val id = doc.id
+            val name = doc.getString("name") ?: return@mapNotNull null
+            val createdBy = doc.getString("createdBy") ?: ""
+            val timestamp = doc.getTimestamp("timestamp")
+            val tracks = doc.get("tracks") as? List<String> ?: emptyList()
+
+            PlaylistItem(id, name, createdBy, timestamp, tracks)
+        }
+
+        return BasicProfileData(user, reviews, playlists)
+    }
+
 
 }

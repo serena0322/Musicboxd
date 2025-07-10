@@ -13,32 +13,34 @@ import com.example.musicboxd.adapter.ReviewAdapter
 import com.example.musicboxd.local.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.firebase.firestore.Query
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.example.musicboxd.viewModels.UserViewModel
+import kotlin.getValue
 
 
 class ShowReviews : Fragment() {
 
+    private val userViewModel: UserViewModel by activityViewModels()
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ReviewAdapter
     private val reviewList = mutableListOf<Review>()
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.show_reviews, container, false)
 
         auth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        //eliminazione recensione
         adapter = ReviewAdapter(reviewList) { review ->
             AlertDialog.Builder(requireContext())
                 .setTitle("Eliminare recensione")
@@ -49,52 +51,18 @@ class ShowReviews : Fragment() {
                 .setNegativeButton("Annulla", null)
                 .show()
         }
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        loadReviews()
+        userViewModel.basicProfile.observe(viewLifecycleOwner) { profile ->
+            val reviews = profile.reviews
+            reviewList.clear()
+            reviewList.addAll(reviews.sortedByDescending { it.timestamp })
+            adapter.notifyDataSetChanged()
+        }
+
         return view
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun loadReviews() {
-        val userId = auth.currentUser?.uid ?: return
-
-        db.collection("User")
-            .document(userId)
-            .collection("Reviews")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                reviewList.clear()
-
-                for (doc in result) {
-                    val songTitle = doc.getString("title") ?: continue
-                    val artistName = doc.getString("artist") ?: continue
-                    val timestamp = doc.getTimestamp("timestamp")
-                    val rating = doc.getDouble("rating") ?: 0.0
-                    val reviewText = doc.getString("textReview") ?: ""
-                    val cover = doc.getString("cover") ?: ""
-
-                    val review = Review(
-                        documentId = doc.id,
-                        actionType = "review",
-                        artistName = artistName,
-                        songTitle = songTitle,
-                        sourceUserId = userId,
-                        albumCoverUrl = cover,
-                        rating = rating,
-                        reviewText = reviewText,
-                        timestamp = timestamp
-                    )
-                    reviewList.add(review)
-                }
-
-                adapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Errore nel caricamento recensioni", it)
-            }
     }
 
     private fun deleteReview(userId: String, documentId: String) {
@@ -104,13 +72,18 @@ class ShowReviews : Fragment() {
             .document(documentId)
             .delete()
             .addOnSuccessListener {
+                val index = reviewList.indexOfFirst { it.documentId == documentId }
+                if (index != -1) {
+                    reviewList.removeAt(index)
+                    adapter.notifyItemRemoved(index)
+                }
                 Toast.makeText(context, "Recensione eliminata", Toast.LENGTH_SHORT).show()
-                loadReviews() // ricarica la lista aggiornata
+
+                // 🔁 Aggiorna il profilo per ricaricare le review aggiornate
+                userViewModel.loadMyBasicProfile(forceReload = true)
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
             }
     }
-
-
 }

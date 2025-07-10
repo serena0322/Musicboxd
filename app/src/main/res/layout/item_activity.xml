@@ -16,7 +16,7 @@
         android:fontFamily="@font/poppinsbold"
         android:text="Activity"
         android:textColor="@color/gray"
-        android:textSize="18sp"
+        android:textSize="15sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

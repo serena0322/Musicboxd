@@ -11,18 +11,23 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.PlaylistAdapter
 import com.example.musicboxd.local.PlaylistItem
+import com.example.musicboxd.viewModels.UserViewModel
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.getValue
 
-class Playlist : Fragment() {
-
+class Playlist() : Fragment() {
+    private val userViewModel: UserViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var auth: FirebaseAuth
     val db = FirebaseFirestore.getInstance()
@@ -33,6 +38,8 @@ class Playlist : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.playlist, container, false)
+
+        userViewModel.loadMyBasicProfile(forceReload = true)
 
         auth = FirebaseAuth.getInstance()
 
@@ -49,6 +56,7 @@ class Playlist : Fragment() {
                     .setMessage("Vuoi eliminare la playlist \"${playlistItem.name}\"?")
                     .setPositiveButton("Elimina") { _, _ ->
                         deletePlaylist(playlistItem)
+                        userViewModel.loadMyBasicProfile(forceReload = true)
                     }
                     .setNegativeButton("Annulla", null)
                     .show()
@@ -63,10 +71,15 @@ class Playlist : Fragment() {
         // 3. Assegna listener al pulsante
         view.findViewById<TextView>(R.id.button).setOnClickListener {
             createPlaylist()
+            userViewModel.loadMyBasicProfile(forceReload = true)
         }
 
-        // 4. Carica i dati (verrà chiamato dopo aver impostato l’adapter)
-        loadPlaylists()
+        userViewModel.basicProfile.observe(viewLifecycleOwner) { profile ->
+            playlists.clear()
+            playlists.addAll(profile.playlists)
+            adapter.notifyDataSetChanged()
+        }
+
 
         return view
     }

@@ -9,12 +9,15 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="224dp"
-        android:layout_height="21dp"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="17dp"
-        android:textSize="18dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="2dp"
+        android:maxLines="3"
         android:text="Title"
         android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/infoCover"
         app:layout_constraintTop_toTopOf="@+id/infoCover" />
@@ -24,7 +27,7 @@
         android:layout_width="224dp"
         android:textSize="14dp"
         android:layout_height="21dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:text="Album"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="@+id/artist"
@@ -34,12 +37,12 @@
         android:id="@+id/duration"
         android:layout_width="224dp"
         android:layout_height="21dp"
-        android:textSize="14dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="Duration"
         android:textColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="@+id/date"
-        app:layout_constraintTop_toBottomOf="@+id/date"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="@+id/genre"
+        app:layout_constraintTop_toBottomOf="@+id/genre"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -47,7 +50,7 @@
         android:textSize="16dp"
         android:layout_width="224dp"
         android:layout_height="21dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:textStyle="italic"
         android:text="Artist"
         android:textColor="#FFFFFF"
@@ -59,7 +62,7 @@
         android:layout_width="224dp"
         android:layout_height="21dp"
         android:textSize="14dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:text="Date"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="@+id/album"
@@ -197,8 +200,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.166"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genre"
-        app:layout_constraintVertical_bias="0.108" />
+        app:layout_constraintTop_toBottomOf="@+id/duration"
+        app:layout_constraintVertical_bias="0.039" />
 
     <TextView
         android:id="@+id/Ratings"
@@ -255,7 +258,6 @@
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:text="★"
         android:textColor="#11F54E"
         app:layout_constraintBottom_toBottomOf="@+id/ratingHistogram"
@@ -281,7 +283,7 @@
         android:id="@+id/genre"
         android:layout_width="224dp"
         android:layout_height="23dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:text="Genre"
         android:textColor="#FFFFFF"
         android:textSize="14dp"
