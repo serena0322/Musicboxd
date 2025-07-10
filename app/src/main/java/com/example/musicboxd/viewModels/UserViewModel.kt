@@ -8,7 +8,6 @@ import com.example.musicboxd.local.ActivityItem
 import com.example.musicboxd.local.Review
 import com.example.musicboxd.`object`.BasicProfileData
 import com.example.musicboxd.`object`.UserRepository
-import com.example.musicboxd.`object`.UserWithData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch

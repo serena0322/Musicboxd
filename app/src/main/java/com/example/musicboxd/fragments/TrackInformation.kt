@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.sqrt
 
 class TrackInformation : AppCompatActivity() {
 
@@ -100,6 +101,7 @@ class TrackInformation : AppCompatActivity() {
             "5.0" to findViewById<View>(R.id.bar_5_0)
         )
 
+        //ISTOGRAMMA
         db.collection("Songs").document(songId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
@@ -120,7 +122,12 @@ class TrackInformation : AppCompatActivity() {
                             Log.d("ISTOGRAMMA", "Chiave: $key - Conteggio: $count")
                             val barView = histogramViews[key]
                             if (barView != null) {
-                                val targetHeight = (count / maxCount * 72).toInt().coerceAtLeast(1)
+                                val minVisibleHeight = 6 // Altezza minima visiva consigliata
+                                val normalizedMax = maxCount.coerceAtLeast(5f) // Normalizza come se ci fossero almeno 5 voti
+                                val targetHeight = ((sqrt(count.toFloat()) / sqrt(normalizedMax)) * 72)
+                                    .toInt()
+                                    .coerceAtLeast(minVisibleHeight)
+
                                 val currentHeight = barView.height
 
                                 val animator = ValueAnimator.ofInt(currentHeight, targetHeight).apply {

@@ -107,22 +107,14 @@ class ReviewActivity : AppCompatActivity() {
 
             // Aggiornamento dati aggregati nella canzone
             val songRef = db.collection("Songs").document(songId)
+            val ratingKey = String.format(Locale.US, "%.1f", rating)
 
             songRef.get().addOnSuccessListener { snapshot ->
                 if (!snapshot.exists()) {
                     val initialHistogram = mapOf(
-                        "0.5" to 0L,
-                        "1.0" to 0L,
-                        "1.5" to 0L,
-                        "2.0" to 0L,
-                        "2.5" to 0L,
-                        "3.0" to 0L,
-                        "3.5" to 0L,
-                        "4.0" to 0L,
-                        "4.5" to 0L,
-                        "5.0" to 0L
+                        "0.5" to 0, "1.0" to 0, "1.5" to 0, "2.0" to 0, "2.5" to 0,
+                        "3.0" to 0, "3.5" to 0, "4.0" to 0, "4.5" to 0, "5.0" to 0
                     )
-
                     val initialData = mapOf(
                         "totalRatingSum" to 0.0,
                         "totalRatings" to 0,
@@ -131,41 +123,58 @@ class ReviewActivity : AppCompatActivity() {
                     songRef.set(initialData)
                 }
 
-                // Prosegui con la transazione (come già fai)
+                // Transazione
                 db.runTransaction { transaction ->
                     val doc = transaction.get(songRef)
                     val currentSum = doc.getDouble("totalRatingSum") ?: 0.0
                     val currentCount = doc.getLong("totalRatings") ?: 0L
-                    val ratingKey = String.format("%.1f", rating.toDouble())
-                    Log.d("DEBUG", "rating = $rating, ratingKey = $ratingKey")
 
                     val updates = mapOf(
                         "totalRatingSum" to currentSum + rating,
                         "totalRatings" to currentCount + 1,
-                        "ratingsHistogram.$ratingKey" to FieldValue.increment(1)
+                        "ratingsHistogram" to mapOf(ratingKey to FieldValue.increment(1))
                     )
-                    transaction.set(songRef, updates, SetOptions.merge())
+                    transaction.update(songRef, updates)
+
                 }.addOnSuccessListener {
                     Log.d("Firestore", "Dati canzone aggiornati correttamente")
+
+                    // Ora puoi leggere i nuovi dati aggiornati
+                    songRef.get().addOnSuccessListener { snapshot ->
+                        val histogram = snapshot.get("ratingsHistogram") as? Map<String, Long>
+                        Log.d(
+                            "CHECK",
+                            "Nuovo conteggio per $ratingKey: ${histogram?.get(ratingKey)}"
+                        )
+                        Log.d("DEBUG", "ratingsHistogram completo: $histogram")
+                    }
+
+                    // Like, se cuore selezionato
+                    if (heartImage.isSelected) {
+                        userDoc.update("likes", FieldValue.increment(1))
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "Like incrementato nel profilo utente")
+                            }
+                            .addOnFailureListener {
+                                Log.e("Firestore", "Errore aggiornamento like utente", it)
+                            }
+                    }
+
+                    // Solo alla fine chiudi
+                    finish()
+
                 }.addOnFailureListener {
                     saveButton.isEnabled = true
-                    Toast.makeText(this, "Errore nel salvataggio della recensione", Toast.LENGTH_SHORT).show()
+                    Log.e("Firestore", "Errore nella transazione: ${it.localizedMessage}", it)
+                    Toast.makeText(
+                        this,
+                        "Errore nel salvataggio della recensione",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-
-
-            // Aggiorna contatore dei like se il cuore è selezionato
-            if (heartImage.isSelected) {
-                userDoc.update("likes", FieldValue.increment(1))
-                    .addOnSuccessListener {
-                        Log.d("Firestore", "Like incrementato nel profilo utente")
-                    }
-                    .addOnFailureListener {
-                        Log.e("Firestore", "Errore aggiornamento like utente", it)
-                    }
-            }
-            finish()
         }
+
 
             heartImage.setOnClickListener {
                 val isLiked = !heartImage.isSelected
