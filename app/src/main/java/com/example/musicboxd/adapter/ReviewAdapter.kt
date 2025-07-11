@@ -49,6 +49,16 @@ class ReviewAdapter(
             true
         }
 
+        //Per adattare il layout se manca la recensione scritta, gli altri valori salgono più in alto
+        val text = review.reviewText.trim()
+
+        if (text.isEmpty()) {
+            holder.reviewText.visibility = View.GONE
+        } else {
+            holder.reviewText.visibility = View.VISIBLE
+            holder.reviewText.text = text
+        }
+
         val ratingFormatted = if ((review.rating % 1).toFloat() == 0f) {
             review.rating.toInt().toString()
         } else {

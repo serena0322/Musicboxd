@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.TrackAdapter
+import com.example.musicboxd.adapter.TrackAdapter2
 import com.example.musicboxd.viewModels.SearchViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,8 +24,8 @@ import com.google.android.material.R as MaterialR
 
 class AddSongBottomSheet : BottomSheetDialogFragment() {
 
-    private val viewModel: SearchViewModel by viewModels()
-    private lateinit var adapter: TrackAdapter
+    private val viewModel: SearchViewModel by activityViewModels()
+    private lateinit var adapter: TrackAdapter2
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,16 +39,12 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Inizializza RecyclerView e Adapter (come in SearchFragment)
-        adapter = TrackAdapter(
-            onItemClick = { selectedTrack ->
-                val intent = Intent(requireContext(), ReviewActivity::class.java).apply {
-                    putExtra("track", selectedTrack)
-                }
-                startActivity(intent)
-            },
-            onLongClick = { }
-        )
-
+        adapter = TrackAdapter2 { selectedTrack ->
+            val intent = Intent(requireContext(), ReviewActivity::class.java).apply {
+                putExtra("track", selectedTrack)
+            }
+            startActivity(intent)
+        }
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.addScrollView)
         recyclerView.adapter = adapter
@@ -94,6 +92,7 @@ class AddSongBottomSheet : BottomSheetDialogFragment() {
                 dialog.findViewById<View>(MaterialR.id.design_bottom_sheet)
             bottomSheet?.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded)
         }
+
         return dialog
     }
 }

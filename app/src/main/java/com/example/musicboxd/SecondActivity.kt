@@ -19,7 +19,6 @@ class SecondActivity : AppCompatActivity() {
         if (currentUser != null) {
             // Utente già autenticato, passa direttamente alla MainActivity
             navigateToMainActivity()
-            finish() // Chiude la SecondActivity per non tornare indietro con il back button
         }
     }
 
@@ -30,7 +29,10 @@ class SecondActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            // Pulizia stack per evitare problemi di comportamento e backstack
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
         startActivity(intent)
     }
 }

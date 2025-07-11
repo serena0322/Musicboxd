@@ -32,12 +32,6 @@ class MainActivity() : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(0, 0, 0, systemBars.bottom)
-            insets
-        }
-
         val destination = intent.getStringExtra("destination")
 
         // Trova il NavHostFragment e ottieni il NavController

@@ -25,7 +25,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.Musicboxd" />
 
         <activity android:name=".fragments.ReviewActivity" />
 

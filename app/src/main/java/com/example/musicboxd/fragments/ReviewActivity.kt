@@ -15,12 +15,13 @@ import com.example.musicboxd.network.Track
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.musicboxd.R
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.SetOptions
 import org.chromium.base.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -66,117 +67,123 @@ class ReviewActivity : AppCompatActivity() {
             saveButton.isEnabled = false
             val currentUser = FirebaseAuth.getInstance().currentUser ?: return@setOnClickListener
             val uid = currentUser.uid
+            val db = FirebaseFirestore.getInstance()
+            val userDoc = db.collection("User").document(uid)
             val reviewText = textReviewInput.text?.toString()?.trim() ?: ""
             val rating = ratingBar.rating.toDouble()
             val timestamp = Timestamp.now()
             val songId = track?.id?.toString() ?: return@setOnClickListener
 
-            val db = FirebaseFirestore.getInstance()
-            val userDoc = db.collection("User").document(uid)
+            // Controllo recensione esistente
+            userDoc.collection("Reviews")
+                .whereEqualTo("title", title)
+                .whereEqualTo("artist", artist)
+                .limit(1)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (!documents.isEmpty) {
+                        // Recensione già esistente
+                        saveButton.isEnabled = false
+                        textReviewInput.isEnabled = false
+                        ratingBar.isEnabled = false
+                        Toast.makeText(
+                            this,
+                            "Hai già recensito questa canzone.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@addOnSuccessListener
+                    }
 
-            // Dati recensione
-            val reviewData = mapOf(
-                "action" to "review",
-                "timestamp" to timestamp,
-                "textReview" to reviewText,
-                "title" to title,
-                "artist" to artist,
-                "rating" to rating,
-                "cover" to coverUrl
-            )
-
-            // Attività utente
-            val activityData = mapOf(
-                "action" to "Hai recensito \"$title\" di $artist",
-                "timestamp" to timestamp
-            )
-
-            // Attività pubblica
-            val publicActivity = mapOf(
-                "actionType" to "review",
-                "sourceUserId" to uid,
-                "songTitle" to title,
-                "artistName" to artist,
-                "timestamp" to timestamp
-            )
-
-            // Salvataggio asincrono parallelo
-            userDoc.collection("Reviews").add(reviewData)
-            userDoc.collection("Activity").add(activityData)
-            userDoc.collection("ActivityForOthers").add(publicActivity)
-
-            // Aggiornamento dati aggregati nella canzone
-            val songRef = db.collection("Songs").document(songId)
-            val ratingKey = String.format(Locale.US, "%.1f", rating)
-
-            songRef.get().addOnSuccessListener { snapshot ->
-                if (!snapshot.exists()) {
-                    val initialHistogram = mapOf(
-                        "0.5" to 0, "1.0" to 0, "1.5" to 0, "2.0" to 0, "2.5" to 0,
-                        "3.0" to 0, "3.5" to 0, "4.0" to 0, "4.5" to 0, "5.0" to 0
+                    // Altrimenti procedi con il salvataggio
+                    val reviewData = mapOf(
+                        "action" to "review",
+                        "timestamp" to timestamp,
+                        "textReview" to reviewText,
+                        "title" to title,
+                        "artist" to artist,
+                        "rating" to rating,
+                        "cover" to coverUrl
                     )
-                    val initialData = mapOf(
-                        "totalRatingSum" to 0.0,
-                        "totalRatings" to 0,
-                        "ratingsHistogram" to initialHistogram
+
+                    val activityData = mapOf(
+                        "action" to "Hai recensito \"$title\" di $artist",
+                        "timestamp" to timestamp
                     )
-                    songRef.set(initialData)
-                }
 
-                // Transazione
-                db.runTransaction { transaction ->
-                    val doc = transaction.get(songRef)
-                    val currentSum = doc.getDouble("totalRatingSum") ?: 0.0
-                    val currentCount = doc.getLong("totalRatings") ?: 0L
-
-                    val updates = mapOf(
-                        "totalRatingSum" to currentSum + rating,
-                        "totalRatings" to currentCount + 1,
-                        "ratingsHistogram" to mapOf(ratingKey to FieldValue.increment(1))
+                    val publicActivity = mapOf(
+                        "actionType" to "review",
+                        "sourceUserId" to uid,
+                        "songTitle" to title,
+                        "artistName" to artist,
+                        "timestamp" to timestamp
                     )
-                    transaction.update(songRef, updates)
 
-                }.addOnSuccessListener {
-                    Log.d("Firestore", "Dati canzone aggiornati correttamente")
+                    userDoc.collection("Reviews").add(reviewData)
+                    userDoc.collection("Activity").add(activityData)
+                    userDoc.collection("ActivityForOthers").add(publicActivity)
 
-                    // Ora puoi leggere i nuovi dati aggiornati
+                    val songRef = db.collection("Songs").document(songId)
+                    val ratingKey = String.format(Locale.US, "%.1f", rating)
+
                     songRef.get().addOnSuccessListener { snapshot ->
-                        val histogram = snapshot.get("ratingsHistogram") as? Map<String, Long>
-                        Log.d(
-                            "CHECK",
-                            "Nuovo conteggio per $ratingKey: ${histogram?.get(ratingKey)}"
-                        )
-                        Log.d("DEBUG", "ratingsHistogram completo: $histogram")
-                    }
+                        val setupTask = if (!snapshot.exists()) {
+                            val initialHistogram = mapOf(
+                                "0.5" to 0, "1.0" to 0, "1.5" to 0, "2.0" to 0, "2.5" to 0,
+                                "3.0" to 0, "3.5" to 0, "4.0" to 0, "4.5" to 0, "5.0" to 0
+                            )
+                            val initialData = mapOf(
+                                "totalRatingSum" to 0.0,
+                                "totalRatings" to 0,
+                                "ratingsHistogram" to initialHistogram
+                            )
+                            songRef.set(initialData)
+                        } else {
+                            Tasks.forResult(null)
+                        }
 
-                    // Like, se cuore selezionato
-                    if (heartImage.isSelected) {
-                        userDoc.update("likes", FieldValue.increment(1))
-                            .addOnSuccessListener {
-                                Log.d("Firestore", "Like incrementato nel profilo utente")
+                        setupTask.continueWithTask {
+                            db.runTransaction { transaction ->
+                                val doc = transaction.get(songRef)
+                                val currentSum = doc.getDouble("totalRatingSum") ?: 0.0
+                                val currentCount = doc.getLong("totalRatings") ?: 0L
+                                val ratingKey = String.format(Locale.US, "%.1f", rating)
+                                val fieldPath = FieldPath.of("ratingsHistogram", ratingKey)
+
+                                val histogram = doc.get("ratingsHistogram") as? Map<String, Any> ?: emptyMap()
+                                val existingValue = histogram[ratingKey] as? Long
+
+                                if (existingValue == null) {
+                                    // Prima inizializza il campo se non esiste
+                                    transaction.update(songRef, fieldPath, 0L)
+                                }
+
+                                // Dopo aggiorna tutto
+                                transaction.update(songRef, "totalRatingSum", currentSum + rating)
+                                transaction.update(songRef, "totalRatings", currentCount + 1)
+                                transaction.update(songRef, fieldPath, FieldValue.increment(1))
                             }
-                            .addOnFailureListener {
-                                Log.e("Firestore", "Errore aggiornamento like utente", it)
+
+                        }.addOnSuccessListener {
+                            if (heartImage.isSelected) {
+                                userDoc.update("likes", FieldValue.increment(1))
                             }
+                            finish()
+                        }.addOnFailureListener {
+                            saveButton.isEnabled = true
+                            Toast.makeText(
+                                this,
+                                "Errore nel salvataggio della recensione",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-
-                    // Solo alla fine chiudi
-                    finish()
-
-                }.addOnFailureListener {
-                    saveButton.isEnabled = true
-                    Log.e("Firestore", "Errore nella transazione: ${it.localizedMessage}", it)
-                    Toast.makeText(
-                        this,
-                        "Errore nel salvataggio della recensione",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            }
+                .addOnFailureListener {
+                    Log.e("Firestore", "Errore durante il controllo recensione esistente", it)
+                }
         }
 
-
-            heartImage.setOnClickListener {
+        heartImage.setOnClickListener {
                 val isLiked = !heartImage.isSelected
                 heartImage.isSelected = isLiked
                 likeText.text = if (isLiked) "Liked" else "Like"

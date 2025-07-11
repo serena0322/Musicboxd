@@ -60,6 +60,7 @@ class ShowReviews : Fragment() {
             reviewList.clear()
             reviewList.addAll(reviews.sortedByDescending { it.timestamp })
             adapter.notifyDataSetChanged()
+
         }
 
         return view

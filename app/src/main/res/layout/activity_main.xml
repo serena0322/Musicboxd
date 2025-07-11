@@ -5,36 +5,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/scrollView"
     tools:context=".MainActivity">
 
-    <!-- Host dei Fragment -->
-    <!-- Container che ospita i fragment -->
+    <!-- Contenitore Fragment -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:defaultNavHost="true"
         app:navGraph="@navigation/navigation"
+        app:defaultNavHost="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!--BottomNav-->
+    <!-- Bottom Navigation Personalizzato -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@color/gray"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         app:itemIconTint="@color/iconTint"
-        app:itemIconSize="35dp"
+        app:itemIconSize="28dp"
         app:labelVisibilityMode="unlabeled"
+        app:itemRippleColor="@color/home"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
