@@ -1,5 +1,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#66B0F1" />
+
+    <solid android:color="#66B0F1" /> <!-- Colore azzurro vivo, come prima -->
+
     <corners android:radius="4dp" />
+
+    <size android:height="2dp" /> <!-- Altezza sottile ma visibile anche a 0 -->
 </shape>

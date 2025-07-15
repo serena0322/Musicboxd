@@ -16,8 +16,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.musicboxd.viewModels.UserViewModel
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldValue
+import java.util.Locale
 import kotlin.getValue
 
 
@@ -67,24 +69,66 @@ class ShowReviews : Fragment() {
     }
 
     private fun deleteReview(userId: String, documentId: String) {
-        db.collection("User")
+        val reviewRef = db.collection("User")
             .document(userId)
             .collection("Reviews")
             .document(documentId)
-            .delete()
-            .addOnSuccessListener {
-                val index = reviewList.indexOfFirst { it.documentId == documentId }
-                if (index != -1) {
-                    reviewList.removeAt(index)
-                    adapter.notifyItemRemoved(index)
-                }
-                Toast.makeText(context, "Recensione eliminata", Toast.LENGTH_SHORT).show()
 
-                // 🔁 Aggiorna il profilo per ricaricare le review aggiornate
-                userViewModel.loadMyBasicProfile(forceReload = true)
+        reviewRef.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val rating = snapshot.getDouble("rating") ?: return@addOnSuccessListener
+                val songTitle = snapshot.getString("title") ?: return@addOnSuccessListener
+                val artistName = snapshot.getString("artist") ?: return@addOnSuccessListener
+
+                // Trova il documento della canzone tramite title + artist (assumendo songId è basato su questo)
+                db.collection("Songs")
+                    .whereEqualTo("title", songTitle)
+                    .whereEqualTo("artist", artistName)
+                    .limit(1)
+                    .get()
+                    .addOnSuccessListener { songDocs ->
+                        if (!songDocs.isEmpty) {
+                            val songDoc = songDocs.first()
+                            val songRef = songDoc.reference
+                            val ratingKey = String.format(Locale.US, "%.1f", rating)
+
+                            db.runTransaction { transaction ->
+                                val songSnapshot = transaction.get(songRef)
+                                val currentSum = songSnapshot.getDouble("totalRatingSum") ?: 0.0
+                                val currentCount = songSnapshot.getLong("totalRatings") ?: 0L
+                                val histogramPath = FieldPath.of("ratingsHistogram", ratingKey)
+
+                                // Aggiorna i valori
+                                transaction.update(songRef, "totalRatingSum", currentSum - rating)
+                                transaction.update(songRef, "totalRatings", currentCount - 1)
+                                transaction.update(songRef, histogramPath, FieldValue.increment(-1))
+                            }
+                        }
+
+                        // Solo dopo aggiorna la recensione
+                        reviewRef.delete()
+                            .addOnSuccessListener {
+                                val index = reviewList.indexOfFirst { it.documentId == documentId }
+                                if (index != -1) {
+                                    reviewList.removeAt(index)
+                                    adapter.notifyItemRemoved(index)
+                                }
+                                Toast.makeText(context, "Recensione eliminata", Toast.LENGTH_SHORT).show()
+                                userViewModel.loadMyBasicProfile(forceReload = true)
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
+                            }
+
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Errore nel recupero della canzone", Toast.LENGTH_SHORT).show()
+                    }
+
             }
-            .addOnFailureListener {
-                Toast.makeText(context, "Errore nell'eliminazione", Toast.LENGTH_SHORT).show()
-            }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Errore durante l'accesso alla recensione", Toast.LENGTH_SHORT).show()
+        }
     }
+
 }

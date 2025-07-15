@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicboxd.local.ActivityItem
 import com.example.musicboxd.local.Review
+import com.example.musicboxd.local.User
 import com.example.musicboxd.`object`.BasicProfileData
 import com.example.musicboxd.`object`.UserRepository
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
@@ -108,4 +110,36 @@ class UserViewModel : ViewModel() {
             _otherUserReviews.postValue(reviews.sortedByDescending { it.timestamp })
         }
     }
+
+    private val _followers = MutableLiveData<List<User>>()
+    val followers: LiveData<List<User>> = _followers
+
+    private val _following = MutableLiveData<List<User>>()
+    val following: LiveData<List<User>> = _following
+
+    private val _searchResults = MutableLiveData<List<User>>()
+    val searchResults: LiveData<List<User>> = _searchResults
+
+    fun loadFollowers() {
+        viewModelScope.launch {
+            val users = UserRepository.getFollowers()
+            _followers.postValue(users)
+        }
+    }
+
+    fun loadFollowing() {
+        viewModelScope.launch {
+            val users = UserRepository.getFollowing()
+            _following.postValue(users)
+        }
+    }
+
+    fun performUserSearch(query: String) {
+        viewModelScope.launch {
+            val results = UserRepository.searchUsersByUsername(query)
+            _searchResults.postValue(results)
+        }
+    }
+
+
 }

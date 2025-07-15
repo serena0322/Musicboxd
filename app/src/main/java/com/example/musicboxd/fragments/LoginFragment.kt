@@ -2,6 +2,7 @@ package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
@@ -36,6 +37,25 @@ class LoginFragment : Fragment(){
         emailEditText = view.findViewById(R.id.email)
         passwordEditText = view.findViewById(R.id.password)
         loginButton = view.findViewById(R.id.buttonLogin)
+        val recoverTextView = view.findViewById<TextView>(R.id.credentialRecovery)
+
+        recoverTextView.setOnClickListener {
+            val email = emailEditText.text.toString().trim()
+
+            if (email.isEmpty()) {
+                Toast.makeText(requireContext(), "Inserisci l'indirizzo email", Toast.LENGTH_SHORT).show()
+            } else {
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(requireContext(), "Email di recupero inviata", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(requireContext(), "Errore: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+            }
+        }
+
 
         val goToRegister = view.findViewById<TextView>(R.id.textViewSignup)
 
@@ -78,9 +98,9 @@ class LoginFragment : Fragment(){
             // Misura la larghezza del testo
             val textWidth = textView.paint.measureText(textView.text.toString())
 
-            // Colori per la sfumatura
-            val startColor = ContextCompat.getColor(requireContext(), R.color.home)
-            val endColor = ContextCompat.getColor(requireContext(), R.color.teal_200)
+            // Sfumatura fucsia → azzurro
+            val startColor = Color.parseColor("#FF00AA") // Fucsia
+            val endColor = Color.parseColor("#00CFFF")   // Azzurro
 
             // Creazione della sfumatura orizzontale
             val shader = LinearGradient(

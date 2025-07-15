@@ -47,7 +47,7 @@ class ShowUserPlaylist : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        view.findViewById<TextView>(R.id.NamePlaylist).text = playlistName
+        view.findViewById<TextView>(R.id.name_playlist).text = playlistName
 
         // 🔍 Recupera la playlist dell’utente specificato
         db.collection("User")

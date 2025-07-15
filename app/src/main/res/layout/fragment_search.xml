@@ -14,13 +14,17 @@
         android:layout_height="wrap_content"
         android:text="Search"
         android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:textSize="35sp"
         android:fontFamily="@font/poppinsbold"
+        android:letterSpacing="0.05"
+        android:lineSpacingExtra="2dp"
         android:textAlignment="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
     <!-- Barra di ricerca -->
     <androidx.appcompat.widget.SearchView

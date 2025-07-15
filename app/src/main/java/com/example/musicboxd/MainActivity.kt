@@ -28,6 +28,7 @@ class MainActivity() : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.loadMyBasicProfile()
             userViewModel.observeMyUserRealtime() //aggiorna dati in real time
+            userViewModel.observeMyProfileDataRealtime()
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -78,11 +79,17 @@ class ActivityFragment : Fragment() {
     private fun updateDisplayedActivities(tabPosition: Int) {
         when (tabPosition) {
             0 -> {
+                tabLayout.setSelectedTabIndicatorColor(
+                    ContextCompat.getColor(requireContext(), R.color.home)
+                )
                 val data = userViewModel.friendsActivities.value ?: emptyList()
                 adapter.updateTabIndex(0)
                 adapter.updateData(data)
             }
             1 -> {
+                tabLayout.setSelectedTabIndicatorColor(
+                    ContextCompat.getColor(requireContext(), R.color.light_heavenly)
+                )
                 val data = userViewModel.myActivities.value ?: emptyList()
                 adapter.updateTabIndex(1)
                 adapter.updateData(data)

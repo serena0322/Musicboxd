@@ -1,4 +1,5 @@
 package com.example.musicboxd.fragments
+import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
@@ -38,13 +39,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         tabLayout = view.findViewById(R.id.tabLayout)
-//        recyclerView = view.findViewById(R.id.homeRecyclerView)
-//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-//        adapter = TrackAdapter(songs, artistMap, albumMap, albumImagesMap)
-//        recyclerView.adapter = adapter
-
-//        loadSongsFromFirestore()
         // Listener dei tab
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -57,19 +52,19 @@ class HomeFragment : Fragment() {
 
                     1 -> {
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(requireContext(), R.color.add)
+                            ContextCompat.getColor(requireContext(), R.color.search)
                         )
                     }
 
                     2 -> {
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(requireContext(), R.color.teal_200)
+                            ContextCompat.getColor(requireContext(), R.color.notify)
                         )
                     }
 
                     3 -> {
                         tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(requireContext(), R.color.profile)
+                            ContextCompat.getColor(requireContext(), R.color.light_heavenly)
                         )
                     }
                 }
@@ -81,61 +76,6 @@ class HomeFragment : Fragment() {
 
         return view
     }
-//
-//    private fun loadSongsFromFirestore() {
-//        val db = Firebase.firestore
-//
-//        db.collection("Song").get().addOnSuccessListener { songSnapshot ->
-//            val songList = songSnapshot.toObjects(Song::class.java)
-//            songs.clear()
-//            songs.addAll(songList)
-//
-//            db.collection("Artist").get().addOnSuccessListener { artistSnapshot ->
-//                val newArtistMap: Map<String, Artist> = artistSnapshot.documents.mapNotNull { doc ->
-//                    val artist = doc.toObject(Artist::class.java)
-//                    val id = doc.id
-//                    if (artist != null) id to artist else null
-//                }.toMap()
-//
-//                this.artistMap.clear()
-//                this.artistMap.putAll(newArtistMap)
-//                adapter.updateArtistMap(this.artistMap)
-//
-//                db.collection("Album").get().addOnSuccessListener { albumSnapshot ->
-//                    val newAlbumMap: Map<String, Album> = albumSnapshot.documents.mapNotNull { doc ->
-//                        val album = doc.toObject(Album::class.java)
-//                        val id = doc.id
-//                        if (album != null) id to album else null
-//                    }.toMap()
-//
-//                    this.albumMap.clear()
-//                    this.albumMap.putAll(newAlbumMap)
-//                    adapter.updateAlbumMap(this.albumMap)
-//
-//                    db.collection("Image").get().addOnSuccessListener { imageSnapshot ->
-//                        val imageList = imageSnapshot.toObjects(Image::class.java)
-//
-//                        this.albumImagesMap.clear()
-//                        this.albumImagesMap.putAll(
-//                            imageList.filter { it.albumId.isNotBlank() }
-//                                .groupBy { it.albumId }
-//                        )
-//
-//                        adapter.notifyDataSetChanged()
-//                    }
-//                }
-//            }
-//        }.addOnFailureListener {
-//            Log.e("Firestore", "Errore nel caricamento songs: ${it.message}", it)
-//            Toast.makeText(
-//                requireContext(),
-//                "Errore nel caricamento dati: ${it.message}",
-//                Toast.LENGTH_LONG
-//            ).show()
-//        }
-//      }
-//   }
-
 
         //sfumatura titolo
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -150,9 +90,9 @@ class HomeFragment : Fragment() {
 //            val textWidth = textView.paint.measureText(textView.text.toString())
                 val textWidth = textView.width.toFloat()
 
-                // Colori per la sfumatura
-                val startColor = ContextCompat.getColor(requireContext(), R.color.home)
-                val endColor = ContextCompat.getColor(requireContext(), R.color.teal_200)
+                // Sfumatura fucsia → azzurro
+                val startColor = Color.parseColor("#FF00AA") // Fucsia
+                val endColor = Color.parseColor("#00CFFF")   // Azzurro
 
                 // Creazione della sfumatura orizzontale
                 val shader = LinearGradient(

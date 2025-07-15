@@ -50,7 +50,7 @@ class ShowSongPlaylist : Fragment() {
         // Forza il refresh del profilo in caso sia obsoleto (specie dopo modifiche)
         userViewModel.loadMyBasicProfile(forceReload = true)
 
-        nameTextView = view.findViewById(R.id.NamePlaylist)
+        nameTextView = view.findViewById(R.id.name_playlist)
 
         // Setup RecyclerView
         recyclerView = view.findViewById(R.id.RecyclerView)

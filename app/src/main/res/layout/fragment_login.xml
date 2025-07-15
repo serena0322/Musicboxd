@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayout"
@@ -28,7 +27,8 @@
             android:gravity="center"
             android:text="Musicboxd"
             android:textColor="@color/white"
-            android:textSize="50sp"
+            android:textSize="44sp"
+            android:letterSpacing="0.05"
             android:textStyle="bold" />
 
         <EditText
@@ -39,9 +39,13 @@
             android:background="@drawable/edit_text_background"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:padding="12dp"
+            android:paddingVertical="14dp"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textColorHint="#AAAAAA"
+            android:fontFamily="@font/poppinsregular"
+            android:textSize="15sp"
+            android:textStyle="normal" />
 
         <EditText
             android:id="@+id/password"
@@ -51,9 +55,13 @@
             android:background="@drawable/edit_text_background"
             android:hint="Password"
             android:inputType="textPassword"
-            android:padding="12dp"
+            android:paddingVertical="14dp"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textColorHint="#AAAAAA"
+            android:fontFamily="@font/poppinsregular"
+            android:textSize="15sp"
+            android:textStyle="normal" />
 
         <Button
             android:id="@+id/buttonLogin"
@@ -63,6 +71,10 @@
             android:background="@drawable/button_background"
             android:gravity="center"
             android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:letterSpacing="0.05"
+            android:fontFamily="@font/poppinsmedium"
             android:textStyle="bold" />
 
         <TextView
@@ -73,7 +85,9 @@
             android:gravity="center"
             android:text="Don't have an account? Sign Up"
             android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:textColor="#CCCCCC"
+            android:textSize="13sp"
+            android:fontFamily="@font/poppinsregular" />
 
         <TextView
             android:id="@+id/credentialRecovery"
@@ -84,7 +98,9 @@
             android:gravity="center"
             android:text="Recover your Account"
             android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:textColor="#34CB62"
+            android:textSize="13sp"
+            android:fontFamily="@font/poppinsmedium" />
 
     </LinearLayout>
 

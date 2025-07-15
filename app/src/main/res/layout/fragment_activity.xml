@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Activity"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="35sp"
         android:textStyle="bold"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/poppinsbold"

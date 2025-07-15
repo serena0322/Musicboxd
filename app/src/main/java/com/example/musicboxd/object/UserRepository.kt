@@ -8,6 +8,7 @@ import com.example.musicboxd.local.Review
 import com.example.musicboxd.local.User
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.SetOptions
@@ -438,6 +439,57 @@ object UserRepository {
         }
 
         return BasicProfileData(user, reviews, playlists)
+    }
+
+    suspend fun searchUsersByUsername(query: String): List<User> {
+        val snapshot = FirebaseFirestore.getInstance()
+            .collection("User")
+            .orderBy("username")
+            .startAt(query)
+            .endAt(query + "\uf8ff")
+            .get()
+            .await()
+
+        return snapshot.map { it.toObject(User::class.java).copy(id = it.id) }
+    }
+
+    // Carica i follower dell’utente loggato
+    suspend fun getFollowers(): List<User> {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return emptyList()
+        val db = FirebaseFirestore.getInstance()
+
+        val followerIds = db.collection("User").document(uid)
+            .collection("followersList")
+            .get().await()
+            .map { it.id }
+
+        if (followerIds.isEmpty()) return emptyList()
+
+        val snapshot = db.collection("User")
+            .whereIn(FieldPath.documentId(), followerIds)
+            .get()
+            .await()
+
+        return snapshot.mapNotNull { it.toObject(User::class.java).copy(id = it.id) }
+    }
+
+    // Carica gli utenti seguiti
+    suspend fun getFollowing(): List<User> {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return emptyList()
+        val db = FirebaseFirestore.getInstance()
+
+        val followingIds = db.collection("User").document(uid)
+            .collection("followingList")
+            .get().await()
+            .map { it.id }
+
+        if (followingIds.isEmpty()) return emptyList()
+
+        val snapshot = db.collection("User")
+            .whereIn(FieldPath.documentId(), followingIds)
+            .get().await()
+
+        return snapshot.mapNotNull { it.toObject(User::class.java).copy(id = it.id) }
     }
 
 
