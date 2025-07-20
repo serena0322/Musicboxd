@@ -10,11 +10,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
-import com.example.musicboxd.adapter.TrackAdapter
 import com.example.musicboxd.adapter.TrackAdapter2
 import com.example.musicboxd.viewModels.SearchViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
