@@ -12,12 +12,11 @@ import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
 
-class TrackAdapter(
+class TrackAdapter3(
     private val onItemClick: (Track) -> Unit,
     private val onLongClick: (Track) -> Unit
-) : ListAdapter<Track, TrackAdapter.TrackViewHolder>(DiffCallback()) {
+) : ListAdapter<Track, TrackAdapter3.TrackViewHolder>(DiffCallback()) {
 
-    // Classe ViewHolder
     inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.title)
         private val artist: TextView = itemView.findViewById(R.id.artist)
@@ -31,13 +30,13 @@ class TrackAdapter(
                 //.placeholder(R.drawable.ic_music_placeholder)
                 .into(cover)
 
-            itemView.setOnClickListener { onItemClick(track) } // Gestione click qui
+            itemView.setOnClickListener { onItemClick(track) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_track, parent, false)
+            .inflate(R.layout.item_track2, parent, false)
         return TrackViewHolder(view)
     }
 
@@ -50,13 +49,12 @@ class TrackAdapter(
             onLongClick(track)
             true
         }
-
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Track>() {
         override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
             return oldItem.title == newItem.title &&
-                   oldItem.artist?.name == newItem.artist?.name
+                    oldItem.artist?.name == newItem.artist?.name
         }
 
         override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {
