@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 import com.example.musicboxd.adapter.HomeAdapter
+import com.example.musicboxd.adapter.TrackSection
 import com.example.musicboxd.network.Track
 import com.example.musicboxd.network.RetrofitInstance
 import com.google.android.material.tabs.TabLayout
@@ -26,7 +27,8 @@ class HomeFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var recyclerView: RecyclerView
 
-    private val trendTracks = mutableListOf<Track>()
+    // Ora gestiamo più sezioni, non solo i trend
+    private val sections = mutableListOf<TrackSection>()
     private lateinit var homeAdapter: HomeAdapter
 
     override fun onCreateView(
@@ -40,7 +42,7 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.homeRecyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        homeAdapter = HomeAdapter(trendTracks, ::onTrackClick, ::onTrackLongClick)
+        homeAdapter = HomeAdapter(sections, ::onTrackClick, ::onTrackLongClick)
         recyclerView.adapter = homeAdapter
 
         setupTabs()
@@ -90,9 +92,16 @@ class HomeFragment : Fragment() {
     private fun loadTracksFromDeezer() {
         lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.api.searchTracks("trending")
-                trendTracks.clear()
-                trendTracks.addAll(response.data)
+                // Puoi fare più chiamate API per categorie diverse
+                val trendingResponse = RetrofitInstance.api.searchTracks("trending")
+                val popResponse = RetrofitInstance.api.searchTracks("pop")
+                val rockResponse = RetrofitInstance.api.searchTracks("rock")
+
+                sections.clear()
+                sections.add(TrackSection("Trending Tracks", trendingResponse.data))
+                sections.add(TrackSection("Pop Hits", popResponse.data))
+                sections.add(TrackSection("Rock Classics", rockResponse.data))
+
                 homeAdapter.notifyDataSetChanged()
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Errore caricamento tracce Deezer", e)
