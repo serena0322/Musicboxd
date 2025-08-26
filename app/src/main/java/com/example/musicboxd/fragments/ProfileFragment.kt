@@ -14,7 +14,6 @@ import com.example.musicboxd.viewModels.UserViewModel
 
 class ProfileFragment : Fragment() {
 
-    //activityViewModels --> quando vuoi condividere dati tra Activity e i suoi fragment
     private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(

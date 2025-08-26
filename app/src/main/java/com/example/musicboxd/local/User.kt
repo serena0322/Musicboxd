@@ -3,7 +3,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 
-
 @Entity(tableName = "User")
 data class User(
     @PrimaryKey val id: String = "",
