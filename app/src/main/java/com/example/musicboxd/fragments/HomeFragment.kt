@@ -25,9 +25,8 @@ import com.example.musicboxd.network.RetrofitInstance
 import com.example.musicboxd.network.Track
 import com.example.musicboxd.viewModels.UserViewModel
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.launch
+import kotlin.text.toFloat
 
 class HomeFragment : Fragment() {
 
@@ -55,10 +54,9 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         homeAdapter = HomeAdapter(sections, ::onTrackClick, ::onTrackLongClick)
-        reviewAdapter = ReviewAdapter(reviewItems) { /* long press opzionale */ }
+        reviewAdapter = ReviewAdapter(reviewItems, onDeleteClick = { /* no-op */ }, showAuthor = true)
 
         recyclerView.adapter = homeAdapter
-
 
         // Se vuoi vedere un gradiente sul titolo, opzionale
         val titleView = view.findViewById<TextView>(R.id.Title)
@@ -82,12 +80,27 @@ class HomeFragment : Fragment() {
             updateDisplayedTab(0)
         }
 
-        // Avvia realtime e osserva UNA sola volta
+        // Avvia realtime
         userViewModel.observeHomeReviewsRealtime()
-        userViewModel.homeReviews.observe(viewLifecycleOwner) { reviews ->
+
+        // Osserva recensioni: aggiorna lista e risolvi autori
+        userViewModel.homeReviews.observe(viewLifecycleOwner) { list ->
+            // aggiorna dataset
+            reviewItems.clear()
+            reviewItems.addAll(list)
             if (tabLayout.selectedTabPosition == 1) {
-                reviewItems.clear()
-                reviewItems.addAll(reviews)
+                reviewAdapter.notifyDataSetChanged()
+            }
+            // risolvi username degli autori (solo se ci sono elementi)
+            if (list.isNotEmpty()) {
+                userViewModel.resolveUsernamesFor(list.map { it.sourceUserId })
+            }
+        }
+
+        // Osserva mappa uid->username e aggiorna l’adapter
+        userViewModel.usernames.observe(viewLifecycleOwner) { map ->
+            reviewAdapter.updateUsernames(map)
+            if (tabLayout.selectedTabPosition == 1) {
                 reviewAdapter.notifyDataSetChanged()
             }
         }
@@ -109,6 +122,7 @@ class HomeFragment : Fragment() {
 
     private fun updateDisplayedTab(position: Int) {
         when (position) {
+            // TAB 0: Tracce
             0 -> {
                 tabLayout.setSelectedTabIndicatorColor(
                     ContextCompat.getColor(requireContext(), R.color.home)
@@ -116,6 +130,7 @@ class HomeFragment : Fragment() {
                 if (recyclerView.adapter !== homeAdapter) recyclerView.adapter = homeAdapter
                 if (!tracksLoadedOnce || sections.isEmpty()) loadTracksFromDeezer()
             }
+            // TAB 1: Recensioni
             1 -> {
                 tabLayout.setSelectedTabIndicatorColor(
                     ContextCompat.getColor(requireContext(), R.color.search)
@@ -154,31 +169,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // --- DEBUG opzionale: probe su collectionGroup, rimuovere in produzione ---
-    override fun onResume() {
-        super.onResume()
-        probeCollectionGroupReviews()
-    }
-
-    private fun probeCollectionGroupReviews() {
-        val db = FirebaseFirestore.getInstance()
-        Log.d("CGQ", "Query: collectionGroup('Reviews')")
-        db.collectionGroup("Reviews")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(5)
-            .get()
-            .addOnSuccessListener { qs ->
-                Log.d("CGQ", "size=${qs.size()}")
-                qs.documents.forEach { d ->
-                    val author = d.reference.parent.parent?.id ?: "(unknown)"
-                    Log.d("CGQ", "path=${d.reference.path} | author=$author | data=${d.data}")
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("CGQ", "collectionGroup FAILED", e)
-            }
-    }
-
     private fun onTrackClick(track: Track) { /* TODO */ }
     private fun onTrackLongClick(track: Track) { /* TODO */ }
 }
+
+

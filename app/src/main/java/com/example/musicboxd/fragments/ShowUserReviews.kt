@@ -30,7 +30,9 @@ class ShowUserReviews : Fragment() {
         val view = inflater.inflate(R.layout.show_reviews, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        adapter = ReviewAdapter(reviewList) { /* click handler se necessario */ }
+        adapter = ReviewAdapter(reviews = reviewList, onDeleteClick = { }, showAuthor = false)
+
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 

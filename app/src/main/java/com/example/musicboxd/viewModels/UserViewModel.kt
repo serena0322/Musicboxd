@@ -43,6 +43,36 @@ class UserViewModel : ViewModel() {
         return (docUsers.get("following") as? List<String>)?.toSet() ?: emptySet()
     }
 
+    fun resolveUsernamesFor(uids: Collection<String>) {
+        viewModelScope.launch {
+            val uniq = uids.filter { it.isNotBlank() }.toSet()
+            if (uniq.isEmpty()) {
+                _usernames.postValue(emptyMap())
+                return@launch
+            }
+
+            val result = mutableMapOf<String, String>()
+            // Firestore whereIn accetta max 10 id per volta
+            for (chunk in uniq.chunked(10)) {
+                try {
+                    val snap = FirebaseFirestore.getInstance()
+                        .collection("User") // se la tua collezione profili è "Users", cambia qui
+                        .whereIn(FieldPath.documentId(), chunk)
+                        .get()
+                        .await()
+
+                    for (doc in snap.documents) {
+                        val name = doc.getString("username")
+                            ?: doc.getString("displayName")
+                            ?: doc.id
+                        result[doc.id] = name
+                    }
+                } catch (_: Exception) { /* ignora eventuali chunk falliti */ }
+            }
+            _usernames.postValue(result)
+        }
+    }
+
     // Realtime senza orderBy: ordino lato client
     fun observeHomeReviewsRealtime() {
         if (homeReviewsListener != null) return

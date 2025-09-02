@@ -43,16 +43,20 @@ class ShowReviews : Fragment() {
         auth = FirebaseAuth.getInstance()
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        adapter = ReviewAdapter(reviewList) { review ->
-            AlertDialog.Builder(requireContext())
-                .setTitle("Eliminare recensione")
-                .setMessage("Sei sicura di voler eliminare questa recensione?")
-                .setPositiveButton("Elimina") { _, _ ->
-                    deleteReview(review.sourceUserId, review.documentId)
-                }
-                .setNegativeButton("Annulla", null)
-                .show()
-        }
+        adapter = ReviewAdapter(
+            reviews = reviewList,
+            onDeleteClick = { review ->
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Eliminare recensione")
+                    .setMessage("Sei sicura di voler eliminare questa recensione?")
+                    .setPositiveButton("Elimina") { _, _ ->
+                        deleteReview(review.sourceUserId, review.documentId)
+                    }
+                    .setNegativeButton("Annulla", null)
+                    .show()
+            },
+            showAuthor = false // qui non mostrare l’autore
+        )
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
