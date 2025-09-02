@@ -9,12 +9,114 @@ import com.example.musicboxd.local.Review
 import com.example.musicboxd.local.User
 import com.example.musicboxd.`object`.BasicProfileData
 import com.example.musicboxd.`object`.UserRepository
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class UserViewModel : ViewModel() {
+
+    // ----- Home (Tab 1): Reviews -----
+    private val _homeReviews = MutableLiveData<List<Review>>(emptyList())
+    val homeReviews: LiveData<List<Review>> = _homeReviews
+    // Mappa uid -> username (per la UI)
+    private val _usernames = MutableLiveData<Map<String, String>>(emptyMap())
+    val usernames: LiveData<Map<String, String>> = _usernames
+    private val firestore = FirebaseFirestore.getInstance()
+    private var homeReviewsListener: ListenerRegistration? = null
+    private var followingCache: Set<String> = emptySet()
+
+    /** Carica la lista dei following; prima dalla collezione 'User' (singolare), poi 'Users' (fallback). */
+    private suspend fun loadFollowingSet(uid: String): Set<String> {
+        val docUser = firestore.collection("User").document(uid).get().await()
+        if (docUser.exists()) {
+            @Suppress("UNCHECKED_CAST")
+            return (docUser.get("following") as? List<String>)?.toSet() ?: emptySet()
+        }
+        val docUsers = firestore.collection("Users").document(uid).get().await()
+        @Suppress("UNCHECKED_CAST")
+        return (docUsers.get("following") as? List<String>)?.toSet() ?: emptySet()
+    }
+
+    // Realtime senza orderBy: ordino lato client
+    fun observeHomeReviewsRealtime() {
+        if (homeReviewsListener != null) return
+        viewModelScope.launch {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            followingCache = if (uid != null) loadFollowingSet(uid) else emptySet()
+
+            val q = firestore.collectionGroup("Reviews")  // <-- niente orderBy
+                .limit(200)
+
+            homeReviewsListener = q.addSnapshotListener { snap, err ->
+                if (err != null || snap == null) {
+                    _homeReviews.postValue(emptyList()); return@addSnapshotListener
+                }
+
+                val mapped = snap.documents
+                    .mapNotNull { it.toLocalReview() }
+                    .sortedByDescending { it.timestamp?.toDate() } // <-- ordinamento client
+
+                val (fromFollowed, fromOthers) = mapped.partition { r ->
+                    r.sourceUserId.isNotBlank() && followingCache.contains(r.sourceUserId)
+                }
+                _homeReviews.postValue((fromFollowed.take(10) + fromOthers.take(20)).shuffled())
+            }
+        }
+    }
+
+    // One-shot senza orderBy: ordino lato client
+    fun reloadHomeReviewsOnce() {
+        viewModelScope.launch {
+            try {
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                if (followingCache.isEmpty() && uid != null) followingCache = loadFollowingSet(uid)
+
+                val snap = firestore.collectionGroup("Reviews")  // <-- niente orderBy
+                    .limit(200)
+                    .get().await()
+
+                val mapped = snap.documents
+                    .mapNotNull { it.toLocalReview() }
+                    .sortedByDescending { it.timestamp?.toDate() } // <-- ordinamento client
+
+                val (fromFollowed, fromOthers) = mapped.partition { r ->
+                    r.sourceUserId.isNotBlank() && followingCache.contains(r.sourceUserId)
+                }
+                _homeReviews.postValue((fromFollowed.take(10) + fromOthers.take(20)).shuffled())
+            } catch (_: Exception) {
+                _homeReviews.postValue(emptyList())
+            }
+        }
+    }
+
+
+    /** Mapping aderente al tuo data class; autore ricavato dal path User/{uid}/Reviews/{doc}. */
+    private fun DocumentSnapshot.toLocalReview(): Review? = try {
+        val r = this.toObject<Review>() ?: return null
+        r.documentId = this.id
+        val authorId = this.reference.parent.parent?.id ?: ""
+        if (r.sourceUserId.isBlank()) r.sourceUserId = this.getString("userId") ?: authorId
+        when (val raw = this.get("rating")) {
+            is Number -> r.rating = raw.toDouble()
+            is String -> r.rating = raw.toDoubleOrNull() ?: r.rating
+        }
+        r.timestamp = this.getTimestamp("timestamp") ?: r.timestamp
+        r
+    } catch (_: Exception) { null }
+
+    override fun onCleared() {
+        super.onCleared()
+        homeReviewsListener?.remove()
+        homeReviewsListener = null
+    }
+
+    // ----- Resto del tuo ViewModel (activities, profili, ecc.) -----
 
     private val _myActivities = MutableLiveData<List<ActivityItem>>()
     val myActivities: LiveData<List<ActivityItem>> = _myActivities
@@ -23,6 +125,8 @@ class UserViewModel : ViewModel() {
     val friendsActivities: LiveData<List<ActivityItem>> = _friendsActivities
 
     private var userListener: ListenerRegistration? = null
+    private var reviewListener: ListenerRegistration? = null
+    private var playlistListener: ListenerRegistration? = null
 
     fun observeMyUserRealtime() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -32,37 +136,25 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    private var reviewListener: ListenerRegistration? = null
-    private var playlistListener: ListenerRegistration? = null
-
     fun observeMyProfileDataRealtime() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
         observeMyUserRealtime()
-
         reviewListener?.remove()
         reviewListener = UserRepository.observeUserReviewsRealtime(uid) { reviews ->
-            _basicProfile.postValue(
-                _basicProfile.value?.copy(reviews = reviews)
-            )
+            _basicProfile.postValue(_basicProfile.value?.copy(reviews = reviews))
         }
-
         playlistListener?.remove()
         playlistListener = UserRepository.observeUserPlaylistsRealtime(uid) { playlists ->
-            _basicProfile.postValue(
-                _basicProfile.value?.copy(playlists = playlists)
-            )
+            _basicProfile.postValue(_basicProfile.value?.copy(playlists = playlists))
         }
     }
 
     private val _basicProfile = MutableLiveData<BasicProfileData>()
     val basicProfile: LiveData<BasicProfileData> = _basicProfile
-
     private var isBasicProfileLoaded = false
 
     fun loadMyBasicProfile(forceReload: Boolean = false) {
         if (isBasicProfileLoaded && !forceReload) return
-
         viewModelScope.launch {
             val profileData = UserRepository.loadMyBasicDataWithReviewsAndPlaylists()
             _basicProfile.postValue(profileData)
@@ -89,12 +181,7 @@ class UserViewModel : ViewModel() {
     }
 
     fun observeAllActivitiesRealtime() {
-        // Osserva le attività dell’utente
-        UserRepository.observeMyActivityRealtime {
-            _myActivities.postValue(it)
-        }
-
-        // Ottiene la lista dei following e osserva le loro attività
+        UserRepository.observeMyActivityRealtime { _myActivities.postValue(it) }
         val followingList = UserRepository.currentUser.value?.following ?: emptyList()
         UserRepository.observeFriendsActivitiesRealtime(followingList) {
             _friendsActivities.postValue(it)
@@ -120,26 +207,15 @@ class UserViewModel : ViewModel() {
     private val _searchResults = MutableLiveData<List<User>>()
     val searchResults: LiveData<List<User>> = _searchResults
 
-    fun loadFollowers() {
-        viewModelScope.launch {
-            val users = UserRepository.getFollowers()
-            _followers.postValue(users)
-        }
+    fun loadFollowers() = viewModelScope.launch {
+        _followers.postValue(UserRepository.getFollowers())
     }
 
-    fun loadFollowing() {
-        viewModelScope.launch {
-            val users = UserRepository.getFollowing()
-            _following.postValue(users)
-        }
+    fun loadFollowing() = viewModelScope.launch {
+        _following.postValue(UserRepository.getFollowing())
     }
 
-    fun performUserSearch(query: String) {
-        viewModelScope.launch {
-            val results = UserRepository.searchUsersByUsername(query)
-            _searchResults.postValue(results)
-        }
+    fun performUserSearch(query: String) = viewModelScope.launch {
+        _searchResults.postValue(UserRepository.searchUsersByUsername(query))
     }
-
-
 }

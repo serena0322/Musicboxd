@@ -2,6 +2,7 @@ package com.example.musicboxd
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.musicboxd.fragments.AddSongBottomSheet
 import kotlinx.coroutines.launch
 import com.example.musicboxd.viewModels.UserViewModel
+import com.google.firebase.FirebaseApp
 
 class MainActivity() : AppCompatActivity() {
 
@@ -30,6 +32,10 @@ class MainActivity() : AppCompatActivity() {
             userViewModel.observeMyUserRealtime() //aggiorna dati in real time
             userViewModel.observeMyProfileDataRealtime()
         }
+
+        val app = FirebaseApp.getInstance()
+        val opt = app.options
+        Log.d("FirebaseProjectCheck", "projectId=${opt.projectId}, appId=${opt.applicationId}, apiKey=${opt.apiKey}, storage=${opt.storageBucket}")
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
