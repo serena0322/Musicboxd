@@ -26,7 +26,6 @@ import com.example.musicboxd.network.Track
 import com.example.musicboxd.viewModels.UserViewModel
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
-import kotlin.text.toFloat
 
 class HomeFragment : Fragment() {
 
@@ -54,17 +53,19 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         homeAdapter = HomeAdapter(sections, ::onTrackClick, ::onTrackLongClick)
-        reviewAdapter = ReviewAdapter(reviewItems, onDeleteClick = { /* no-op */ }, showAuthor = true)
+        reviewAdapter = ReviewAdapter(
+            reviewItems,
+            onDeleteClick = { /* no-op nella Home */ },
+            showAuthor = true
+        )
 
         recyclerView.adapter = homeAdapter
 
-        // Se vuoi vedere un gradiente sul titolo, opzionale
-        val titleView = view.findViewById<TextView>(R.id.Title)
-        titleView?.let { tv ->
+        // Gradiente opzionale sul titolo
+        view.findViewById<TextView>(R.id.Title)?.let { tv ->
             tv.post {
-                val textWidth = tv.width.toFloat()
                 val shader = LinearGradient(
-                    0f, 0f, textWidth, 0f,
+                    0f, 0f, tv.width.toFloat(), 0f,
                     intArrayOf(Color.parseColor("#FF00AA"), Color.parseColor("#00CFFF")),
                     floatArrayOf(0.0f, 0.6f),
                     Shader.TileMode.CLAMP
@@ -74,30 +75,30 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Tab iniziale
+        // Seleziona tab iniziale e aggiorna UI
         tabLayout.post {
             tabLayout.getTabAt(0)?.select()
             updateDisplayedTab(0)
         }
 
-        // Avvia realtime
+        // Avvio realtime per recensioni
         userViewModel.observeHomeReviewsRealtime()
 
-        // Osserva recensioni: aggiorna lista e risolvi autori
+        // Osserva le recensioni e ordinale per più recenti
         userViewModel.homeReviews.observe(viewLifecycleOwner) { list ->
-            // aggiorna dataset
             reviewItems.clear()
-            reviewItems.addAll(list)
+            reviewItems.addAll(
+                list.sortedByDescending { it.orderKey() }
+            )
             if (tabLayout.selectedTabPosition == 1) {
                 reviewAdapter.notifyDataSetChanged()
             }
-            // risolvi username degli autori (solo se ci sono elementi)
             if (list.isNotEmpty()) {
                 userViewModel.resolveUsernamesFor(list.map { it.sourceUserId })
             }
         }
 
-        // Osserva mappa uid->username e aggiorna l’adapter
+        // Aggiorna username autori quando la mappa cambia
         userViewModel.usernames.observe(viewLifecycleOwner) { map ->
             reviewAdapter.updateUsernames(map)
             if (tabLayout.selectedTabPosition == 1) {
@@ -107,7 +108,9 @@ class HomeFragment : Fragment() {
 
         setupTabListener()
 
-        if (!tracksLoadedOnce || sections.isEmpty()) loadTracksFromDeezer()
+        if (!tracksLoadedOnce || sections.isEmpty()) {
+            loadTracksFromDeezer()
+        }
 
         return view
     }
@@ -127,23 +130,35 @@ class HomeFragment : Fragment() {
                 tabLayout.setSelectedTabIndicatorColor(
                     ContextCompat.getColor(requireContext(), R.color.home)
                 )
-                if (recyclerView.adapter !== homeAdapter) recyclerView.adapter = homeAdapter
-                if (!tracksLoadedOnce || sections.isEmpty()) loadTracksFromDeezer()
+                if (recyclerView.adapter !== homeAdapter) {
+                    recyclerView.adapter = homeAdapter
+                }
+                if (!tracksLoadedOnce || sections.isEmpty()) {
+                    loadTracksFromDeezer()
+                }
             }
             // TAB 1: Recensioni
             1 -> {
                 tabLayout.setSelectedTabIndicatorColor(
                     ContextCompat.getColor(requireContext(), R.color.search)
                 )
-                if (recyclerView.adapter !== reviewAdapter) recyclerView.adapter = reviewAdapter
-                if (reviewItems.isEmpty()) userViewModel.reloadHomeReviewsOnce()
+                if (recyclerView.adapter !== reviewAdapter) {
+                    recyclerView.adapter = reviewAdapter
+                }
+                if (reviewItems.isEmpty()) {
+                    userViewModel.reloadHomeReviewsOnce()
+                }
             }
             else -> {
                 tabLayout.setSelectedTabIndicatorColor(
                     ContextCompat.getColor(requireContext(), R.color.home)
                 )
-                if (recyclerView.adapter !== homeAdapter) recyclerView.adapter = homeAdapter
-                if (!tracksLoadedOnce || sections.isEmpty()) loadTracksFromDeezer()
+                if (recyclerView.adapter !== homeAdapter) {
+                    recyclerView.adapter = homeAdapter
+                }
+                if (!tracksLoadedOnce || sections.isEmpty()) {
+                    loadTracksFromDeezer()
+                }
             }
         }
     }
@@ -169,8 +184,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun onTrackClick(track: Track) { /* TODO */ }
-    private fun onTrackLongClick(track: Track) { /* TODO */ }
+    private fun onTrackClick(track: Track) { /* TODO: azione click */ }
+    private fun onTrackLongClick(track: Track) { /* TODO: azione long click */ }
+
+    private fun Review.orderKey(): Long {
+        return this.timestamp?.toDate()?.time ?: 0L
+    }
+
 }
+
 
 
