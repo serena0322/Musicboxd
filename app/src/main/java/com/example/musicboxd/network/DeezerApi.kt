@@ -18,6 +18,18 @@ interface DeezerApi {
     @GET("album/{id}")
     suspend fun getAlbumDetails(@Path("id") albumId: Long): AlbumDetailsResponse
 
+    @GET("chart")
+    suspend fun globalCharts(): ChartResponse
+
 }
+
+// Risposta minima per ottenere i brani dei charts
+data class ChartResponse(
+    val tracks: TrackPage?
+)
+
+data class TrackPage(
+    val data: List<Track> = emptyList()
+)
 
 

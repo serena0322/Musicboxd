@@ -1,9 +1,12 @@
 package com.example.musicboxd.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +29,7 @@ import com.example.musicboxd.network.Track
 import com.example.musicboxd.viewModels.UserViewModel
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
+
 
 class HomeFragment : Fragment() {
 
@@ -167,14 +171,28 @@ class HomeFragment : Fragment() {
     private fun loadTracksFromDeezer() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val trending = RetrofitInstance.api.searchTracks("trending").data
-                val pop = RetrofitInstance.api.searchTracks("pop").data
-                val rock = RetrofitInstance.api.searchTracks("rock").data
+                // Top Charts Globali (simile a Spotify Top 50)
+                val globalChartsPage = RetrofitInstance.api.globalCharts()
+                val globalTop = globalChartsPage.tracks?.data.orEmpty().take(20)
+
+                // Altre categorie
+                val pop = RetrofitInstance.api.searchTracks("pop").data.orEmpty().take(20)
+                val rock = RetrofitInstance.api.searchTracks("rock").data.orEmpty().take(20)
+                val hiphop = RetrofitInstance.api.searchTracks("hip hop").data.orEmpty().take(20)
+                val indie = RetrofitInstance.api.searchTracks("indie").data.orEmpty().take(20)
+                val electronic = RetrofitInstance.api.searchTracks("electronic").data.orEmpty().take(20)
+                val italian = RetrofitInstance.api.searchTracks("italian").data.orEmpty().take(20)
+                val fresh = RetrofitInstance.api.searchTracks("new").data.orEmpty().take(20)
 
                 sections.clear()
-                sections.add(TrackSection("Trending Tracks", trending))
+                sections.add(TrackSection("Top Charts", globalTop)) // 👈 categoria simile a Spotify
                 sections.add(TrackSection("Pop Hits", pop))
                 sections.add(TrackSection("Rock Classics", rock))
+                sections.add(TrackSection("Hip-Hop Vibes", hiphop))
+                sections.add(TrackSection("Indie Discoveries", indie))
+                sections.add(TrackSection("Electronic Essentials", electronic))
+                sections.add(TrackSection("Italian Favorites", italian))
+                sections.add(TrackSection("Fresh Finds", fresh))
 
                 tracksLoadedOnce = true
                 homeAdapter.notifyDataSetChanged()
@@ -184,7 +202,30 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun onTrackClick(track: Track) { /* TODO: azione click */ }
+    private data class CountrySpec(
+        val title: String,
+        val editorialId: Int
+    )
+
+    /** Specifica di una categoria (titolo mostrato + query Deezer + limite) */
+    private data class CategorySpec(
+        val title: String,
+        val query: String,
+        val limit: Int
+    )
+
+    private fun onTrackClick(track: Track) {
+        // Adatta questi campi ai nomi reali nel tuo modello Track
+        val coverUrl: String? = try {
+            track.album?.cover
+        } catch (_: Exception) { null }
+
+        val intent = Intent(requireContext(), TrackInformation::class.java).apply {
+            putExtra("track", track)     // Track deve essere Parcelable (vedi nota sotto)
+            putExtra("cover", coverUrl)  // l’Activity legge "cover"
+        }
+        startActivity(intent)
+    }
     private fun onTrackLongClick(track: Track) { /* TODO: azione long click */ }
 
     private fun Review.orderKey(): Long {
