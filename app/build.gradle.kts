@@ -76,6 +76,7 @@ android {
 
         // Glide (immagini)
         implementation("com.github.bumptech.glide:glide:4.15.1")
+        testImplementation(libs.junit.jupiter)
         kapt("com.github.bumptech.glide:compiler:4.15.1")
 
         // Picasso (se usi anche questo, ma attento: è ridondante con Glide)
@@ -109,5 +110,11 @@ android {
         debugImplementation(libs.androidx.ui.test.manifest)
         //Material
         implementation ("com.google.android.material:material:1.12.0")
+
+        implementation("androidx.media3:media3-exoplayer:1.3.1")
+
+        testImplementation("junit:junit:4.13.2")
+        testImplementation("androidx.test.ext:junit-ktx:1.1.5")
+
     }
 

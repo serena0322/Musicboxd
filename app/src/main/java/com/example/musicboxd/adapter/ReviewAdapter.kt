@@ -16,10 +16,9 @@ import java.util.Locale
 class ReviewAdapter(
     private val reviews: List<Review>,
     private val onDeleteClick: (Review) -> Unit,
-    private val showAuthor: Boolean = false                    // <-- nuovo (default: non mostra)
+    private val showAuthor: Boolean = false
 ) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
-    // Mappa uid -> username per mostrare l’autore quando serve
     private var usernames: Map<String, String> = emptyMap()
     fun updateUsernames(map: Map<String, String>) {
         usernames = map

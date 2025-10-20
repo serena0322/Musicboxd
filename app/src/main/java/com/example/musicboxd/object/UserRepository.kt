@@ -141,8 +141,6 @@ object UserRepository {
 
         val firestore = FirebaseFirestore.getInstance()
         val combinedActivities = mutableListOf<ActivityItem>()
-        val userMap = mutableMapOf<String, String>()
-        var listenersReady = 0
 
         followingList.forEach { friendId ->
             val listener = firestore.collection("User")
