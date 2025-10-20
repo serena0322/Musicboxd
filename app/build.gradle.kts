@@ -113,8 +113,30 @@ android {
 
         implementation("androidx.media3:media3-exoplayer:1.3.1")
 
-        testImplementation("junit:junit:4.13.2")
-        testImplementation("androidx.test.ext:junit-ktx:1.1.5")
+        // Per JUnit/Espresso nei test strumentati
+        androidTestImplementation("androidx.test.ext:junit:1.1.5")
+        androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+        // Per Mockito nei test strumentati
+
+        androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+        androidTestImplementation ("com.google.firebase:firebase-auth-ktx:22.1.1")
+
+        androidTestImplementation("androidx.test:core:1.5.0")
+        androidTestImplementation("androidx.test.ext:junit:1.1.5")
+        androidTestImplementation("androidx.test:runner:1.5.2")
+        androidTestImplementation("androidx.appcompat:appcompat:1.7.0")
+        androidTestImplementation("org.mockito:mockito-core:5.11.0")
+        androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+        androidTestImplementation("org.mockito:mockito-inline:5.2.0")
+
+        debugImplementation("androidx.fragment:fragment-testing:1.8.2")
+
+        androidTestImplementation("androidx.test:core:1.5.0")
+        androidTestImplementation("androidx.test.ext:junit:1.1.5")
+        androidTestImplementation("androidx.test:runner:1.5.2")
+        androidTestImplementation("com.google.android.material:material:1.12.0")
+
 
     }
 
