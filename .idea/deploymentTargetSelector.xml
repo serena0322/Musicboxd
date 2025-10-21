@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="MainActivityTest">
+      <SelectionState runConfigName="HomeFragmentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SecondActivityTest">
+      <SelectionState runConfigName="LoginFragmentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="loggedIn_navigatesToMainActivity()">
+      <SelectionState runConfigName="click_recover_emptyEmail_showsToast()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ActivityFragmentMinimalTest">
+      <SelectionState runConfigName="click_recover_emptyEmail_doesNotNavigate_andUiStays()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ActivityFragmentTest">
+      <SelectionState runConfigName="NetworkTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
