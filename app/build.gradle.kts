@@ -79,6 +79,7 @@ dependencies {
 
     // Immagini
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.androidx.junit.ktx)
     kapt("com.github.bumptech.glide:compiler:4.15.1")
     // (Facoltativo) Picasso è ridondante con Glide: valuta se rimuoverlo
     implementation("com.squareup.picasso:picasso:2.71828")
@@ -130,7 +131,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    testImplementation(kotlin("test"))
+
+    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("androidx.test:core-ktx:1.5.0")
+
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
 
 }
 

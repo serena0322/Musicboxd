@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.musicboxd.R
-class UserProfile : Fragment() {
+open class UserProfile : Fragment() {
 
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var reviewsCountTextView: TextView

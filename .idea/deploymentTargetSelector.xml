@@ -13,19 +13,16 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="HomeFragmentTest">
+      <SelectionState runConfigName="SignInFragmentTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="LoginFragmentTest">
+      <SelectionState runConfigName="TrackInformationTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="click_recover_emptyEmail_showsToast()">
+      <SelectionState runConfigName="UserPlaylistsTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="click_recover_emptyEmail_doesNotNavigate_andUiStays()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="NetworkTest">
+      <SelectionState runConfigName="UserProfileTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
