@@ -1,13 +1,13 @@
 package com.example.musicboxd
 
 import android.app.Activity
-import android.content.Context
 import android.app.Instrumentation
+import android.content.Context
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.intent.Intents // DEVE ESSERE RICONOSCIUTO
+import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.matcher.IntentMatchers.* // DEVE ESSERE RICONOSCIUTO
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.FirebaseApp
@@ -17,7 +17,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class SecondActivityTest {
@@ -28,41 +29,31 @@ class SecondActivityTest {
 
         val ctx = ApplicationProvider.getApplicationContext<Context>()
         FirebaseApp.clearInstancesForTest()
-        val opts = FirebaseOptions.Builder()
-            .setProjectId("demo-test")
-            .setApplicationId("1:1234567890:android:test")
-            .setApiKey("fake-api-key")
-            .build()
-        FirebaseApp.initializeApp(ctx, opts)
+        FirebaseApp.initializeApp(
+            ctx,
+            FirebaseOptions.Builder()
+                .setProjectId("demo-test")
+                .setApplicationId("1:1234567890:android:test")
+                .setApiKey("fake-api-key")
+                .build()
+        )
 
-        FirebaseAuth.getInstance().apply {
-            useEmulator("10.0.2.2", 9099) // <-- importante: NON 127.0.0.1
-            signOut()
-        }
+        // >>> AGGIUNGI QUESTA RIGA (prima di qualunque getInstance()/login) <<<
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
+
+        FirebaseAuth.getInstance().signOut()
     }
-
 
     @After
     fun teardown() {
-        com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+        FirebaseAuth.getInstance().signOut()
         Intents.release()
     }
 
-    @Test
-    fun notLoggedIn_remainsOnSecondActivity() {
-        val scenario = androidx.test.core.app.ActivityScenario.launch(SecondActivity::class.java)
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        intended(hasComponent(MainActivity::class.java.name), Intents.times(0))
-        scenario.close()
-    }
-
-    @Test
-    fun loggedIn_navigatesToMainActivity() {
-        Intents.intending(hasComponent(MainActivity::class.java.name))
-            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
-
+    // Helper: esegue login anonimo e attende che currentUser sia valorizzato
+    private fun loginAnonBlocking(timeoutSec: Long = 15) {
         val auth = FirebaseAuth.getInstance()
-        val latch = java.util.concurrent.CountDownLatch(1)
+        val latch = CountDownLatch(1)
         val listener = FirebaseAuth.AuthStateListener { fa ->
             if (fa.currentUser != null) latch.countDown()
         }
@@ -70,17 +61,37 @@ class SecondActivityTest {
         auth.signInAnonymously().addOnFailureListener { e ->
             throw AssertionError("signInAnonymously() fallita: ${e.message}", e)
         }
-        if (!latch.await(15, java.util.concurrent.TimeUnit.SECONDS)) {
+        if (!latch.await(timeoutSec, TimeUnit.SECONDS)) {
             auth.removeAuthStateListener(listener)
-            throw AssertionError("Auth non pronta: currentUser è ancora null (emulatore su 9099 avviato?)")
+            throw AssertionError("Auth non pronta: currentUser è ancora null")
         }
         auth.removeAuthStateListener(listener)
+    }
 
+    @Test
+    fun notLoggedIn_remainsOnSecondActivity() {
+        val scenario = ActivityScenario.launch(SecondActivity::class.java)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        // Non deve partire MainActivity
+        intended(hasComponent(MainActivity::class.java.name), Intents.times(0))
+        scenario.close()
+    }
+
+    @Test
+    fun loggedIn_navigatesToMainActivity() {
+        // Intercetta la startActivity verso MainActivity per non aprirla davvero
+        Intents.intending(hasComponent(MainActivity::class.java.name))
+            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
+
+        // Esegui un login reale PRIMA di lanciare l’Activity
+        loginAnonBlocking()
+
+        // Ora SecondActivity dovrebbe navigare subito a MainActivity
         val scenario = ActivityScenario.launch(SecondActivity::class.java)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
         intended(hasComponent(MainActivity::class.java.name), Intents.times(1))
         scenario.close()
     }
-
 }
