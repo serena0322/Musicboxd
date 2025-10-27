@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.musicboxd">
+
+    <!-- targetSdk ridotto per compatibilità Robolectric -->
+    <uses-sdk android:targetSdkVersion="34" />
+
+    <application
+        android:label="Musicboxd Test"
+        android:name="android.app.Application" />
+</manifest>
