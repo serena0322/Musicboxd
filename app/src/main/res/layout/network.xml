@@ -37,8 +37,8 @@
         app:tabIndicatorHeight="3dp"
         app:tabRippleColor="@android:color/transparent"
         app:tabTextAppearance="@style/CustomTabTextAppearance"
-        app:tabTextColor="@color/white"
-        app:tabSelectedTextColor="@color/home"
+        app:tabTextColor="@color/light_gray"
+        app:tabSelectedTextColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/followStatsTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

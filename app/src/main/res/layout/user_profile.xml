@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
 
+    <!-- Nome utente -->
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Username"
         android:textColor="@color/white"
         android:textSize="30sp"
+        android:fontFamily="@font/poppinsbold"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/settingsScrollView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"
+        android:letterSpacing="0.02"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <!-- ScrollView con contenuti -->
+    <!-- Contenuto scrollabile -->
     <ScrollView
         android:id="@+id/settingsScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="15dp"
         android:layout_marginTop="20dp"
-        android:background="@color/scrollView"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp"
+        android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/username"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,51 +42,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-            <!-- Diary -->
+            <!-- Reviews -->
             <TextView
                 android:id="@+id/reviews"
                 style="@style/ClickableListItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="Reviews" />
+                android:text="Reviews"
+                android:textColor="@color/white" />
 
             <!-- Playlist -->
             <TextView
                 android:id="@+id/playlist"
                 style="@style/ClickableListItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Playlist" />
+                android:text="Playlist"
+                android:textColor="@color/white" />
 
             <!-- Following -->
             <TextView
                 android:id="@+id/following"
                 style="@style/ClickableListItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Following" />
+                android:text="Following"
+                android:textColor="@color/white" />
 
             <!-- Followers -->
             <TextView
                 android:id="@+id/followers"
                 style="@style/ClickableListItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Followers" />
+                android:text="Followers"
+                android:textColor="@color/white" />
 
-            <!-- Followers -->
+            <!-- Likes -->
             <TextView
                 android:id="@+id/likes"
                 style="@style/ClickableListItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Likes" />
+                android:text="Likes"
+                android:textColor="@color/white" />
 
         </LinearLayout>
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

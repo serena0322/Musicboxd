@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
             // TAB 1: Recensioni
             1 -> {
                 tabLayout.setSelectedTabIndicatorColor(
-                    ContextCompat.getColor(requireContext(), R.color.search)
+                    ContextCompat.getColor(requireContext(), R.color.light_heavenly)
                 )
                 if (recyclerView.adapter !== reviewAdapter) {
                     recyclerView.adapter = reviewAdapter

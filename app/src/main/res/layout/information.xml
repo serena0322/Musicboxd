@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#303C4A" >
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/title"
@@ -15,7 +16,7 @@
         android:lineSpacingExtra="2dp"
         android:maxLines="3"
         android:text="Title"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         android:fontFamily="@font/poppinsbold"
@@ -24,39 +25,12 @@
         app:layout_constraintTop_toTopOf="@+id/infoCover" />
 
     <TextView
-        android:id="@+id/album"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:text="Album"
-        android:textColor="#CCCCCC"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/artist"
-        app:layout_constraintTop_toBottomOf="@+id/artist"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <TextView
-        android:id="@+id/duration"
-        android:layout_width="224dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="8dp"
-        android:text="Duration"
-        android:textColor="#CCCCCC"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/genre"
-        app:layout_constraintTop_toBottomOf="@+id/genre"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
         android:id="@+id/artist"
         android:layout_width="224dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="Artist"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="italic"
         android:fontFamily="@font/poppinsmedium"
@@ -65,16 +39,55 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
+        android:id="@+id/album"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="Album"
+        android:textColor="@color/light_gray"
+        android:textSize="14sp"
+        android:fontFamily="@font/poppinsregular"
+        app:layout_constraintStart_toStartOf="@+id/artist"
+        app:layout_constraintTop_toBottomOf="@+id/artist"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
         android:id="@+id/date"
         android:layout_width="224dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:text="Date"
-        android:textColor="#CCCCCC"
+        android:textColor="@color/light_gray"
         android:textSize="14sp"
         android:fontFamily="@font/poppinsregular"
         app:layout_constraintStart_toStartOf="@+id/album"
         app:layout_constraintTop_toBottomOf="@+id/album" />
+
+    <TextView
+        android:id="@+id/genre"
+        android:layout_width="224dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="12dp"
+        android:text="Genre"
+        android:textColor="@color/light_gray"
+        android:textSize="14sp"
+        android:fontFamily="@font/poppinsregular"
+        app:layout_constraintStart_toStartOf="@+id/infoCover"
+        app:layout_constraintTop_toBottomOf="@+id/infoCover"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="224dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="8dp"
+        android:text="Duration"
+        android:textColor="@color/light_gray"
+        android:textSize="14sp"
+        android:fontFamily="@font/poppinsregular"
+        app:layout_constraintStart_toStartOf="@+id/genre"
+        app:layout_constraintTop_toBottomOf="@+id/genre"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/infoCover"
@@ -88,6 +101,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.045" />
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Riproduci Anteprima"
+        android:textSize="10sp"
+        android:fontFamily="@font/poppinsmedium"
+        android:textColor="@color/home"
+        android:background="@android:color/transparent"
+        android:letterSpacing="0.02"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duration"
+        app:layout_constraintVertical_bias="0.039" />
+
+    <Button
+        android:id="@+id/playlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aggiungi alla Playlist"
+        android:textSize="10sp"
+        android:fontFamily="@font/poppinsmedium"
+        android:textColor="@color/home"
+        android:background="@android:color/transparent"
+        android:letterSpacing="0.02"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.739"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/play" />
+
+    <TextView
+        android:id="@+id/Ratings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="RATINGS"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppinsbold"
+        android:letterSpacing="0.05"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play" />
 
     <LinearLayout
         android:id="@+id/ratingHistogram"
@@ -105,7 +166,7 @@
         app:layout_constraintTop_toBottomOf="@+id/Ratings"
         tools:ignore="MissingConstraints">
 
-        <!-- 0.5★ -->
+        <!-- le barrette usano @drawable/rating_bar_background -->
         <View
             android:id="@+id/bar_0_5"
             android:layout_width="0dp"
@@ -114,7 +175,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 1.0★ -->
         <View
             android:id="@+id/bar_1_0"
             android:layout_width="0dp"
@@ -123,7 +183,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 1.5★ -->
         <View
             android:id="@+id/bar_1_5"
             android:layout_width="0dp"
@@ -132,7 +191,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 2.0★ -->
         <View
             android:id="@+id/bar_2_0"
             android:layout_width="0dp"
@@ -141,7 +199,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 2.5★ -->
         <View
             android:id="@+id/bar_2_5"
             android:layout_width="0dp"
@@ -150,7 +207,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 3.0★ -->
         <View
             android:id="@+id/bar_3_0"
             android:layout_width="0dp"
@@ -159,7 +215,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 3.5★ -->
         <View
             android:id="@+id/bar_3_5"
             android:layout_width="0dp"
@@ -168,7 +223,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 4.0★ -->
         <View
             android:id="@+id/bar_4_0"
             android:layout_width="0dp"
@@ -177,7 +231,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 4.5★ -->
         <View
             android:id="@+id/bar_4_5"
             android:layout_width="0dp"
@@ -186,7 +239,6 @@
             android:layout_weight="1"
             android:background="@drawable/rating_bar_background" />
 
-        <!-- 5.0★ -->
         <View
             android:id="@+id/bar_5_0"
             android:layout_width="0dp"
@@ -196,61 +248,12 @@
             android:background="@drawable/rating_bar_background" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Riproduci Anteprima"
-        android:textSize="10sp"
-        android:fontFamily="@font/poppinsmedium"
-        android:textColor="#11F54E"
-        android:background="@android:color/transparent"
-        android:letterSpacing="0.02"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.166"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/duration"
-        app:layout_constraintVertical_bias="0.039" />
-
-    <TextView
-        android:id="@+id/Ratings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="RATINGS"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/poppinsbold"
-        android:letterSpacing="0.05"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.073"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/play" />
-
-
-    <Button
-        android:id="@+id/playlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Aggiungi alla Playlist"
-        android:textSize="10sp"
-        android:fontFamily="@font/poppinsmedium"
-        android:textColor="#11F54E"
-        android:background="@android:color/transparent"
-        android:letterSpacing="0.02"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.739"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/play" />
-
     <TextView
         android:id="@+id/rating"
         android:layout_width="53dp"
         android:layout_height="28dp"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:fontFamily="@font/poppinsbold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -265,7 +268,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="★"
-        android:textColor="#11F54E"
+        android:textColor="@color/home"
         android:textSize="18sp"
         android:letterSpacing="0.04"
         android:fontFamily="@font/poppinsmedium"
@@ -280,7 +283,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         android:text="★★★★★"
-        android:textColor="#11F54E"
+        android:textColor="@color/home"
         android:textSize="14sp"
         android:letterSpacing="0.03"
         android:fontFamily="@font/poppinsmedium"
@@ -290,18 +293,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rating"
         app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/genre"
-        android:layout_width="224dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="12dp"
-        android:text="Genre"
-        android:textColor="#CCCCCC"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/infoCover"
-        app:layout_constraintTop_toBottomOf="@+id/infoCover"
-        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

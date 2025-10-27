@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/search_root_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
     android:paddingTop="24dp">
@@ -26,7 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
     <!-- Barra di ricerca -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
@@ -35,6 +34,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:theme="@style/SearchViewThemeLight"
         android:background="@drawable/searchbar"
         android:queryHint="Cerca su Musicboxd..."
         app:iconifiedByDefault="false"
@@ -51,7 +51,7 @@
         android:layout_marginTop="7dp"
         android:paddingTop="8dp"
         android:paddingBottom="16dp"
-        android:background="@color/scrollView"
+        android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@id/searchView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- Sfondo leggermente trasparente, grigio-nero -->
-    <solid android:color="#CC1A1A1A" /> <!-- ~80% opacità -->
+    <solid android:color="@color/black" /> <!-- ~80% opacità -->
 
     <!-- Bordi più soft (grigio chiaro ma non bianco) -->
     <stroke

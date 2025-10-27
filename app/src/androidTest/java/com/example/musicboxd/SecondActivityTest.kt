@@ -38,7 +38,6 @@ class SecondActivityTest {
                 .build()
         )
 
-        // >>> AGGIUNGI QUESTA RIGA (prima di qualunque getInstance()/login) <<<
         FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
 
         FirebaseAuth.getInstance().signOut()

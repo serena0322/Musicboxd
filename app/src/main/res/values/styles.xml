@@ -29,5 +29,9 @@
         <item name="cornerSize">9dp</item>
     </style>
 
+    <style name="SearchViewThemeLight" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">#000000</item>  <!-- testo -->
+        <item name="android:textColorHint">#666666</item>     <!-- hint -->
+    </style>
 
 </resources>

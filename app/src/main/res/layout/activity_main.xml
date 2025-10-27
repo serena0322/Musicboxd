@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/scrollView"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
     <!-- Contenitore Fragment -->
@@ -21,19 +21,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom Navigation Personalizzato -->
+    <!-- Bottom Navigation Personalizzata -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="0dp"
         android:layout_height="65dp"
         android:background="@drawable/bottom_nav_background"
-        android:elevation="8dp"
+        android:elevation="10dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:itemIconTint="@color/iconTint"
         app:itemIconSize="28dp"
         app:labelVisibilityMode="unlabeled"
-        app:itemRippleColor="@color/home"
+        app:itemRippleColor="@android:color/transparent"
+        app:itemBackground="@android:color/transparent"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
