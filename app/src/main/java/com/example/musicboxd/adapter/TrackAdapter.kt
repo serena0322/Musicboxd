@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
 
+//usata in ShowSongPlaylist
+
 class TrackAdapter(
     private val onItemClick: (Track) -> Unit,
     private val onLongClick: (Track) -> Unit
@@ -28,7 +30,6 @@ class TrackAdapter(
             artist.text = track.artist?.name
             Glide.with(itemView.context)
                 .load(track.album?.cover)
-                //.placeholder(R.drawable.ic_music_placeholder)
                 .into(cover)
 
             itemView.setOnClickListener { onItemClick(track) } // Gestione click qui

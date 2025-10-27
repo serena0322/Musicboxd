@@ -117,13 +117,11 @@
         android:name="com.example.musicboxd.fragments.Playlist"
         android:label="Playlist"
         tools:layout="@layout/playlist" >
-        <argument
-            android:name="userId"
-            app:argType="string" />
         <action
             android:id="@+id/action_playlist_to_showSongPlaylist"
             app:destination="@id/showSongPlaylist" />
     </fragment>
+
 
     <!-- Fragment ShowSong-->
     <fragment
@@ -134,6 +132,11 @@
         <argument
             android:name="playlistId"
             app:argType="string" />
+
+        <argument
+            android:name="playlistName"
+            app:argType="string"
+            android:defaultValue="" />
 
     </fragment>
 

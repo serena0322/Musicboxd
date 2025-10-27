@@ -10,19 +10,26 @@ import com.example.musicboxd.local.PlaylistItem
 
 class PlaylistAdapter(
     private val playlists: MutableList<PlaylistItem>,
-    private val onItemClick: (PlaylistItem) -> Unit,
-    private val onLongClick: (PlaylistItem) -> Unit) :
-    RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
+    private val onItemClick: (id: String, name: String) -> Unit,
+    private val onLongClick: (PlaylistItem) -> Unit
+) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     inner class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.playlistName)
-
         init {
             itemView.setOnClickListener {
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onItemClick(playlists[position])
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    val p = playlists[pos]
+                    onItemClick(p.id, p.name) // SOLO ID e nome
                 }
+            }
+            itemView.setOnLongClickListener {
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onLongClick(playlists[pos])
+                }
+                true
             }
         }
     }

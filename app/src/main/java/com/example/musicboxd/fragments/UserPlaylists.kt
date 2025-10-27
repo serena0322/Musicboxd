@@ -47,16 +47,20 @@ class UserPlaylists : Fragment() {
         val args: UserPlaylistsArgs by navArgs()
         userId = args.userId
 
-        adapter = PlaylistAdapter(playlists,
-            onItemClick = { playlistItem ->
-                val action = UserPlaylistsDirections.actionUserplaylistToShowUserPlaylist(
-                    playlistName = playlistItem.name,
-                    userId = userId
+        adapter = PlaylistAdapter(
+            playlists,
+            onItemClick = { playlistId, playlistName ->
+                val args = Bundle().apply {
+                    putString("playlistId", playlistId)
+                    putString("playlistName", playlistName)
+                    putString("userId", userId)
+                }
+                findNavController().navigate(
+                    R.id.action_userplaylist_to_showUserPlaylist, // usa l'ID esatto del tuo graph
+                    args
                 )
-                findNavController().navigate(action)
             },
-            onLongClick = {
-            }
+            onLongClick = { /* ... */ }
         )
 
         recyclerView.adapter = adapter

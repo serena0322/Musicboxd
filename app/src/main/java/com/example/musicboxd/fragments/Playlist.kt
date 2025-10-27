@@ -46,8 +46,12 @@ class Playlist() : Fragment() {
         // 1. Inizializza prima l'adapter con il listener
         adapter = PlaylistAdapter(
             playlists,
-            onItemClick = { playlistItem ->
-                val action = PlaylistDirections.actionPlaylistToShowSongPlaylist(playlistItem.id)
+            onItemClick = { id, name ->
+                val action = PlaylistDirections
+                    .actionPlaylistToShowSongPlaylist(
+                        playlistId = id,
+                        playlistName = name
+                    )
                 findNavController().navigate(action)
             },
             onLongClick = { playlistItem ->
