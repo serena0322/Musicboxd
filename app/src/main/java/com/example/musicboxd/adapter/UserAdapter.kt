@@ -22,6 +22,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
+// Adapter per la lista utenti con DiffUtil: visualizza username/nome, gestisce tap (apri profilo) e long-press con menu Follow/Unfollow in base al tab corrente.
+// Integra operazioni Firebase (followers/following, liste, logging attività proprie/altrui) e aggiorna la lista dopo follow/unfollow.
+
 class UserAdapter(
     private var tabIndex: Int = 0,
     private val onUserClick: (User) -> Unit

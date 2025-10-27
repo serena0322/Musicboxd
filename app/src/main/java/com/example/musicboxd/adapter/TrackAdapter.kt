@@ -12,7 +12,8 @@ import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
 
-//usata in ShowSongPlaylist
+// Adapter per la schermata ShowSongPlaylist: mostra i brani con titolo, artista e copertina,
+// gestendo click e long click sugli elementi con aggiornamento efficiente tramite DiffUtil.
 
 class TrackAdapter(
     private val onItemClick: (Track) -> Unit,

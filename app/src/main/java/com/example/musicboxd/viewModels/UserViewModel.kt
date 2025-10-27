@@ -19,6 +19,10 @@ import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+// ViewModel completo per profili e feed: gestisce LiveData di recensioni (realtime e one-shot),
+// attività personali/amici, profilo base proprio/altrui, followers/following e ricerca utenti,
+// orchestrando Firestore e coroutine (viewModelScope).
+
 class UserViewModel : ViewModel() {
 
     // ----- Home (Tab 1): Reviews -----

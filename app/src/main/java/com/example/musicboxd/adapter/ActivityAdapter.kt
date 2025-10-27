@@ -10,6 +10,9 @@ import com.example.musicboxd.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/*Adapter per la RecyclerView che gestisce la visualizzazione delle attività utente
+o degli amici all’interno della schermata Activity.*/
+
 class ActivityAdapter(
     private var tabIndex: Int = 0,
     private var items: List<ActivityItem>) :

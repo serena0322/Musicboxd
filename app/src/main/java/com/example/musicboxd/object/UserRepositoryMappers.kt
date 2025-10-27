@@ -5,8 +5,9 @@ import com.example.musicboxd.local.PlaylistItem
 import com.example.musicboxd.local.Review
 import com.google.firebase.Timestamp
 
+// Funzioni helper usate nei Instrumented test : mappano i dati Firestore (Map<String, Any?>) in oggetti locali
+// Review, PlaylistItem e ActivityItem, garantendo conversioni sicure e valori di default.
 
-//per instrumented test
 internal fun mapReview(docId: String, data: Map<String, Any?>, userId: String): Review? {
     val songTitle = data["title"] as? String ?: return null
     val artistName = data["artist"] as? String ?: return null

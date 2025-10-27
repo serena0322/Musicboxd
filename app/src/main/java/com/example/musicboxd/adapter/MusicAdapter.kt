@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.local.MusicItem
 import com.example.musicboxd.R
 
+// Adapter semplice per la schermata Home: mostra una lista di brani locali con titolo e artista,
+// aggiornando i dati tramite il metodo updateData().
+
 class MusicAdapter(private var items: List<MusicItem>) :
     RecyclerView.Adapter<MusicAdapter.MusicViewHolder>() {
 

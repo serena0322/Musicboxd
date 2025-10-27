@@ -15,6 +15,9 @@ data class TrackSection(
     val tracks: List<Track>
 )
 
+// Adapter principale della schermata Home: mostra più sezioni (es. “Top Songs”, “Nuove Uscite”),
+// ognuna con una lista orizzontale di brani gestita da TrackAdapter3.
+
 class HomeAdapter(
     private val sections: List<TrackSection>,
     private val onTrackClick: (Track) -> Unit,

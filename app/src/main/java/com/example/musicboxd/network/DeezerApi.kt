@@ -4,6 +4,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Path
 
+// Interfaccia Retrofit per l’API di Deezer: gestisce le chiamate di ricerca brani, dettagli traccia/album
+// e recupero delle classifiche globali (chart), restituendo le relative response data class.
 
 interface DeezerApi {
 

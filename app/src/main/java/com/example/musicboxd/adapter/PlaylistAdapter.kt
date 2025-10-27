@@ -8,6 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.local.PlaylistItem
 
+// Adapter per la lista delle playlist utente: mostra il nome di ogni playlist e gestisce click e
+// long click per aprire o modificare la playlist selezionata.
+
 class PlaylistAdapter(
     private val playlists: MutableList<PlaylistItem>,
     private val onItemClick: (id: String, name: String) -> Unit,

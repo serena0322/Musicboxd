@@ -1,11 +1,12 @@
 package com.example.musicboxd
 
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
+
+// Activity di avvio: verifica se l’utente è già autenticato tramite FirebaseAuth e, in caso positivo,
+// reindirizza automaticamente alla MainActivity pulendo lo stack delle attività precedenti.
 
 class SecondActivity : AppCompatActivity() {
 

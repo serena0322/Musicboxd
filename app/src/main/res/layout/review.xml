@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray_blue">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/layout_title"
@@ -13,7 +13,7 @@
         android:layout_marginStart="20dp"
         android:fontFamily="@font/poppinsbold"
         android:text="I Listened..."
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:letterSpacing="0.03"
         android:textStyle="bold"
@@ -31,7 +31,7 @@
         android:fontFamily="@font/poppinsmedium"
         android:text="SAVE"
         android:textAllCaps="true"
-        android:textColor="#34CB62"
+        android:textColor="@color/home"
         android:textSize="16sp"
         android:letterSpacing="0.05"
         android:textStyle="bold"
@@ -49,7 +49,7 @@
         android:layout_height="42dp"
         android:fontFamily="@font/poppinsregular"
         android:text="Date"
-        android:textColor="#E0E0E0"
+        android:textColor="@color/light_gray"
         android:textSize="16sp"
         android:letterSpacing="0.02"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,7 +66,7 @@
         android:fontFamily="@font/poppinsregular"
         android:text="TextView"
         android:textAlignment="textEnd"
-        android:textColor="#E0E0E0"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:letterSpacing="0.02"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -82,7 +82,7 @@
         android:layout_height="42dp"
         android:fontFamily="@font/poppinsregular"
         android:text="Rate"
-        android:textColor="#E0E0E0"
+        android:textColor="@color/light_gray"
         android:textSize="16sp"
         android:letterSpacing="0.02"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -99,7 +99,7 @@
         android:fontFamily="@font/poppinsregular"
         android:text="Like"
         android:textAlignment="textEnd"
-        android:textColor="#E0E0E0"
+        android:textColor="@color/light_gray"
         android:textSize="16sp"
         android:letterSpacing="0.02"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -109,13 +109,15 @@
         app:layout_constraintTop_toTopOf="@+id/rate"
         app:layout_constraintVertical_bias="0.0" />
 
-<RatingBar
+    <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="239dp"
         android:layout_height="67dp"
         android:clickable="true"
         android:isIndicator="false"
-        android:progressTint="#FDEC59"
+        android:progressTint="@color/home"
+        android:progressBackgroundTint="@color/light_gray"
+        android:secondaryProgressTint="@color/home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -124,14 +126,21 @@
         app:layout_constraintVertical_bias="0.086" />
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:id="@+id/reviewInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="16dp"
         android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:boxStrokeColor="@color/light_gray"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidthFocused="2dp"
+        app:boxStrokeErrorColor="@color/home"
+        app:hintTextColor="@color/light_gray"
+        app:boxBackgroundColor="#101010"
         app:layout_constraintStart_toStartOf="@+id/ratingBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ratingBar">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -140,12 +149,13 @@
             android:layout_height="150dp"
             android:background="@android:color/transparent"
             android:gravity="top|start"
-            android:hint="Add a review..."
+            android:hint="Scrivi qui la tua recensione..."
             android:inputType="textMultiLine"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <ImageView
         android:id="@+id/heartImage"
@@ -154,13 +164,13 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/heart_toggle"
+        app:tint="@color/home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/like"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ratingBar"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/heart_default" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/coverImage"
@@ -193,7 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Artist"
-        android:textColor="@color/white"
+        android:textColor="@color/light_gray"
         android:textSize="18sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"

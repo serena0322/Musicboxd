@@ -4,6 +4,9 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+// Modelli dati per l’integrazione con l’API Deezer: rappresentano tracce, artisti, album e generi,
+// con classi Parcelable per il passaggio sicuro tra componenti Android e mapping JSON tramite Gson.
+
 @Parcelize
 data class DeezerResponse(val data: List<Track>): Parcelable
 

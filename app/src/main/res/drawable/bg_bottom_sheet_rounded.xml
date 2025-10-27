@@ -1,30 +1,19 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
 
-    <!-- Sfondo scuro con angoli arrotondati solo sopra -->
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/scrollView" />
-            <corners android:topLeftRadius="24dp" android:topRightRadius="24dp"/>
-        </shape>
-    </item>
+    <!-- Sfondo leggermente trasparente, grigio-nero -->
+    <solid android:color="#CC1A1A1A" /> <!-- ~80% opacità -->
 
-    <!-- Bordo sottile bianco sopra + laterali -->
-    <item android:left="0dp" android:right="0dp" android:top="0dp">
-        <shape android:shape="rectangle">
-            <stroke android:width="0.5dp" android:color="@android:color/white"/>
-            <solid android:color="@android:color/transparent" />
-            <corners android:topLeftRadius="24dp" android:topRightRadius="24dp"/>
-        </shape>
-    </item>
+    <!-- Bordi più soft (grigio chiaro ma non bianco) -->
+    <stroke
+        android:width="1dp"
+        android:color="#66D0D0D0" /> <!-- grigio chiaro semi-trasparente -->
 
-    <!-- Maschera per coprire il bordo in basso -->
-    <item android:top="675dp"> <!-- Cambia questo valore se necessario -->
-        <shape android:shape="rectangle">
-            <solid android:color="@color/scrollView" />
-        </shape>
-    </item>
+    <!-- Angoli arrotondati -->
+    <corners android:radius="24dp" />
+</shape>
 
-</layer-list>
 
 
 

@@ -14,7 +14,11 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
-//Intermediario tra l’interfaccia utente (UI) e Firebase Firestore
+// Repository centralizzato dell’utente: ponte tra UI e Firebase Firestore/Auth con metodi sospesi e
+// listener realtime per caricare/osservare utente, attività personali/amici, recensioni e playlist,
+// e aggiornare campi profilo. Espone LiveData dello stato corrente, funzioni di ricerca
+// (username, followers/following) e logging attività; restituisce DTO aggregati
+// (BasicProfileData, UserWithData).
 
 data class BasicProfileData(
     val user: User?,

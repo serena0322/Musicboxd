@@ -6,8 +6,6 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,6 +14,9 @@ import com.example.musicboxd.fragments.AddSongBottomSheet
 import kotlinx.coroutines.launch
 import com.example.musicboxd.viewModels.UserViewModel
 import com.google.firebase.FirebaseApp
+
+// Activity principale: inizializza Firebase e UserViewModel, carica/Osserva profilo e imposta NavHost + BottomNavigation (Home, Search, Activity, Profile) con tint dinamico.
+// Gestisce l’azione “Add” aprendo la BottomSheet AddSong invece di navigare, e consente deep-link iniziale via extra "destination".
 
 class MainActivity() : AppCompatActivity() {
 

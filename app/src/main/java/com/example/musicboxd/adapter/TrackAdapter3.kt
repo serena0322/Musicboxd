@@ -12,6 +12,9 @@ import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
 
+// Adapter per la lista dei brani: mostra titolo, artista e copertina, gestendo click e long click
+// su ciascun elemento con aggiornamento efficiente tramite DiffUtil.
+
 class TrackAdapter3(
     private val onItemClick: (Track) -> Unit,
     private val onLongClick: (Track) -> Unit

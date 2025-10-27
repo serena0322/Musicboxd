@@ -8,6 +8,9 @@ import com.bumptech.glide.Glide
 import com.example.musicboxd.R
 import com.example.musicboxd.network.Track
 
+// Adapter per la ricerca dei brani: mostra titolo, artista e copertina, gestendo il click su ogni
+// traccia con aggiornamento efficiente tramite DiffUtil.
+
 class TrackAdapter2(
     private val onTrackClick: (Track) -> Unit
 ) : ListAdapter<Track, TrackAdapter2.TrackViewHolder>(DiffCallback()) {

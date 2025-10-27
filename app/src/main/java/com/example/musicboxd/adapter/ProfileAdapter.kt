@@ -7,6 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicboxd.R
 
+// Adapter per la sezione profilo: mostra una lista di nomi utente e aggiorna i dati tramite il
+// metodo updateData() per riflettere le modifiche in tempo reale.
+
 class ProfileAdapter(private var items: List<String>) :
     RecyclerView.Adapter<ProfileAdapter.ViewHolder>() {
 

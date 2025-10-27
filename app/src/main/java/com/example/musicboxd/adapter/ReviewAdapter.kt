@@ -13,6 +13,9 @@ import com.example.musicboxd.local.Review
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+// Adapter per la lista delle recensioni: mostra titolo, artista, voto, testo, data e copertina
+// dell’album, con supporto opzionale per l’autore e long click per l’eliminazione.
+
 class ReviewAdapter(
     private val reviews: List<Review>,
     private val onDeleteClick: (Review) -> Unit,
