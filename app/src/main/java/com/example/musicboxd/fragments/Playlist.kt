@@ -12,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,17 +19,17 @@ import com.example.musicboxd.R
 import com.example.musicboxd.adapter.PlaylistAdapter
 import com.example.musicboxd.local.PlaylistItem
 import com.example.musicboxd.viewModels.UserViewModel
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.getValue
 
-class Playlist() : Fragment() {
+class Playlist : Fragment() {
+
     private val userViewModel: UserViewModel by activityViewModels()
     private lateinit var recyclerView: RecyclerView
     private lateinit var auth: FirebaseAuth
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
+
     private lateinit var adapter: PlaylistAdapter
     private val playlists = mutableListOf<PlaylistItem>()
 
@@ -39,19 +38,16 @@ class Playlist() : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.playlist, container, false)
 
+        auth = FirebaseAuth.getInstance()
         userViewModel.loadMyBasicProfile(forceReload = true)
 
-        auth = FirebaseAuth.getInstance()
-
-        // 1. Inizializza prima l'adapter con il listener
+        // Adapter che usa le callback con PlaylistItem
         adapter = PlaylistAdapter(
-            playlists,
-            onItemClick = { id, name ->
-                val action = PlaylistDirections
-                    .actionPlaylistToShowSongPlaylist(
-                        playlistId = id,
-                        playlistName = name
-                    )
+            playlists = playlists,
+            onItemClick = { playlistItem ->
+                val action = PlaylistDirections.actionPlaylistToShowSongPlaylist(
+                    playlistId = playlistItem.id
+                )
                 findNavController().navigate(action)
             },
             onLongClick = { playlistItem ->
@@ -67,23 +63,22 @@ class Playlist() : Fragment() {
             }
         )
 
-        // 2. Poi assegnalo al RecyclerView
         recyclerView = view.findViewById(R.id.activityRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        // 3. Assegna listener al pulsante
+        // Crea nuova playlist
         view.findViewById<TextView>(R.id.button).setOnClickListener {
             createPlaylist()
             userViewModel.loadMyBasicProfile(forceReload = true)
         }
 
+        // Osserva il profilo di base e aggiorna la lista
         userViewModel.basicProfile.observe(viewLifecycleOwner) { profile ->
             playlists.clear()
             playlists.addAll(profile.playlists)
             adapter.notifyDataSetChanged()
         }
-
 
         return view
     }
@@ -109,6 +104,7 @@ class Playlist() : Fragment() {
             }
     }
 
+    // (Facoltativo) Se vuoi usare l’ascolto realtime diretto da Firestore
     private fun loadPlaylists() {
         val userId = auth.currentUser?.uid ?: return
         db.collection("User")
@@ -152,7 +148,7 @@ class Playlist() : Fragment() {
                     "name" to playlistName,
                     "createdBy" to userId,
                     "timestamp" to FieldValue.serverTimestamp(),
-                    "tracks" to emptyList<String>() // Campo opzionale per inizializzazione
+                    "tracks" to emptyList<String>()
                 )
 
                 db.collection("User")
@@ -173,5 +169,4 @@ class Playlist() : Fragment() {
             .create()
             .show()
     }
-
 }

@@ -86,8 +86,6 @@ dependencies {
     // --- Immagini ---
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
-    // (Valuta se tenere Picasso: è ridondante con Glide)
-    // implementation("com.squareup.picasso:picasso:2.71828")
 
     // --- Firebase (BOM) ---
     implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
@@ -111,18 +109,22 @@ dependencies {
     //        TEST LOCALI
     // =========================
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.robolectric:robolectric:4.12.1")
-    testImplementation("androidx.test:core:1.6.1")              // utilità test JVM
-    testImplementation("androidx.arch.core:core-testing:2.2.0") // InstantTaskExecutorRule
+    testImplementation("org.robolectric:robolectric:4.12.2")
+    testImplementation("androidx.test:core:1.5.0")                 // ⬅ allineato
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("androidx.navigation:navigation-testing:2.7.7")
 
     // =========================
     //     TEST STRUMENTALI
     // =========================
-    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("androidx.test:core:1.5.0")           // ⬅ allineato
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("org.mockito:mockito-android:5.11.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
 
     // Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -136,11 +138,4 @@ dependencies {
 
     // Fragment testing (solo debug)
     debugImplementation("androidx.fragment:fragment-testing:1.8.2")
-
-    // Mockito solo se realmente necessario negli strumentali:
-    // androidTestImplementation("org.mockito:mockito-android:5.8.0")
-    // androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
-
-    testImplementation("androidx.navigation:navigation-testing:2.7.7")
-
 }

@@ -1,8 +1,8 @@
 package com.example.musicboxd.adapter
 
 import android.content.Context
-import android.widget.FrameLayout
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,8 +33,8 @@ class PlaylistAdapterTest {
     @After
     fun tearDown() { /* no-op */ }
 
-    // Helper (adatta se PlaylistItem ha più campi)
-    private fun pl(name: String) = PlaylistItem(name = name)
+    // Helper
+    private fun pl(name: String) = PlaylistItem(id = name.lowercase(), name = name)
 
     @Test
     fun `getItemCount restituisce la dimensione iniziale`() {
@@ -62,33 +62,42 @@ class PlaylistAdapterTest {
 
     @Test
     fun `click su item invoca onItemClick con la playlist giusta`() {
+        // Arrange
         var clicked: PlaylistItem? = null
         val playlists = mutableListOf(pl("Chill"), pl("Focus"))
         val adapter = PlaylistAdapter(
-            playlists,
-            onItemClick = { clicked = it },
-            onLongClick = {}
+            playlists = playlists,
+            onItemClick = { playlistItem -> clicked = playlistItem },
+            onLongClick = { /* no-op */ }
         )
 
-        // Attach a RecyclerView reale per avere bindingAdapterPosition valido
+        // RecyclerView reale per avere bindingAdapterPosition valido
         val rv = RecyclerView(context).apply {
             layoutManager = LinearLayoutManager(context)
             this.adapter = adapter
         }
         parent.addView(rv)
 
-        // Misura e layout per creare le view
+        // Misura e layout per creare le view holder
         rv.measure(
             View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(1920, View.MeasureSpec.AT_MOST)
         )
         rv.layout(0, 0, 1080, 1920)
 
-        val vh = rv.findViewHolderForAdapterPosition(1)!!  // "Focus"
+        // Act: click sul secondo elemento ("Focus")
+        val vh = rv.findViewHolderForAdapterPosition(1) ?: run {
+            // Se non ancora creato, forza il bind manualmente
+            val holder = adapter.onCreateViewHolder(parent, 0)
+            adapter.onBindViewHolder(holder, 1)
+            holder
+        }
         vh.itemView.performClick()
 
+        // Assert
         assertNotNull(clicked)
         assertEquals("Focus", clicked!!.name)
+        assertEquals("focus", clicked!!.id) // coerente con helper pl()
     }
 
     @Test
@@ -97,8 +106,8 @@ class PlaylistAdapterTest {
         val playlists = mutableListOf(pl("Gym"))
         val adapter = PlaylistAdapter(
             playlists,
-            onItemClick = {},
-            onLongClick = { longClicked = it }
+            onItemClick = { /* no-op */ },
+            onLongClick = { item -> longClicked = item }
         )
 
         val rv = RecyclerView(context).apply {
@@ -112,7 +121,11 @@ class PlaylistAdapterTest {
         )
         rv.layout(0, 0, 1080, 1920)
 
-        val vh = rv.findViewHolderForAdapterPosition(0)!!
+        val vh = rv.findViewHolderForAdapterPosition(0) ?: run {
+            val holder = adapter.onCreateViewHolder(parent, 0)
+            adapter.onBindViewHolder(holder, 0)
+            holder
+        }
         vh.itemView.performLongClick()
 
         assertNotNull(longClicked)
@@ -129,7 +142,7 @@ class PlaylistAdapterTest {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 insertedAt = positionStart
             }
-            override fun onChanged() { onChanged++ } // non dovrebbe essere chiamato
+            override fun onChanged() { onChanged++ } // non deve essere chiamato
         }
         adapter.registerAdapterDataObserver(observer)
 
@@ -137,14 +150,13 @@ class PlaylistAdapterTest {
         adapter.addPlaylist(newPl)
 
         assertEquals(3, adapter.itemCount)
-        assertEquals(0, insertedAt)            // inserita in posizione 0
-        assertEquals("NewTop", /* top name */ newPl.name)
-        assertEquals("NewTop", /* verify order */ (/* reflect internal */ true).let {
-            // Verifica indirettamente che l'ordine sia corretto creando un VH e bindando pos 0
-            val holder = adapter.onCreateViewHolder(parent, 0)
-            adapter.onBindViewHolder(holder, 0)
-            holder.itemView.findViewById<TextView>(R.id.playlistName).text.toString()
-        })
-        assertEquals(0, onChanged)             // nessun notifyDataSetChanged
+        assertEquals(0, insertedAt)
+        assertEquals(0, onChanged)
+
+        // Verifica indirettamente che in posizione 0 ci sia NewTop
+        val holder = adapter.onCreateViewHolder(parent, 0)
+        adapter.onBindViewHolder(holder, 0)
+        val tvTop = holder.itemView.findViewById<TextView>(R.id.playlistName)
+        assertEquals("NewTop", tvTop.text.toString())
     }
 }
