@@ -1,4 +1,3 @@
-<!-- res/drawable/button_background_gradient.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:shape="rectangle"

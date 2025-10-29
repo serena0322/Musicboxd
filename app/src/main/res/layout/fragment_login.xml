@@ -74,6 +74,7 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:letterSpacing="0.05"
+            app:backgroundTint="@null"
             android:fontFamily="@font/poppinsmedium"
             android:textStyle="bold" />
 
