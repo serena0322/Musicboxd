@@ -4,16 +4,26 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.example.musicboxd.fragments.AddSongBottomSheet
 import kotlinx.coroutines.launch
 import com.example.musicboxd.viewModels.UserViewModel
+import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.FirebaseApp
+import kotlin.math.max
 
 // Activity principale: inizializza Firebase e UserViewModel, carica/Osserva profilo e imposta NavHost + BottomNavigation (Home, Search, Activity, Profile) con tint dinamico.
 // Gestisce l’azione “Add” aprendo la BottomSheet AddSong invece di navigare, e consente deep-link iniziale via extra "destination".
@@ -27,6 +37,52 @@ class MainActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val root = findViewById<View>(R.id.root)
+        val bottomBarContainer = findViewById<View>(R.id.bottom_bar_container)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+
+// Disattiva la pillola M3/MDC
+        bottomNav.setItemActiveIndicatorEnabled(false)
+// facoltativo: nessun colore assegnato
+        bottomNav.itemActiveIndicatorColor = null
+
+        // Status bar: padding top sul root
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = sys.top)
+            insets
+        }
+
+        // Gesture bar / tastiera: margine bottom dinamico sul contenitore
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { v, insets ->
+            val sysBottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+            val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            val extra = max(sysBottom, imeBottom)
+            val base = (6 * resources.displayMetrics.density).toInt() // margine estetico
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> { bottomMargin = base + extra }
+            insets
+        }
+
+        // NavController + listener (Add apre la BottomSheet)
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHost.navController
+
+        if (bottomNav.menu.size() == 0) bottomNav.inflateMenu(R.menu.bottom_nav_menu)
+        if (bottomNav.selectedItemId == 0) bottomNav.selectedItemId = R.id.nav_home
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_add -> { AddSongBottomSheet().show(supportFragmentManager, "AddSong"); false }
+                else -> NavigationUI.onNavDestinationSelected(item, navController)
+            }
+        }
+        bottomNav.setOnItemReselectedListener { item ->
+            if (item.itemId == R.id.nav_add) AddSongBottomSheet().show(supportFragmentManager, "AddSong")
+        }
+
         // Carica dati utente e attività all'avvio
         lifecycleScope.launch {
             userViewModel.loadMyBasicProfile()
@@ -38,21 +94,16 @@ class MainActivity() : AppCompatActivity() {
         val opt = app.options
         Log.d("FirebaseProjectCheck", "projectId=${opt.projectId}, appId=${opt.applicationId}, apiKey=${opt.apiKey}, storage=${opt.storageBucket}")
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
         val destination = intent.getStringExtra("destination")
 
         // Trova il NavHostFragment e ottieni il NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        val navController = navHostFragment.navController
 
         if (destination == "home") {
             navController.navigate(R.id.homeFragment)
         }
-
-        // Collega la bottom navigation al NavController
-        bottomNav.setupWithNavController(navController)
 
         // Setta il ColorStateList prima di selezionare le icone
         bottomNav.setOnItemSelectedListener()
