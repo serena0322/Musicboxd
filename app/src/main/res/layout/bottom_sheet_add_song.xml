@@ -17,64 +17,58 @@
     android:outlineProvider="background">
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:paddingTop="24dp"
-        android:paddingBottom="16dp"
-        android:background="@android:color/transparent">
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add a Song"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            android:fontFamily="@font/poppinsbold"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppinsbold"
             android:letterSpacing="0.04"
             android:lineSpacingExtra="2dp"
+            android:text="Add a Song"
             android:textAlignment="center"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView2"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/searchbar"
-            android:theme="@style/SearchViewThemeLight"
             android:queryHint="Cerca un brano..."
+            android:theme="@style/SearchViewThemeLight"
             app:iconifiedByDefault="false"
-            app:layout_constraintTop_toBottomOf="@id/Title"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/Title" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/addScrollView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:paddingHorizontal="10dp"
             android:background="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@id/searchView2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <!-- Maschera nera per "nascondere" il bordo inferiore -->
-        <View
-            android:layout_width="0dp"
-            android:layout_height="8dp"
-            android:background="@color/black"
+            android:paddingHorizontal="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/searchView2"
+            app:layout_constraintVertical_bias="0.123" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

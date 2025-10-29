@@ -80,6 +80,9 @@ class TrackInformation : AppCompatActivity() {
         val formattedDuration = formatDuration(duration)
         findViewById<TextView>(R.id.duration).text = "Durata: $formattedDuration"
 
+        if (rating.text.isNullOrBlank()) {
+            rating.text = "0.0"
+        }
         val coverImageView = findViewById<ImageView>(R.id.infoCover)
         Glide.with(this)
             .load(coverUrl)

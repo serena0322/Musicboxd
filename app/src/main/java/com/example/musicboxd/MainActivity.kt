@@ -1,6 +1,8 @@
 package com.example.musicboxd
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -12,16 +14,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.musicboxd.fragments.AddSongBottomSheet
 import kotlinx.coroutines.launch
 import com.example.musicboxd.viewModels.UserViewModel
-import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.FirebaseApp
 import kotlin.math.max
 
@@ -32,15 +31,16 @@ class MainActivity() : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
 
+    // helper dp
+    val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        val root = findViewById<View>(R.id.root)
         val bottomBarContainer = findViewById<View>(R.id.bottom_bar_container)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
@@ -49,11 +49,16 @@ class MainActivity() : AppCompatActivity() {
 // facoltativo: nessun colore assegnato
         bottomNav.itemActiveIndicatorColor = null
 
-        // Status bar: padding top sul root
+        // edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val root = findViewById<View>(R.id.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
-            val sys = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = sys.top)
-            insets
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // padding laterali 16dp; margine top/bottom dinamici (status/gesture)
+            v.setPadding(10.dp, bars.top + 12.dp, 10.dp, bars.bottom + 24.dp)
+            WindowInsetsCompat.CONSUMED
         }
 
         // Gesture bar / tastiera: margine bottom dinamico sul contenitore
@@ -146,6 +151,19 @@ class MainActivity() : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val config = newBase.resources.configuration
+
+        // Consente ridimensionamento ma entro limiti sicuri
+        val clamped = config.fontScale.coerceIn(1.0f, 1.20f)
+        if (config.fontScale != clamped) {
+            config.fontScale = clamped
+        }
+
+        val context = newBase.createConfigurationContext(config)
+        super.attachBaseContext(context)
     }
 }
 

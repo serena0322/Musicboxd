@@ -1,297 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/black">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="210dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:ellipsize="end"
-        android:lineSpacingExtra="2dp"
-        android:maxLines="3"
-        android:text="Title"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/poppinsbold"
-        android:letterSpacing="0.02"
-        app:layout_constraintStart_toEndOf="@+id/infoCover"
-        app:layout_constraintTop_toTopOf="@+id/infoCover" />
+        android:padding="16dp"
+        android:fitsSystemWindows="true"
+        android:paddingTop="?attr/actionBarSize"
+        app:layout_constrainedWidth="true"
+        app:layout_constrainedHeight="true">
 
-    <TextView
-        android:id="@+id/artist"
-        android:layout_width="224dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:text="Artist"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:textStyle="italic"
-        android:fontFamily="@font/poppinsmedium"
-        android:letterSpacing="0.01"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <TextView
-        android:id="@+id/album"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:text="Album"
-        android:textColor="@color/light_gray"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/artist"
-        app:layout_constraintTop_toBottomOf="@+id/artist"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="224dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:text="Date"
-        android:textColor="@color/light_gray"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/album"
-        app:layout_constraintTop_toBottomOf="@+id/album" />
-
-    <TextView
-        android:id="@+id/genre"
-        android:layout_width="224dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="12dp"
-        android:text="Genre"
-        android:textColor="@color/light_gray"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/infoCover"
-        app:layout_constraintTop_toBottomOf="@+id/infoCover"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/duration"
-        android:layout_width="224dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="8dp"
-        android:text="Duration"
-        android:textColor="@color/light_gray"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppinsregular"
-        app:layout_constraintStart_toStartOf="@+id/genre"
-        app:layout_constraintTop_toBottomOf="@+id/genre"
-        tools:ignore="MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/infoCover"
-        android:layout_width="147dp"
-        android:layout_height="147dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="Cover Image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <Button
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Riproduci Anteprima"
-        android:textSize="10sp"
-        android:fontFamily="@font/poppinsmedium"
-        android:textColor="@color/home"
-        android:background="@android:color/transparent"
-        android:letterSpacing="0.02"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.166"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/duration"
-        app:layout_constraintVertical_bias="0.039" />
-
-    <Button
-        android:id="@+id/playlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Aggiungi alla Playlist"
-        android:textSize="10sp"
-        android:fontFamily="@font/poppinsmedium"
-        android:textColor="@color/home"
-        android:background="@android:color/transparent"
-        android:letterSpacing="0.02"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.739"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/play" />
-
-    <TextView
-        android:id="@+id/Ratings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="RATINGS"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/poppinsbold"
-        android:letterSpacing="0.05"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.073"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/play" />
-
-    <LinearLayout
-        android:id="@+id/ratingHistogram"
-        android:layout_width="271dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="12dp"
-        android:background="@android:color/transparent"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
-        android:weightSum="10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.357"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Ratings"
-        tools:ignore="MissingConstraints">
-
-        <!-- le barrette usano @drawable/rating_bar_background -->
-        <View
-            android:id="@+id/bar_0_5"
+    <!-- Barrier: serve a posizionare in modo robusto ciò che sta sotto cover+info -->
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/infoBottomBarrier"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="0dp"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="infoCover,date" />
 
-        <View
-            android:id="@+id/bar_1_0"
+        <!-- COVER: percentuale + rapporto 1:1 -->
+        <ImageView
+            android:id="@+id/infoCover"
+            android:layout_marginTop="32dp"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="0dp"
+            android:contentDescription="Cover Image"
+            android:scaleType="centerCrop"
+            app:layout_constraintWidth_percent="0.36"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/bar_1_5"
+        <!-- TITOLO -->
+        <TextView
+            android:id="@+id/title"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppinsbold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@id/infoCover"
+            app:layout_constraintTop_toTopOf="@id/infoCover"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:id="@+id/bar_2_0"
+        <!-- ARTISTA -->
+        <TextView
+            android:id="@+id/artist"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Artist"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:fontFamily="@font/poppinsmedium"
+            android:letterSpacing="0.01"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:id="@+id/bar_2_5"
+        <!-- ALBUM -->
+        <TextView
+            android:id="@+id/album"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Album"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp"
+            android:fontFamily="@font/poppinsregular"
+            app:layout_constraintStart_toStartOf="@id/artist"
+            app:layout_constraintTop_toBottomOf="@id/artist"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:id="@+id/bar_3_0"
+        <!-- DATA -->
+        <TextView
+            android:id="@+id/date"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Date"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp"
+            android:fontFamily="@font/poppinsregular"
+            app:layout_constraintStart_toStartOf="@id/album"
+            app:layout_constraintTop_toBottomOf="@id/album"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:id="@+id/bar_3_5"
+        <!-- GENERE -->
+        <TextView
+            android:id="@+id/genre"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Genre"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp"
+            android:fontFamily="@font/poppinsregular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/infoBottomBarrier"
+            app:layout_constraintEnd_toStartOf="@+id/duration" />
 
-        <View
-            android:id="@+id/bar_4_0"
+        <!-- DURATA (allineata alla baseline di GENERE) -->
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Duration"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp"
+            android:fontFamily="@font/poppinsregular"
+            app:layout_constraintBaseline_toBaselineOf="@id/genre"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- PULSANTI: catena orizzontale -->
+        <Button
+            android:id="@+id/play"
+            style="?attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Riproduci Anteprima"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppinsmedium"
+            android:textColor="@color/home"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@id/genre"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/playlist"
+            app:layout_constraintHorizontal_chainStyle="packed" />
 
-        <View
-            android:id="@+id/bar_4_5"
+        <Button
+            android:id="@+id/playlist"
+            style="?attr/borderlessButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Aggiungi alla Playlist"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppinsmedium"
+            android:textColor="@color/home"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="@id/play"
+            app:layout_constraintBottom_toBottomOf="@id/play"
+            app:layout_constraintStart_toEndOf="@id/play"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:id="@+id/bar_5_0"
+        <!-- TITOLO SEZIONE RATINGS -->
+        <TextView
+            android:id="@+id/Ratings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="RATINGS"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppinsbold"
+            android:letterSpacing="0.05"
+            app:layout_constraintTop_toBottomOf="@id/play"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- CONTAINER RATING + STARS -->
+        <LinearLayout
+            android:id="@+id/ratingContainer"
             android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rating_bar_background" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            app:layout_constraintTop_toTopOf="@id/ratingHistogram"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="12dp">
 
-    <TextView
-        android:id="@+id/rating"
-        android:layout_width="53dp"
-        android:layout_height="28dp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:fontFamily="@font/poppinsbold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ratingHistogram"
-        app:layout_constraintVertical_bias="0.035" />
+            <!-- NUMERO RATING (centrato sulle stelle) -->
+            <TextView
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppinsbold"
+                android:gravity="center"
+                android:layout_marginBottom="4dp" />
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="★"
-        android:textColor="@color/home"
-        android:textSize="18sp"
-        android:letterSpacing="0.04"
-        android:fontFamily="@font/poppinsmedium"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingHistogram"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.065"
-        app:layout_constraintStart_toStartOf="parent" />
+            <!-- STELLE, ASCIUGATE SU UNA RIGA -->
+            <TextView
+                android:id="@+id/ratingStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="★★★★★"
+                android:textColor="@color/home"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppinsmedium"
+                android:letterSpacing="0.05" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:text="★★★★★"
-        android:textColor="@color/home"
-        android:textSize="14sp"
-        android:letterSpacing="0.03"
-        android:fontFamily="@font/poppinsmedium"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingHistogram"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.962"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rating"
-        app:layout_constraintVertical_bias="1.0" />
+        <!-- ISTOGRAMMA A SINISTRA -->
+        <LinearLayout
+            android:id="@+id/ratingHistogram"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="12dp"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:weightSum="10"
+            app:layout_constraintTop_toBottomOf="@id/Ratings"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ratingContainer">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View android:id="@+id/bar_0_5" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_1_0" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_1_5" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_2_0" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_2_5" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_3_0" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_3_5" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_4_0" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_4_5" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+        <View android:id="@+id/bar_5_0" android:layout_width="0dp" android:layout_height="2dp" android:layout_weight="1" android:layout_marginHorizontal="2dp" android:background="@drawable/rating_bar_background"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

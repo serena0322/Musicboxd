@@ -1,214 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/black">
 
-    <TextView
-        android:id="@+id/layout_title"
-        android:layout_width="170dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="20dp"
-        android:fontFamily="@font/poppinsbold"
-        android:text="I Listened..."
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:letterSpacing="0.03"
-        android:textStyle="bold"
-        android:elevation="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/save"
-        app:layout_constraintVertical_bias="0.013" />
-
-    <Button
-        android:id="@+id/save"
-        android:layout_width="93dp"
-        android:layout_height="46dp"
-        android:background="@android:color/transparent"
-        android:fontFamily="@font/poppinsmedium"
-        android:text="SAVE"
-        android:textAllCaps="true"
-        android:textColor="@color/home"
-        android:textSize="16sp"
-        android:letterSpacing="0.05"
-        android:textStyle="bold"
-        android:elevation="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.898"
-        app:layout_constraintStart_toEndOf="@+id/layout_title"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.048" />
-
-    <TextView
-        android:id="@+id/Date"
-        android:layout_width="102dp"
-        android:layout_height="42dp"
-        android:fontFamily="@font/poppinsregular"
-        android:text="Date"
-        android:textColor="@color/light_gray"
-        android:textSize="16sp"
-        android:letterSpacing="0.02"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/coverImage"
-        app:layout_constraintTop_toBottomOf="@+id/coverImage"
-        app:layout_constraintVertical_bias="0.055" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="161dp"
-        android:layout_height="48dp"
-        android:fontFamily="@font/poppinsregular"
-        android:text="TextView"
-        android:textAlignment="textEnd"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:letterSpacing="0.02"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toEndOf="@+id/Date"
-        app:layout_constraintTop_toTopOf="@+id/Date"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/rate"
-        android:layout_width="102dp"
-        android:layout_height="42dp"
-        android:fontFamily="@font/poppinsregular"
-        android:text="Rate"
-        android:textColor="@color/light_gray"
-        android:textSize="16sp"
-        android:letterSpacing="0.02"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/Date"
-        app:layout_constraintTop_toBottomOf="@+id/Date"
-        app:layout_constraintVertical_bias="0.033" />
-
-    <TextView
-        android:id="@+id/like"
-        android:layout_width="75dp"
-        android:layout_height="43dp"
-        android:fontFamily="@font/poppinsregular"
-        android:text="Like"
-        android:textAlignment="textEnd"
-        android:textColor="@color/light_gray"
-        android:textSize="16sp"
-        android:letterSpacing="0.02"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textView4"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/rate"
-        app:layout_constraintTop_toTopOf="@+id/rate"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="239dp"
-        android:layout_height="67dp"
-        android:clickable="true"
-        android:isIndicator="false"
-        android:progressTint="@color/home"
-        android:progressBackgroundTint="@color/light_gray"
-        android:secondaryProgressTint="@color/home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/rate"
-        app:layout_constraintTop_toBottomOf="@+id/rate"
-        app:layout_constraintVertical_bias="0.086" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:id="@+id/reviewInputLayout"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="16dp"
-        android:background="@android:color/transparent"
-        app:boxStrokeColor="@color/light_gray"
-        app:boxStrokeWidth="1dp"
-        app:boxStrokeWidthFocused="2dp"
-        app:boxStrokeErrorColor="@color/home"
-        app:hintTextColor="@color/light_gray"
-        app:boxBackgroundColor="#101010"
-        app:layout_constraintStart_toStartOf="@+id/ratingBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingBar">
+        android:layout_marginLeft="7dp"
+        android:padding="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textReview"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@android:color/transparent"
-            android:gravity="top|start"
-            android:hint="Scrivi qui la tua recensione..."
-            android:inputType="textMultiLine"
+        <TextView
+            android:id="@+id/layout_title"
+            android:layout_width="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppinsbold"
+            android:text="I Listened..."
             android:textColor="@color/white"
-            android:textColorHint="@color/light_gray"
-            android:textSize="18sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:textSize="20sp"
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/save"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppinsmedium"
+            android:text="SAVE"
+            android:textAllCaps="true"
+            android:textColor="@color/home"
+            android:textSize="16sp"
+            android:letterSpacing="0.05"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/layout_title"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- COVER: percentuale e rapporto 1:1 (sempre quadrata) -->
+        <ImageView
+            android:id="@+id/coverImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintWidth_percent="0.30"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_title" />
+
+        <!-- TITOLO BRANO: elastico a destra della cover -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Title"
+            android:textColor="@color/white"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="14sp"
+            android:autoSizeMaxTextSize="22sp"
+            android:autoSizeStepGranularity="1sp"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/coverImage"
+            app:layout_constraintTop_toTopOf="@+id/coverImage"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- ARTISTA sotto al titolo -->
+        <TextView
+            android:id="@+id/artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Artist"
+            android:textColor="@color/light_gray"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- RIGA DATA: etichetta + valore in catena -->
+        <TextView
+            android:id="@+id/Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Date"
+            android:textColor="@color/light_gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/coverImage"
+            app:layout_constraintTop_toBottomOf="@+id/coverImage" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="2025-10-29"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/Date"
+            app:layout_constraintTop_toTopOf="@+id/Date"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- RIGA RATE: etichetta + ratingBar con cuore a destra -->
+        <TextView
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Rate"
+            android:textColor="@color/light_gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/Date"
+            app:layout_constraintTop_toBottomOf="@+id/Date" />
+
+        <!-- sostituisci SOLO questo blocco -->
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="180dp"
+            android:layout_marginStart="8dp"
+            android:numStars="5"
+            android:splitTrack="false"
+            android:progressTint="@color/home"
+            android:secondaryProgressTint="@color/home"
+            android:progressBackgroundTint="@color/gray"
+            android:stepSize="0.5"
+            android:isIndicator="false"
+            app:layout_constraintStart_toEndOf="@+id/rate"
+            app:layout_constraintTop_toTopOf="@+id/rate"
+            app:layout_constraintEnd_toStartOf="@+id/heartImage"/>
 
 
-    <ImageView
-        android:id="@+id/heartImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/heart_toggle"
-        app:tint="@color/home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/like"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar"
-        app:layout_constraintVertical_bias="0.0" />
+        <ImageView
+            android:id="@+id/heartImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/heart_toggle"
+            app:layout_constraintStart_toEndOf="@+id/ratingBar"
+            app:layout_constraintTop_toTopOf="@+id/ratingBar"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/coverImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/layout_title"
-        app:layout_constraintTop_toBottomOf="@id/layout_title" />
+        <!-- (Mantengo il tuo TextView 'like' come etichetta accanto al cuore) -->
+        <TextView
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Like"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/heartImage"
+            app:layout_constraintTop_toBottomOf="@+id/heartImage"/>
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="246dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="30dp"
-        android:text="Title"
-        android:textColor="@color/white"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/coverImage"
-        app:layout_constraintTop_toTopOf="@+id/coverImage" />
+        <!-- AREA RECENSIONE: piena larghezza elastica -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:id="@+id/reviewInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            app:boxStrokeColor="@color/light_gray"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeErrorColor="@color/home"
+            app:hintTextColor="@color/light_gray"
+            app:boxBackgroundColor="#101010"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratingBar">
 
-    <TextView
-        android:id="@+id/artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Artist"
-        android:textColor="@color/light_gray"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textReview"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@android:color/transparent"
+                android:gravity="top|start"
+                android:hint="Scrivi qui la tua recensione..."
+                android:inputType="textMultiLine"
+                android:textColor="@color/white"
+                android:textColorHint="@color/light_gray"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- SPACER FINALE -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/reviewInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
